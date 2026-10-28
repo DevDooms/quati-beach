@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-petroleo: #0f5c63;
+  --color-petroleo-escuro: #0a3f45;
+  --color-petroleo-noite: #072a2e;
+  --color-onda: #1fa3a8;
+  --color-onda-claro: #d7f1f0;
+  --color-sol: #f5c518;
+  --color-sol-escuro: #a07c00;
+  --color-areia: #f3e3c3;
+  --color-areia-claro: #fbf6ec;
+  --color-laranja: #f08a24;
+
+  --font-display: "Bebas Neue", "Anton", Impact, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-areia-claro text-petroleo-noite font-sans antialiased;
+}
+
+.titulo {
+  @apply font-display tracking-wide leading-[0.95];
+}
+
+.sem-scrollbar {
+  scrollbar-width: none;
+}
+.sem-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes sobe {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.anim-sobe {
+  animation: sobe 0.25s ease-out;
+}
