@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { CalendarDays, CircleUser, MapPin, Menu, Phone, X } from 'lucide-react'
 import { NEGOCIO } from '../data/mock'
 import { linkWhatsApp, statusFuncionamento } from '../lib/agenda'
@@ -16,6 +16,7 @@ const NAV = [
 
 export default function Layout() {
   const { pathname, search } = useLocation()
+  const tipoNavegacao = useNavigationType()
   const [menu, setMenu] = useState(false)
   const { db } = useDB()
   const { logado } = useLoginDemo('cliente')
@@ -25,7 +26,12 @@ export default function Layout() {
   useEffect(() => {
     setMenu(false)
     window.scrollTo({ top: 0 })
-  }, [pathname, search])
+  }, [pathname])
+
+  // filtros da página (dia, quadra...) trocam a URL com replace e não devem rolar para o topo
+  useEffect(() => {
+    if (tipoNavegacao === 'PUSH') window.scrollTo({ top: 0 })
+  }, [search])
 
   return (
     <div className="min-h-dvh flex flex-col">

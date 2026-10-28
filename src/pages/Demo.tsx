@@ -1,3 +1,4 @@
+import quadraAerea from '../assets/quadra-aerea.png'
 import { Link } from 'react-router-dom'
 import { ArrowRight, CircleUser, Globe, LayoutDashboard, Lightbulb } from 'lucide-react'
 import { Logo } from '../components/Icones'
@@ -32,7 +33,7 @@ const VISOES = [
 export default function Demo() {
   return (
     <div className="min-h-dvh bg-petroleo-noite text-white relative overflow-hidden">
-      <img src="/quadra-aerea.png" alt="" className="absolute inset-0 size-full object-cover opacity-15" aria-hidden />
+      <img src={quadraAerea} alt="" className="absolute inset-0 size-full object-cover opacity-15" aria-hidden />
       <div className="relative mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="text-center">
           <Logo className="size-24 mx-auto" />

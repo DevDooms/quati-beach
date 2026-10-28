@@ -1,3 +1,4 @@
+import quadraAerea from '../assets/quadra-aerea.png'
 import { Link } from 'react-router-dom'
 import { Lock, Mail } from 'lucide-react'
 import { useLoginDemo } from '../lib/store'
@@ -9,7 +10,7 @@ export default function AdminLogin() {
   const { entrar } = useLoginDemo('admin')
   return (
     <div className="min-h-dvh grid place-items-center bg-petroleo-noite px-4 py-10 relative overflow-hidden">
-      <img src="/quadra-aerea.png" alt="" className="absolute inset-0 size-full object-cover opacity-20" aria-hidden />
+      <img src={quadraAerea} alt="" className="absolute inset-0 size-full object-cover opacity-20" aria-hidden />
       <div className="relative w-full max-w-sm rounded-3xl bg-white p-8 shadow-2xl">
         <div className="text-center">
           <Logo className="size-20 mx-auto" />

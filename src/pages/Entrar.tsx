@@ -1,3 +1,4 @@
+import quadraAerea from '../assets/quadra-aerea.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { Lock, Phone } from 'lucide-react'
 import { CLIENTE_DEMO } from '../data/mock'
@@ -18,7 +19,7 @@ export default function Entrar() {
     <section className="mx-auto max-w-5xl px-4 py-10 sm:py-16">
       <div className="grid overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-2">
         <div className="relative hidden md:block bg-petroleo">
-          <img src="/quadra-aerea.png" alt="" className="absolute inset-0 size-full object-cover opacity-50" />
+          <img src={quadraAerea} alt="" className="absolute inset-0 size-full object-cover opacity-50" />
           <div className="absolute inset-0 bg-gradient-to-t from-petroleo-noite via-petroleo-noite/40 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-8 text-white">
             <Logo className="size-20" />

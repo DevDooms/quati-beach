@@ -1,3 +1,4 @@
+import quadraAerea from '../assets/quadra-aerea.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight, CalendarDays, Clock, GraduationCap, MapPin, Phone, Star, Trophy, Users, Zap } from 'lucide-react'
 import { AVALIACOES, MODALIDADES, NEGOCIO, QUADRAS, quadraPorId } from '../data/mock'
@@ -19,7 +20,7 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="relative bg-petroleo text-white overflow-hidden">
-        <img src="/quadra-aerea.png" alt="" className="absolute inset-0 size-full object-cover opacity-35" aria-hidden />
+        <img src={quadraAerea} alt="" className="absolute inset-0 size-full object-cover opacity-35" aria-hidden />
         <div className="absolute inset-0 bg-gradient-to-r from-petroleo-noite/95 via-petroleo/80 to-petroleo/40" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 pt-12 pb-24 sm:pt-20 sm:pb-32 grid gap-10 lg:grid-cols-[1.2fr_1fr] items-center">
           <div>
@@ -136,7 +137,7 @@ export default function Home() {
                 </li>
               ))}
             </ol>
-            <img src="/quadra-aerea.png" alt="Vista aérea das quadras do Quati Beach Sport" className="mt-6 rounded-3xl shadow-lg w-full max-h-60 object-cover" />
+            <img src={quadraAerea} alt="Vista aérea das quadras do Quati Beach Sport" className="mt-6 rounded-3xl shadow-lg w-full max-h-60 object-cover" />
           </div>
           <div className="rounded-3xl bg-white p-3 sm:p-5 shadow-xl">
             <MapaQuadras selecionada={null} onEscolher={(id) => navegar(`/agendar?quadra=${id}&ir=1`)} />
