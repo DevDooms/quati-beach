@@ -78,12 +78,18 @@ export const NEGOCIO = {
   whatsapp: '5511999358944',
   instagram: 'https://www.instagram.com/quatibeachsport/',
   instagramUser: '@quatibeachsport',
-  seguidores: '2,1 mil',
+  googleAvaliacoes: 'https://www.google.com/search?q=Quati+Beach+Sport+Embu-Gua%C3%A7u+avalia%C3%A7%C3%B5es',
   nota: 5.0,
   avaliacoes: 21,
   mapaEmbed:
     'https://www.google.com/maps?q=R.+Serafim+Lu%C3%ADs+Martins,+865+-+Vila+Louro,+Embu-Gua%C3%A7u+-+SP&output=embed',
   mapaLink: 'https://maps.google.com/?q=Quati+Beach+Sport+Embu-Gua%C3%A7u',
+}
+
+// Regras mostradas no site (combinar com o dono antes de publicar)
+export const POLITICA = {
+  cancelamentoHoras: 12,
+  textoCurto: 'Cancelamento grátis até 12h antes. Choveu forte? Remarcamos sem custo.',
 }
 
 // Cliente fictício usado na "Área do cliente" da demonstração
@@ -284,6 +290,41 @@ export const TORNEIOS_INICIAIS: Torneio[] = [
     ],
   },
 ]
+
+// Cardápio ilustrativo do bar (itens e preços inventados para a demonstração)
+export const CARDAPIO: { categoria: string; itens: { nome: string; descricao?: string; preco: number }[] }[] = [
+  {
+    categoria: 'Porções',
+    itens: [
+      { nome: 'Batata frita', descricao: 'Com cheddar e bacon +R$ 8', preco: 32 },
+      { nome: 'Calabresa acebolada', descricao: 'Acompanha pão francês', preco: 38 },
+      { nome: 'Isca de frango', descricao: 'Empanada, com molho da casa', preco: 42 },
+      { nome: 'Mandioca frita', preco: 28 },
+    ],
+  },
+  {
+    categoria: 'Lanches',
+    itens: [
+      { nome: 'X-Quati', descricao: 'Hambúrguer artesanal, queijo, bacon e salada', preco: 29 },
+      { nome: 'Misto quente', preco: 14 },
+      { nome: 'Açaí 500 ml', descricao: 'Com 3 acompanhamentos', preco: 22 },
+    ],
+  },
+  {
+    categoria: 'Bebidas',
+    itens: [
+      { nome: 'Água de coco', preco: 9 },
+      { nome: 'Água mineral', preco: 5 },
+      { nome: 'Isotônico', preco: 9 },
+      { nome: 'Refrigerante lata', preco: 7 },
+      { nome: 'Suco natural', descricao: 'Laranja, limão ou abacaxi com hortelã', preco: 12 },
+      { nome: 'Cerveja long neck', preco: 12 },
+      { nome: 'Balde com 6 long necks', preco: 62 },
+    ],
+  },
+]
+
+export const TIPOS_EVENTO = ['Aniversário', 'Confraternização de empresa', 'Despedida / chá', 'Torneio entre amigos', 'Outro']
 
 export const EDICOES_ANTERIORES = [
   { nome: '4º Torneio de Futevôlei', data: '06/06/2026', duplas: 42 },

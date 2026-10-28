@@ -1,16 +1,26 @@
 import { useState } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { DIAS_SEMANA, ORDEM_DIAS, fmtReais } from '../lib/agenda'
-import { useDB } from '../lib/store'
+import { useDB, type Modulos } from '../lib/store'
 import { IconeWhatsApp } from '../components/Icones'
 import { Botao, Campo, Cartao, TituloPagina, classeInput } from './ui'
+
+const MODULOS: { id: keyof Modulos; nome: string; descricao: string }[] = [
+  { id: 'aulas', nome: 'Aulas e professores', descricao: 'Grade de aulas, planos mensais e página de professores.' },
+  { id: 'torneios', nome: 'Torneios', descricao: 'Página do torneio com inscrição de duplas.' },
+  { id: 'bar', nome: 'Cardápio do bar', descricao: 'Página com porções, lanches e bebidas.' },
+  { id: 'eventos', nome: 'Eventos', descricao: 'Formulário de orçamento para festas e empresas.' },
+]
 
 export default function Config() {
   const { db, set, resetar } = useDB()
   const [precos, setPrecos] = useState(db.precos)
   const [func, setFunc] = useState(db.funcionamento)
+  const [modulos, setModulos] = useState(db.modulos)
+  const [planos, setPlanos] = useState(db.planos)
   const [resetado, setResetado] = useState(false)
-  const alterado = JSON.stringify(precos) !== JSON.stringify(db.precos) || JSON.stringify(func) !== JSON.stringify(db.funcionamento)
+  const alterado =
+    JSON.stringify([precos, func, modulos, planos]) !== JSON.stringify([db.precos, db.funcionamento, db.modulos, db.planos])
   const horas = Array.from({ length: 19 }, (_, i) => i + 5)
 
   return (
@@ -18,10 +28,53 @@ export default function Config() {
       <TituloPagina
         titulo="Configurações"
         sub="Preços e horários usados no site e na agenda."
-        acoes={<Botao onClick={() => set((db) => ({ ...db, precos, funcionamento: func }))} disabled={!alterado}>{alterado ? 'Salvar alterações' : 'Tudo salvo'}</Botao>}
+        acoes={
+          <Botao onClick={() => set((db) => ({ ...db, precos, funcionamento: func, modulos, planos }))} disabled={!alterado}>
+            {alterado ? 'Salvar alterações' : 'Tudo salvo'}
+          </Botao>
+        }
       />
 
       <div className="grid gap-6 xl:grid-cols-2">
+        <Cartao className="p-5 xl:col-span-2">
+          <h2 className="titulo text-3xl text-petroleo">Módulos do site</h2>
+          <p className="text-sm text-petroleo-noite/60">
+            Ligue só o que o cliente contratou. Agendamento de quadra está sempre ativo; o resto aparece ou some do menu do site.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {MODULOS.map(({ id, nome, descricao }) => {
+              const ativo = modulos[id]
+              return (
+                <label
+                  key={id}
+                  className={`cursor-pointer rounded-2xl border-2 p-4 transition ${ativo ? 'border-onda bg-onda-claro/50' : 'border-petroleo/10 opacity-70'}`}
+                >
+                  <span className="flex items-center justify-between gap-2">
+                    <b>{nome}</b>
+                    <input type="checkbox" checked={ativo} onChange={() => setModulos({ ...modulos, [id]: !ativo })} className="accent-petroleo size-5" />
+                  </span>
+                  <span className="block mt-1 text-xs text-petroleo-noite/60">{descricao}</span>
+                </label>
+              )
+            })}
+          </div>
+        </Cartao>
+
+        <Cartao className="p-5">
+          <h2 className="titulo text-3xl text-petroleo">Planos de aula</h2>
+          <div className="mt-3 space-y-3">
+            {planos.map((pl, i) => (
+              <div key={pl.id} className="grid grid-cols-[1fr_110px] gap-3">
+                <Campo rotulo="Plano">
+                  <input value={pl.nome} onChange={(e) => setPlanos(planos.map((x, j) => (j === i ? { ...x, nome: e.target.value } : x)))} className={classeInput} />
+                </Campo>
+                <Campo rotulo="R$ / mês">
+                  <input type="number" min={0} value={pl.preco} onChange={(e) => setPlanos(planos.map((x, j) => (j === i ? { ...x, preco: Number(e.target.value) } : x)))} className={classeInput} />
+                </Campo>
+              </div>
+            ))}
+          </div>
+        </Cartao>
         <Cartao className="p-5">
           <h2 className="titulo text-3xl text-petroleo">Preço da hora</h2>
           <div className="mt-3 grid grid-cols-2 gap-3">

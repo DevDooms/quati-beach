@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { CalendarDays, CalendarPlus, CircleCheck, Clock, GraduationCap, History, LogOut, MapPin, Trophy, X } from 'lucide-react'
-import { CLIENTE_DEMO, modalidadePorId, quadraPorId } from '../data/mock'
+import { CLIENTE_DEMO, POLITICA, modalidadePorId, quadraPorId } from '../data/mock'
 import {
   DIAS_SEMANA,
   chaveData,
@@ -99,7 +99,8 @@ export default function MinhaConta() {
                           <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{quadraPorId(r.quadraId).nome}</span>
                         </p>
                         <p className={`mt-1 text-xs font-bold ${r.pago ? 'text-emerald-700' : 'text-laranja'}`}>
-                          {r.pago ? 'Pago' : `A pagar no local · ${fmtReais(precoDoHorario(db, d, r.hora))}`}
+                          {r.pago ? `Pago${r.formaPagamento ? ` · ${r.formaPagamento}` : ''}` : `A pagar no local · ${fmtReais(precoDoHorario(db, d, r.hora))}`}
+                          {r.fixoId && <span className="ml-2 rounded-full bg-sol/30 px-2 py-0.5 text-petroleo-noite">Horário fixo</span>}
                         </p>
                       </div>
                     </div>
@@ -112,12 +113,18 @@ export default function MinhaConta() {
                       >
                         <IconeWhatsApp className="size-4 text-[#128c4a]" /> Remarcar
                       </a>
-                      <button
-                        onClick={() => set((db) => ({ ...db, reservas: db.reservas.filter((x) => x.id !== r.id) }))}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-full border border-red-200 text-red-600 py-2 text-sm font-semibold hover:bg-red-50"
-                      >
-                        <X className="size-4" /> Cancelar
-                      </button>
+                      {podeCancelar(r.data, r.hora) ? (
+                        <button
+                          onClick={() => set((db) => ({ ...db, reservas: db.reservas.filter((x) => x.id !== r.id) }))}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-red-200 text-red-600 py-2 text-sm font-semibold hover:bg-red-50"
+                        >
+                          <X className="size-4" /> Cancelar
+                        </button>
+                      ) : (
+                        <span className="inline-flex items-center justify-center rounded-full bg-petroleo/5 px-2 text-center text-[11px] leading-tight text-petroleo-noite/60">
+                          Menos de {POLITICA.cancelamentoHoras}h: fale no WhatsApp
+                        </span>
+                      )}
                     </div>
                   </article>
                 )
@@ -202,6 +209,13 @@ export default function MinhaConta() {
       </div>
     </>
   )
+}
+
+// Política: cancelamento pelo site só até X horas antes do jogo
+function podeCancelar(data: string, hora: number) {
+  const inicio = dataDeChave(data)
+  inicio.setHours(hora)
+  return inicio.getTime() - Date.now() >= POLITICA.cancelamentoHoras * 3600_000
 }
 
 function Titulo({ icone, children }: { icone: ReactNode; children: ReactNode }) {

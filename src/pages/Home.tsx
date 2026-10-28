@@ -1,6 +1,6 @@
-import quadraAerea from '../assets/quadra-aerea.png'
+import quadraAerea from '../assets/quadra-aerea.jpg'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, CalendarDays, Clock, GraduationCap, MapPin, Phone, Star, Trophy, Users, Zap } from 'lucide-react'
+import { ArrowRight, CalendarDays, Clock, GraduationCap, MapPin, PartyPopper, Phone, Star, Trophy, Users, UtensilsCrossed, Zap } from 'lucide-react'
 import { AVALIACOES, MODALIDADES, NEGOCIO, QUADRAS, quadraPorId } from '../data/mock'
 import { DIAS_SEMANA, chaveData, dataDeChave, fmtDataCurta, fmtDiaSemana, fmtHora, fmtReais, linkWhatsApp, proximosLivres } from '../lib/agenda'
 import { useDB } from '../lib/store'
@@ -38,9 +38,11 @@ export default function Home() {
               <Link to="/agendar" className="inline-flex items-center gap-2 rounded-full bg-sol text-petroleo-noite px-6 py-3.5 font-extrabold hover:brightness-105 shadow-lg shadow-sol/20">
                 <CalendarDays className="size-5" /> Agendar quadra
               </Link>
-              <Link to="/aulas" className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 px-6 py-3.5 font-bold hover:bg-white/10">
-                <GraduationCap className="size-5" /> Ver aulas
-              </Link>
+              {db.modulos.aulas && (
+                <Link to="/aulas" className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 px-6 py-3.5 font-bold hover:bg-white/10">
+                  <GraduationCap className="size-5" /> Ver aulas
+                </Link>
+              )}
             </div>
           </div>
 
@@ -84,7 +86,7 @@ export default function Home() {
             [String(QUADRAS.length), 'quadras de areia'],
             [String(db.professores.length), 'professores'],
             [String(db.aulas.length), 'aulas por semana'],
-            [NEGOCIO.seguidores, 'seguidores'],
+            [`${NEGOCIO.nota.toFixed(1).replace('.', ',')} ★`, 'no Google'],
           ].map(([n, t]) => (
             <div key={t} className="rounded-2xl bg-white border border-petroleo/10 p-4 text-center">
               <p className="titulo text-4xl text-petroleo">{n}</p>
@@ -104,7 +106,7 @@ export default function Home() {
             return (
               <Link
                 key={m.id}
-                to={`/aulas?modalidade=${m.id}`}
+                to={db.modulos.aulas ? `/aulas?modalidade=${m.id}` : '/agendar'}
                 className="group relative overflow-hidden rounded-3xl bg-white border border-petroleo/10 p-6 hover:-translate-y-1 hover:shadow-xl transition"
               >
                 <span className={`absolute -right-10 -top-10 size-32 rounded-full ${m.cor} opacity-20 group-hover:scale-125 transition`} />
@@ -112,7 +114,7 @@ export default function Home() {
                 <h3 className="titulo text-4xl text-petroleo mt-3">{m.nome}</h3>
                 <p className="mt-2 text-sm text-petroleo-noite/70">{m.descricao}</p>
                 <p className="mt-4 text-sm font-bold text-onda inline-flex items-center gap-1">
-                  {qtd} turmas na semana <ArrowRight className="size-4 group-hover:translate-x-1 transition" />
+                  {db.modulos.aulas ? `${qtd} turmas na semana` : 'Reservar quadra'} <ArrowRight className="size-4 group-hover:translate-x-1 transition" />
                 </p>
               </Link>
             )
@@ -145,8 +147,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* BAR E EVENTOS */}
+      {(db.modulos.bar || db.modulos.eventos) && (
+        <section className="mx-auto max-w-6xl px-4 pt-16 grid gap-4 md:grid-cols-2">
+          {db.modulos.bar && (
+            <Link to="/bar" className="group rounded-3xl bg-laranja text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
+              <UtensilsCrossed className="absolute -right-4 -bottom-4 size-36 text-white/15" />
+              <p className="text-xs font-bold uppercase tracking-widest text-white/80">Bar do Quati</p>
+              <h2 className="titulo text-5xl mt-1">Porções e bebida gelada</h2>
+              <p className="mt-2 text-white/90 max-w-sm">O pós-jogo favorito da galera. Veja o cardápio e encomende para o fim do seu horário.</p>
+              <span className="mt-4 inline-flex items-center gap-1 font-bold">Ver cardápio <ArrowRight className="size-4 group-hover:translate-x-1 transition" /></span>
+            </Link>
+          )}
+          {db.modulos.eventos && (
+            <Link to="/eventos" className="group rounded-3xl bg-petroleo text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
+              <PartyPopper className="absolute -right-4 -bottom-4 size-36 text-white/10" />
+              <p className="text-xs font-bold uppercase tracking-widest text-sol">Eventos</p>
+              <h2 className="titulo text-5xl mt-1">Aniversário na areia?</h2>
+              <p className="mt-2 text-white/85 max-w-sm">Festas, confraternizações de empresa e torneios entre amigos com quadra exclusiva.</p>
+              <span className="mt-4 inline-flex items-center gap-1 font-bold text-sol">Pedir orçamento <ArrowRight className="size-4 group-hover:translate-x-1 transition" /></span>
+            </Link>
+          )}
+        </section>
+      )}
+
       {/* TORNEIO */}
-      {torneio && (
+      {torneio && db.modulos.torneios && (
         <section className="mx-auto max-w-6xl px-4 py-16">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-onda to-petroleo text-white p-8 sm:p-12 grid gap-6 md:grid-cols-[1fr_auto] items-center">
             <Trophy className="absolute -right-6 -bottom-6 size-48 text-white/10" />
@@ -189,6 +215,16 @@ export default function Home() {
               </figcaption>
             </figure>
           ))}
+        </div>
+        <div className="mt-6 text-center">
+          <a
+            href={NEGOCIO.googleAvaliacoes}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-petroleo/20 px-5 py-2.5 font-bold text-petroleo hover:border-petroleo"
+          >
+            Ver todas as {NEGOCIO.avaliacoes} avaliações no Google <ArrowRight className="size-4" />
+          </a>
         </div>
       </section>
 

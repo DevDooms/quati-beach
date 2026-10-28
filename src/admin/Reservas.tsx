@@ -5,7 +5,7 @@ import { chaveData, dataDeChave, fmtDataCurta, fmtDiaSemana, fmtHora, fmtReais, 
 import { useDB, type Reserva } from '../lib/store'
 import { IconeWhatsApp } from '../components/Icones'
 import { Chip } from '../components/Pecas'
-import { Botao, Cartao, JanelaNovaReserva, JanelaReserva, SeloOrigem, SeloPago, TituloPagina, classeInput, precoReserva } from './ui'
+import { Botao, Cartao, JanelaNovaReserva, JanelaReserva, SeloOrigem, SeloPago, TituloPagina, classeInput, precoReserva, useOcultarValores } from './ui'
 
 const PERIODOS = { proximas: 'Próximas', hoje: 'Hoje', passadas: 'Passadas', todas: 'Todas' } as const
 type Periodo = keyof typeof PERIODOS
@@ -19,6 +19,7 @@ export default function Reservas() {
   const [limite, setLimite] = useState(40)
   const [aberta, setAberta] = useState<Reserva | null>(null)
   const [nova, setNova] = useState(false)
+  const { oculto } = useOcultarValores()
 
   const hoje = chaveData(new Date())
   const termo = busca.trim().toLowerCase()
@@ -46,7 +47,7 @@ export default function Reservas() {
     <>
       <TituloPagina
         titulo="Reservas"
-        sub={`${lista.length} reservas · ${fmtReais(total)} no total · ${fmtReais(pendente)} pendente`}
+        sub={oculto ? `${lista.length} reservas` : `${lista.length} reservas · ${fmtReais(total)} no total · ${fmtReais(pendente)} pendente`}
         acoes={<Botao onClick={() => setNova(true)}><Plus className="size-4" /> Nova reserva</Botao>}
       />
 

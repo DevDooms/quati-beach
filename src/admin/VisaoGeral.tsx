@@ -2,18 +2,21 @@ import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { addDays, formatDistanceToNow, startOfWeek } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowRight, CalendarCheck, CircleDollarSign, Gauge, Hourglass, Sparkles } from 'lucide-react'
+import { ArrowRight, Bell, CalendarCheck, CircleDollarSign, Eye, EyeOff, Gauge, Hourglass, PartyPopper, Sparkles } from 'lucide-react'
 import { QUADRAS, modalidadePorId, quadraPorId } from '../data/mock'
 import { chaveData, dataDeChave, fmtDataCurta, fmtDiaSemana, fmtFaixa, fmtHora, fmtReais, horasDoDia, montarGrade, proximosDias } from '../lib/agenda'
 import { acharProfessor, useDB, type Origem, type Reserva } from '../lib/store'
 import { IconeWhatsApp } from '../components/Icones'
-import { Cartao, JanelaReserva, SeloOrigem, SeloPago, TituloPagina, precoReserva } from './ui'
+import { Botao, Cartao, JanelaReserva, SeloOrigem, SeloPago, TituloPagina, precoReserva, useOcultarValores } from './ui'
 
 export default function VisaoGeral() {
   const { db } = useDB()
   const [aberta, setAberta] = useState<Reserva | null>(null)
+  const { oculto, alternar } = useOcultarValores()
   const agora = new Date()
   const hoje = chaveData(agora)
+  const eventosNovos = db.eventos.filter((e) => !e.respondido).length
+  const filaEspera = db.espera.filter((e) => e.data >= hoje).length
 
   const reservasHoje = db.reservas.filter((r) => r.data === hoje)
   const aulasHoje = db.aulas.filter((a) => a.diaSemana === agora.getDay())
@@ -43,13 +46,40 @@ export default function VisaoGeral() {
 
   return (
     <>
-      <TituloPagina titulo="Visão geral" sub={<span className="first-letter:uppercase inline-block">{agora.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>} />
+      <TituloPagina
+        titulo="Visão geral"
+        sub={<span className="first-letter:uppercase inline-block">{agora.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>}
+        acoes={
+          <Botao tipo="secundario" onClick={alternar}>
+            {oculto ? <Eye className="size-4" /> : <EyeOff className="size-4" />} {oculto ? 'Mostrar valores' : 'Ocultar valores'}
+          </Botao>
+        }
+      />
+
+      {(eventosNovos > 0 || filaEspera > 0) && (
+        <div className="mb-4 grid gap-2 sm:grid-cols-2">
+          {eventosNovos > 0 && (
+            <Link to="/admin/solicitacoes" className="flex items-center gap-3 rounded-2xl bg-laranja/10 border border-laranja/30 px-4 py-3 text-sm hover:bg-laranja/15">
+              <PartyPopper className="size-5 text-laranja" />
+              <span className="flex-1"><b>{eventosNovos} pedido{eventosNovos > 1 ? 's' : ''} de evento</b> esperando resposta</span>
+              <ArrowRight className="size-4" />
+            </Link>
+          )}
+          {filaEspera > 0 && (
+            <Link to="/admin/solicitacoes?aba=espera" className="flex items-center gap-3 rounded-2xl bg-onda-claro border border-onda/30 px-4 py-3 text-sm hover:bg-onda-claro/70">
+              <Bell className="size-5 text-onda" />
+              <span className="flex-1"><b>{filaEspera} pessoa{filaEspera > 1 ? 's' : ''}</b> na lista de espera</span>
+              <ArrowRight className="size-4" />
+            </Link>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
         <Kpi icone={<CalendarCheck />} rotulo="Reservas hoje" valor={String(reservasHoje.length)} detalhe={`+ ${aulasHoje.length} aulas`} />
         <Kpi icone={<Gauge />} rotulo="Ocupação hoje" valor={`${ocupacao}%`} detalhe={`${reservasHoje.length + aulasHoje.length} de ${capacidade} horários`} barra={ocupacao} />
-        <Kpi icone={<CircleDollarSign />} rotulo="Faturamento da semana" valor={fmtReais(faturamento)} detalhe={`${daSemana.length} reservas`} />
-        <Kpi icone={<Hourglass />} rotulo="A receber" valor={fmtReais(aReceber)} detalhe={`${pendentes.length} pendentes`} alerta />
+        <Kpi icone={<CircleDollarSign />} rotulo="Faturamento da semana" valor={oculto ? 'R$ •••' : fmtReais(faturamento)} detalhe={`${daSemana.length} reservas`} />
+        <Kpi icone={<Hourglass />} rotulo="A receber" valor={oculto ? 'R$ •••' : fmtReais(aReceber)} detalhe={`${pendentes.length} pendentes`} alerta />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.4fr_1fr]">

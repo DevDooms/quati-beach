@@ -1,15 +1,20 @@
-import quadraAerea from '../assets/quadra-aerea.png'
+import quadraAerea from '../assets/quadra-aerea.jpg'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Lock, Phone } from 'lucide-react'
+import { Phone } from 'lucide-react'
 import { CLIENTE_DEMO } from '../data/mock'
 import { useLoginDemo } from '../lib/store'
 import { IconeWhatsApp, Logo } from '../components/Icones'
-import { classeCampo } from '../components/ModalReserva'
+import { classeCampo, mascaraTelefone } from '../components/ModalReserva'
 
-// Tela de login só visual: qualquer botão leva para a área do cliente.
+const CODIGO_DEMO = '482915'
+
+// Login só visual, sem senha: telefone → código "recebido" no WhatsApp → área do cliente.
 export default function Entrar() {
   const { entrar } = useLoginDemo('cliente')
   const navegar = useNavigate()
+  const [etapa, setEtapa] = useState<'telefone' | 'codigo'>('telefone')
+  const [telefone, setTelefone] = useState(CLIENTE_DEMO.telefone)
   const ir = () => {
     entrar()
     navegar('/minha-conta')
@@ -33,54 +38,65 @@ export default function Entrar() {
           <p className="text-onda font-semibold text-sm uppercase tracking-[0.2em]">Área do cliente</p>
           <h1 className="titulo text-5xl text-petroleo mt-1">Entrar</h1>
 
-          <form
-            className="mt-6 space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault()
-              ir()
-            }}
-          >
-            <label className="block">
-              <span className="text-sm font-semibold">WhatsApp</span>
-              <div className="relative">
-                <Phone className="size-4 absolute left-4 top-1/2 -translate-y-1/2 mt-0.5 text-petroleo-noite/40" />
-                <input defaultValue={CLIENTE_DEMO.telefone} inputMode="tel" className={`${classeCampo} pl-10`} />
-              </div>
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold">Senha</span>
-              <div className="relative">
-                <Lock className="size-4 absolute left-4 top-1/2 -translate-y-1/2 mt-0.5 text-petroleo-noite/40" />
-                <input type="password" defaultValue="demonstracao" className={`${classeCampo} pl-10`} />
-              </div>
-            </label>
-            <div className="flex justify-between text-sm">
-              <label className="inline-flex items-center gap-2">
-                <input type="checkbox" defaultChecked className="accent-petroleo" /> Lembrar de mim
+          {etapa === 'telefone' ? (
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault()
+                setEtapa('codigo')
+              }}
+            >
+              <p className="text-sm text-petroleo-noite/70">Sem senha para lembrar: a gente manda um código no seu WhatsApp.</p>
+              <label className="block">
+                <span className="text-sm font-semibold">Seu WhatsApp</span>
+                <div className="relative">
+                  <Phone className="size-4 absolute left-4 top-1/2 -translate-y-1/2 mt-0.5 text-petroleo-noite/40" />
+                  <input value={telefone} onChange={(e) => setTelefone(mascaraTelefone(e.target.value))} inputMode="tel" className={`${classeCampo} pl-10`} />
+                </div>
               </label>
-              <button type="button" onClick={ir} className="font-semibold text-onda">Esqueci a senha</button>
-            </div>
-            <button type="submit" className="w-full rounded-full bg-sol text-petroleo-noite py-3.5 font-extrabold hover:brightness-105">
-              Entrar
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="flex items-center justify-center gap-2 w-full rounded-full bg-[#25d366] text-white py-3.5 font-extrabold hover:brightness-105"
+              >
+                <IconeWhatsApp /> Receber código no WhatsApp
+              </button>
+              <p className="text-center text-xs text-petroleo-noite/60">Primeira vez aqui? A conta é criada automaticamente.</p>
+            </form>
+          ) : (
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault()
+                ir()
+              }}
+            >
+              <p className="text-sm text-petroleo-noite/70">
+                Enviamos um código de 6 dígitos para <b>{telefone}</b>.
+              </p>
+              <div className="flex justify-between gap-2" aria-label="Código de verificação">
+                {CODIGO_DEMO.split('').map((n, i) => (
+                  <input
+                    key={i}
+                    defaultValue={n}
+                    maxLength={1}
+                    inputMode="numeric"
+                    aria-label={`Dígito ${i + 1}`}
+                    className="w-full aspect-square max-w-14 rounded-xl border-2 border-petroleo/20 text-center titulo text-3xl text-petroleo outline-none focus:border-onda"
+                  />
+                ))}
+              </div>
+              <button type="submit" className="w-full rounded-full bg-sol text-petroleo-noite py-3.5 font-extrabold hover:brightness-105">
+                Entrar
+              </button>
+              <div className="flex justify-between text-sm">
+                <button type="button" onClick={() => setEtapa('telefone')} className="font-semibold text-petroleo-noite/60">Trocar número</button>
+                <button type="button" className="font-semibold text-onda">Reenviar código</button>
+              </div>
+            </form>
+          )}
 
-          <div className="my-5 flex items-center gap-3 text-xs text-petroleo-noite/50">
-            <span className="h-px flex-1 bg-petroleo/15" /> ou <span className="h-px flex-1 bg-petroleo/15" />
-          </div>
-          <button
-            onClick={ir}
-            className="flex items-center justify-center gap-2 w-full rounded-full border-2 border-[#25d366] text-[#128c4a] py-3 font-bold hover:bg-[#25d366]/10"
-          >
-            <IconeWhatsApp /> Receber código no WhatsApp
-          </button>
-
-          <p className="mt-6 text-center text-sm text-petroleo-noite/70">
-            Primeira vez aqui?{' '}
-            <button onClick={ir} className="font-bold text-petroleo underline">Criar conta</button>
-          </p>
           <p className="mt-6 rounded-xl bg-areia-claro p-3 text-center text-xs text-petroleo-noite/60">
-            Demonstração: não é preciso preencher nada, é só tocar em <b>Entrar</b>. <Link to="/demo" className="underline">Trocar de visão</Link>
+            Demonstração: o código já vem preenchido, é só tocar nos botões. <Link to="/demo" className="underline">Trocar de visão</Link>
           </p>
         </div>
       </div>

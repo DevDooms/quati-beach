@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { LayoutGrid, List, X } from 'lucide-react'
 import { MODALIDADES, NIVEIS, modalidadePorId, quadraPorId } from '../data/mock'
-import { DIAS_CURTOS, DIAS_SEMANA, ORDEM_DIAS, fmtDataCurta, fmtDataLonga, fmtFaixa, fmtHora, proximaDataDaAula } from '../lib/agenda'
+import { DIAS_CURTOS, DIAS_SEMANA, ORDEM_DIAS, fmtDataCurta, fmtDataLonga, fmtFaixa, fmtHora, fmtReais, linkWhatsApp, proximaDataDaAula } from '../lib/agenda'
+import { IconeWhatsApp } from '../components/Icones'
 import { acharProfessor, useDB } from '../lib/store'
 import ModalReserva from '../components/ModalReserva'
 import { CabecalhoPagina, CartaoAula, Chip, SeloModalidade } from '../components/Pecas'
@@ -130,6 +131,44 @@ export default function Aulas() {
             {horasSemana.length === 0 && <p className="p-8 text-center text-petroleo-noite/60">Nenhuma aula com esses filtros.</p>}
           </div>
         )}
+
+        {/* Planos */}
+        <section className="mt-14">
+          <p className="text-onda font-semibold text-sm uppercase tracking-[0.2em]">Gostou da aula experimental?</p>
+          <h2 className="titulo text-5xl text-petroleo mt-1">Planos mensais</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {db.planos.map((pl, i) => {
+              const destaque = i === 1
+              return (
+                <div
+                  key={pl.id}
+                  className={`relative rounded-3xl p-6 flex flex-col ${destaque ? 'bg-petroleo text-white shadow-xl shadow-petroleo/30' : 'bg-white border border-petroleo/10'}`}
+                >
+                  {destaque && (
+                    <span className="absolute -top-3 left-6 rounded-full bg-sol text-petroleo-noite px-3 py-1 text-xs font-extrabold uppercase">Mais escolhido</span>
+                  )}
+                  <h3 className="titulo text-3xl">{pl.nome}</h3>
+                  <p className={`text-sm ${destaque ? 'text-white/75' : 'text-petroleo-noite/60'}`}>{pl.descricao}</p>
+                  <p className="mt-4">
+                    <span className={`titulo text-5xl ${destaque ? 'text-sol' : 'text-petroleo'}`}>{fmtReais(pl.preco)}</span>
+                    <span className={`text-sm ${destaque ? 'text-white/70' : 'text-petroleo-noite/60'}`}> /mês</span>
+                  </p>
+                  <a
+                    href={linkWhatsApp(`Olá! Quero saber mais sobre o plano de aulas "${pl.nome}" (${fmtReais(pl.preco)}/mês).`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`mt-5 inline-flex items-center justify-center gap-2 rounded-full py-3 font-bold ${
+                      destaque ? 'bg-sol text-petroleo-noite' : 'bg-petroleo text-white'
+                    }`}
+                  >
+                    <IconeWhatsApp className="size-4" /> Quero esse plano
+                  </a>
+                </div>
+              )
+            })}
+          </div>
+          <p className="mt-3 text-xs text-petroleo-noite/50">Vale para qualquer modalidade. Valores ilustrativos.</p>
+        </section>
       </div>
 
       {aula && dataAula && (
@@ -150,7 +189,7 @@ export default function Aulas() {
           mensagemWhatsApp={(nome) =>
             `Olá! ${nome ? `Sou ${nome} e ` : ''}quero fazer uma aula experimental de ${modalidadePorId(aula.modalidade).nome} (${aula.nivel}) com o prof. ${acharProfessor(db, aula.professorId).nome.split(' ')[0]} no dia ${fmtDataCurta(dataAula)} às ${fmtHora(aula.hora)}.`
           }
-          onConfirmar={(nome, telefone) => {
+          onConfirmar={({ nome, telefone }) => {
             if (lotada) return
             set((db) => ({ ...db, aulas: db.aulas.map((a) => (a.id === aula.id ? { ...a, alunos: [...a.alunos, { nome, telefone }] } : a)) }))
           }}

@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { CalendarRange, ExternalLink, GraduationCap, LayoutDashboard, ListChecks, LogOut, Settings, Trophy, Users } from 'lucide-react'
-import { useLoginDemo } from '../lib/store'
+import { CalendarRange, ExternalLink, GraduationCap, Inbox, LayoutDashboard, ListChecks, LogOut, Repeat, Settings, Trophy, Users } from 'lucide-react'
+import { chaveData } from '../lib/agenda'
+import { useDB, useLoginDemo } from '../lib/store'
 import { Logo } from '../components/Icones'
 import AdminLogin from './Login'
 
@@ -9,6 +10,8 @@ const NAV = [
   { to: '/admin', label: 'Visão geral', icone: LayoutDashboard, end: true },
   { to: '/admin/agenda', label: 'Agenda', icone: CalendarRange },
   { to: '/admin/reservas', label: 'Reservas', icone: ListChecks },
+  { to: '/admin/mensalistas', label: 'Mensalistas', icone: Repeat },
+  { to: '/admin/solicitacoes', label: 'Solicitações', icone: Inbox },
   { to: '/admin/aulas', label: 'Grade de aulas', icone: GraduationCap },
   { to: '/admin/torneios', label: 'Torneios', icone: Trophy },
   { to: '/admin/professores', label: 'Professores', icone: Users },
@@ -17,6 +20,9 @@ const NAV = [
 
 export default function AdminLayout() {
   const { logado, sair } = useLoginDemo('admin')
+  const { db } = useDB()
+  // aviso de pendências ao lado de "Solicitações"
+  const pendentes = db.eventos.filter((e) => !e.respondido).length + db.espera.filter((e) => e.data >= chaveData(new Date())).length
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo({ top: 0 })
@@ -53,6 +59,9 @@ export default function AdminLayout() {
               }
             >
               <Icone className="size-5" /> {label}
+              {to === '/admin/solicitacoes' && pendentes > 0 && (
+                <span className="ml-auto rounded-full bg-laranja text-white text-[11px] font-extrabold px-1.5 min-w-5 text-center">{pendentes}</span>
+              )}
             </NavLink>
           ))}
         </nav>

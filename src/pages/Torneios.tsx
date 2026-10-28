@@ -114,7 +114,7 @@ export default function Torneios() {
           textoConfirmar="Reservar vaga da dupla"
           textoSucesso="Vaga reservada!"
           mensagemWhatsApp={(nome) => `Olá! ${nome ? `Sou ${nome} e ` : ''}quero inscrever minha dupla no ${t.nome}, categoria ${categoria}.`}
-          onConfirmar={(nome, telefone) =>
+          onConfirmar={({ nome, telefone }) =>
             set((db) => ({
               ...db,
               torneios: db.torneios.map((x) =>

@@ -3,15 +3,18 @@ import { Link, NavLink, Outlet, useLocation, useNavigationType } from 'react-rou
 import { CalendarDays, CircleUser, MapPin, Menu, Phone, X } from 'lucide-react'
 import { NEGOCIO } from '../data/mock'
 import { linkWhatsApp, statusFuncionamento } from '../lib/agenda'
-import { useDB, useLoginDemo } from '../lib/store'
+import { useDB, useLoginDemo, type Modulos } from '../lib/store'
 import { IconeInstagram, IconeWhatsApp, Logo } from './Icones'
 
-const NAV = [
+// itens do menu; os de módulos desligados no painel somem do site
+const TODOS_NAV: { to: string; label: string; modulo?: keyof Modulos }[] = [
   { to: '/', label: 'Início' },
   { to: '/agendar', label: 'Agendar quadra' },
-  { to: '/aulas', label: 'Aulas' },
-  { to: '/professores', label: 'Professores' },
-  { to: '/torneios', label: 'Torneios' },
+  { to: '/aulas', label: 'Aulas', modulo: 'aulas' },
+  { to: '/professores', label: 'Professores', modulo: 'aulas' },
+  { to: '/torneios', label: 'Torneios', modulo: 'torneios' },
+  { to: '/bar', label: 'Bar', modulo: 'bar' },
+  { to: '/eventos', label: 'Eventos', modulo: 'eventos' },
 ]
 
 export default function Layout() {
@@ -19,6 +22,7 @@ export default function Layout() {
   const tipoNavegacao = useNavigationType()
   const [menu, setMenu] = useState(false)
   const { db } = useDB()
+  const NAV = TODOS_NAV.filter((n) => !n.modulo || db.modulos[n.modulo])
   const { logado } = useLoginDemo('cliente')
   const status = statusFuncionamento(db)
   const conta = logado ? { to: '/minha-conta', label: 'Minha conta' } : { to: '/entrar', label: 'Entrar' }
@@ -57,7 +61,7 @@ export default function Layout() {
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5">
             {NAV.slice(1).map((n) => (
               <NavLink
                 key={n.to}
@@ -74,7 +78,7 @@ export default function Layout() {
           <div className="flex items-center gap-2">
             <Link
               to={conta.to}
-              className="hidden md:inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-white/85 hover:text-white"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-white/85 hover:text-white"
             >
               <CircleUser className="size-5" /> {conta.label}
             </Link>
@@ -85,7 +89,7 @@ export default function Layout() {
               <CalendarDays className="size-4" /> Reservar
             </Link>
             <button
-              className="md:hidden p-2 -mr-2"
+              className="lg:hidden p-2 -mr-2"
               onClick={() => setMenu((m) => !m)}
               aria-label={menu ? 'Fechar menu' : 'Abrir menu'}
             >
@@ -95,7 +99,7 @@ export default function Layout() {
         </div>
 
         {menu && (
-          <nav className="md:hidden border-t border-white/10 px-4 pb-4 pt-2 anim-sobe">
+          <nav className="lg:hidden border-t border-white/10 px-4 pb-4 pt-2 anim-sobe">
             {[...NAV, conta].map((n) => (
               <NavLink
                 key={n.to}
@@ -138,6 +142,7 @@ export default function Layout() {
             {NAV.map((n) => (
               <Link key={n.to} to={n.to} className="block hover:text-white">{n.label}</Link>
             ))}
+            <Link to="/privacidade" className="block hover:text-white">Política de privacidade</Link>
           </div>
         </div>
         <div className="border-t border-white/10 py-4 px-4 text-center text-xs text-white/50">

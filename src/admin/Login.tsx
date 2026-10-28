@@ -1,4 +1,4 @@
-import quadraAerea from '../assets/quadra-aerea.png'
+import quadraAerea from '../assets/quadra-aerea.jpg'
 import { Link } from 'react-router-dom'
 import { Lock, Mail } from 'lucide-react'
 import { useLoginDemo } from '../lib/store'

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { addDays } from 'date-fns'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
-import { QUADRAS, modalidadePorId, type Aula } from '../data/mock'
+import { ChevronLeft, ChevronRight, CloudRain, Plus } from 'lucide-react'
+import { QUADRAS, modalidadePorId, quadraPorId, type Aula } from '../data/mock'
 import { chaveData, dataDeChave, fmtDataLonga, fmtHora, fmtReais, linkWhatsApp, montarGrade, whatsDoTelefone } from '../lib/agenda'
 import { acharProfessor, useDB, type Reserva } from '../lib/store'
 import { IconeWhatsApp } from '../components/Icones'
 import { Janela, SeloModalidade } from '../components/Pecas'
-import { Botao, Cartao, JanelaNovaReserva, JanelaReserva, SeloOrigem, SeloPago, TituloPagina, classeInput, precoReserva } from './ui'
+import { Botao, Cartao, Confirmar, JanelaNovaReserva, JanelaReserva, SeloOrigem, SeloPago, TituloPagina, classeInput, precoReserva, useOcultarValores } from './ui'
 
 export default function Agenda() {
   const { db } = useDB()
@@ -15,6 +15,8 @@ export default function Agenda() {
   const [reserva, setReserva] = useState<Reserva | null>(null)
   const [aula, setAula] = useState<Aula | null>(null)
   const [nova, setNova] = useState<{ hora?: number; quadraId?: string } | null>(null)
+  const [chuva, setChuva] = useState(false)
+  const { oculto } = useOcultarValores()
 
   const d = dataDeChave(data)
   const grade = montarGrade(db, d, new Date(0))
@@ -27,8 +29,13 @@ export default function Agenda() {
     <>
       <TituloPagina
         titulo="Agenda"
-        sub={`${doDia.length} reservas · ${fmtReais(totalDia)} no dia`}
-        acoes={<Botao onClick={() => setNova({})}><Plus className="size-4" /> Nova reserva</Botao>}
+        sub={`${doDia.length} reservas${oculto ? '' : ` · ${fmtReais(totalDia)} no dia`}`}
+        acoes={
+          <>
+            <Botao tipo="secundario" onClick={() => setChuva(true)}><CloudRain className="size-4" /> Aviso de chuva</Botao>
+            <Botao onClick={() => setNova({})}><Plus className="size-4" /> Nova reserva</Botao>
+          </>
+        }
       />
 
       <Cartao className="p-3 flex flex-wrap items-center gap-2 mb-4">
@@ -63,7 +70,17 @@ export default function Agenda() {
                       </span>
                       <span className="flex items-center justify-between gap-2 mt-0.5">
                         <span className="text-xs text-petroleo-noite/60 truncate">{s.reserva.telefone}</span>
-                        <SeloOrigem origem={s.reserva.origem} />
+                        <span className="flex gap-1">
+                          {(() => {
+                            const fila = db.espera.filter((e) => e.data === data && e.hora === s.hora && e.quadraId === s.quadraId).length
+                            return fila > 0 && <span className="rounded-full bg-laranja/15 text-laranja px-1.5 py-0.5 text-[10px] font-extrabold" title="Na lista de espera">+{fila} fila</span>
+                          })()}
+                          {s.reserva.fixoId ? (
+                            <span className="rounded-full bg-sol/40 px-2 py-0.5 text-[11px] font-bold">Fixo</span>
+                          ) : (
+                            <SeloOrigem origem={s.reserva.origem} />
+                          )}
+                        </span>
                       </span>
                     </button>
                   ) : s.aula ? (
@@ -94,7 +111,68 @@ export default function Agenda() {
       {reserva && <JanelaReserva reserva={reserva} onFechar={() => setReserva(null)} />}
       {nova && <JanelaNovaReserva inicial={{ data, ...nova }} onFechar={() => setNova(null)} />}
       {aula && <JanelaAula aula={aula} onFechar={() => setAula(null)} />}
+      {chuva && <JanelaChuva data={data} onFechar={() => setChuva(false)} />}
     </>
+  )
+}
+
+// Choveu: avisa cada cliente do dia pelo WhatsApp e libera as reservas sem custo
+function JanelaChuva({ data, onFechar }: { data: string; onFechar: () => void }) {
+  const { db, set } = useDB()
+  const d = dataDeChave(data)
+  const agora = new Date()
+  const afetadas = db.reservas
+    .filter((r) => r.data === data && (data !== chaveData(agora) || r.hora >= agora.getHours()))
+    .sort((a, b) => a.hora - b.hora)
+  const [feito, setFeito] = useState(false)
+
+  return (
+    <Janela onFechar={onFechar} titulo="Aviso de chuva" etiqueta={<span className="text-xs font-bold uppercase tracking-widest text-onda first-letter:uppercase">{fmtDataLonga(d)}</span>} largura="sm:max-w-lg">
+      {feito ? (
+        <p className="rounded-xl bg-emerald-50 text-emerald-800 p-4 text-sm font-semibold">Reservas canceladas sem custo. Os horários voltaram a ficar livres no site.</p>
+      ) : afetadas.length === 0 ? (
+        <p className="text-sm text-petroleo-noite/60">Nenhuma reserva restante neste dia.</p>
+      ) : (
+        <>
+          <p className="text-sm text-petroleo-noite/70">
+            Mande a mensagem para cada cliente oferecendo remarcar sem custo. Com o bot de WhatsApp, isso vai sair para todos de uma vez.
+          </p>
+          <ul className="mt-3 divide-y divide-petroleo/10 rounded-2xl border border-petroleo/10 max-h-72 overflow-y-auto">
+            {afetadas.map((r) => (
+              <li key={r.id} className="flex items-center gap-3 px-3 py-2 text-sm">
+                <span className="titulo text-xl text-petroleo w-10">{fmtHora(r.hora)}</span>
+                <span className="flex-1 min-w-0">
+                  <b className="block truncate">{r.nome}</b>
+                  <span className="text-xs text-petroleo-noite/60">{quadraPorId(r.quadraId).nome} · {r.telefone}</span>
+                </span>
+                <a
+                  href={linkWhatsApp(
+                    `Olá, ${r.nome.split(' ')[0]}! Aqui é do Quati Beach Sport. Por causa da chuva, seu horário de hoje às ${r.hora}h não vai rolar 🌧️. Podemos remarcar sem custo: qual dia fica bom pra você?`,
+                    whatsDoTelefone(r.telefone),
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 rounded-lg bg-[#25d366] text-white px-2.5 py-1.5 text-xs font-bold"
+                >
+                  <IconeWhatsApp className="size-3.5" /> Avisar
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 flex justify-end">
+            <Confirmar
+              rotulo={`Cancelar as ${afetadas.length} sem custo`}
+              pergunta="Liberar todas?"
+              onConfirmar={() => {
+                const ids = new Set(afetadas.map((r) => r.id))
+                set((db) => ({ ...db, reservas: db.reservas.filter((r) => !ids.has(r.id)) }))
+                setFeito(true)
+              }}
+            />
+          </div>
+        </>
+      )}
+    </Janela>
   )
 }
 

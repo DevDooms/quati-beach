@@ -17,9 +17,9 @@ Abra http://localhost:5173/demo — a página de escolha entre as três visões.
 | Endereço | O que é |
 |---|---|
 | `/demo` | Escolher entre site, área do cliente e painel |
-| `/` | Site público: mapa das quadras, agenda por quadra, aulas, professores, torneios |
-| `/entrar` → `/minha-conta` | Área do cliente (login apenas visual) |
-| `/admin` | Painel do Quati: visão geral, agenda, reservas, grade de aulas, torneios, professores, configurações |
+| `/` | Site público: mapa das quadras, agenda por quadra (horário fixo, Pix/cartão/balcão, dividir a conta, lista de espera), aulas e planos, professores, torneios, bar, eventos, privacidade |
+| `/entrar` → `/minha-conta` | Área do cliente (login só visual, por código no WhatsApp) |
+| `/admin` | Painel do Quati: visão geral, agenda (com aviso de chuva), reservas, mensalistas, solicitações (eventos e lista de espera), grade de aulas, torneios, professores, configurações (preços, horários, planos e módulos do site) |
 
 Dica: abra o site e o painel em abas lado a lado — o que muda num aparece no outro na hora.
 Em **Painel → Configurações** há um botão para restaurar os dados de exemplo.

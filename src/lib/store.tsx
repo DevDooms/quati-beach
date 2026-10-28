@@ -33,20 +33,98 @@ export interface Reserva {
   formaPagamento?: FormaPagamento
   minha?: boolean // feita neste navegador pelo site
   criadaEm?: string // ISO; só nas reservas feitas durante a demonstração
+  fixoId?: string // reserva gerada por um horário fixo (mensalista)
+}
+
+// Grupo que joga toda semana no mesmo dia, horário e quadra
+export interface Mensalista {
+  id: string
+  nome: string
+  telefone: string
+  diaSemana: number
+  hora: number
+  quadraId: string
+  desde: string // yyyy-MM-dd
+}
+
+export interface Espera {
+  id: string
+  data: string
+  hora: number
+  quadraId: string
+  nome: string
+  telefone: string
+  criadaEm: string
+}
+
+export interface PedidoEvento {
+  id: string
+  nome: string
+  telefone: string
+  tipo: string
+  data: string
+  pessoas: number
+  obs: string
+  criadoEm: string
+  respondido: boolean
+}
+
+export interface Plano {
+  id: string
+  nome: string
+  preco: number
+  descricao: string
+}
+
+export interface Modulos {
+  aulas: boolean
+  torneios: boolean
+  bar: boolean
+  eventos: boolean
 }
 
 export interface DB {
   versao: number
   reservas: Reserva[]
+  mensalistas: Mensalista[]
+  espera: Espera[]
+  eventos: PedidoEvento[]
   aulas: Aula[]
+  planos: Plano[]
   professores: Professor[]
   torneios: Torneio[]
   precos: { normal: number; pico: number }
   funcionamento: Record<number, [number, number]>
+  modulos: Modulos
 }
 
 const CHAVE = 'quati:db'
-const VERSAO = 3
+const VERSAO = 4
+
+// semanas à frente que um horário fixo ocupa na agenda
+export const SEMANAS_FIXO = 8
+
+// Reservas que um mensalista ocupa a partir de `de`, pulando horários já tomados
+export function reservasDoFixo(
+  db: Pick<DB, 'reservas' | 'aulas'>,
+  m: Mensalista,
+  de: Date,
+  semanas = SEMANAS_FIXO,
+  pago = false,
+): Reserva[] {
+  const novas: Reserva[] = []
+  let d = startOfDay(de)
+  while (d.getDay() !== m.diaSemana) d = addDays(d, 1)
+  for (let i = 0; i < semanas; i++, d = addDays(d, 7)) {
+    const data = format(d, 'yyyy-MM-dd')
+    const ocupado =
+      db.reservas.some((r) => r.data === data && r.hora === m.hora && r.quadraId === m.quadraId) ||
+      db.aulas.some((a) => a.diaSemana === m.diaSemana && a.hora === m.hora && a.quadraId === m.quadraId)
+    if (ocupado) continue
+    novas.push({ id: novoId(), data, hora: m.hora, quadraId: m.quadraId, nome: m.nome, telefone: m.telefone, origem: 'Site', pago, fixoId: m.id })
+  }
+  return novas
+}
 
 export const novoId = () => crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
@@ -58,6 +136,11 @@ export function sorteio(s: string) {
     h = Math.imul(h, 16777619)
   }
   return ((h >>> 0) % 1000) / 1000
+}
+
+const dataDeChaveLocal = (k: string) => {
+  const [y, m, d] = k.split('-').map(Number)
+  return new Date(y, m - 1, d)
 }
 
 function semear(): DB {
@@ -96,12 +179,77 @@ function semear(): DB {
     const data = format(addDays(hoje, dias), 'yyyy-MM-dd')
     const idx = reservas.findIndex((r) => r.data === data && r.hora === 21 && r.quadraId === 'q2')
     if (idx >= 0) reservas.splice(idx, 1)
-    reservas.push({ id: novoId(), data, hora: 21, quadraId: 'q2', ...CLIENTE_DEMO, origem: 'Site', pago })
+    reservas.push({ id: novoId(), data, hora: 21, quadraId: 'q2', ...CLIENTE_DEMO, origem: 'Site', pago, formaPagamento: pago ? 'Pix' : 'Balcão' })
   }
+
+  // horários fixos de exemplo: tiram as reservas avulsas do mesmo horário
+  const inicioFixos = addDays(hoje, -14)
+  const mensalistas: Mensalista[] = [
+    { id: 'm1', nome: 'Grupo do Marcão', telefone: '(11) 98123-4455', diaSemana: 2, hora: 21, quadraId: 'q1', desde: format(addDays(hoje, -90), 'yyyy-MM-dd') },
+    { id: 'm2', nome: 'Futevôlei da Firma', telefone: '(11) 97654-3210', diaSemana: 4, hora: 21, quadraId: 'q2', desde: format(addDays(hoje, -60), 'yyyy-MM-dd') },
+    { id: 'm3', nome: 'Beach das Amigas', telefone: '(11) 99876-1122', diaSemana: 6, hora: 16, quadraId: 'q2', desde: format(addDays(hoje, -30), 'yyyy-MM-dd') },
+  ]
+  const semFixos = reservas.filter(
+    (r) => r.telefone === CLIENTE_DEMO.telefone || !mensalistas.some((m) => m.quadraId === r.quadraId && m.hora === r.hora && dataDeChaveLocal(r.data).getDay() === m.diaSemana),
+  )
+  const fixas = mensalistas.flatMap((m) =>
+    reservasDoFixo({ reservas: semFixos, aulas: AULAS_INICIAIS }, m, inicioFixos, SEMANAS_FIXO + 2).map((r) => ({ ...r, pago: r.data < format(hoje, 'yyyy-MM-dd') })),
+  )
+
+  const eventos: PedidoEvento[] = [
+    {
+      id: 'e1',
+      nome: 'Patrícia Mendes',
+      telefone: '(11) 98222-7788',
+      tipo: 'Aniversário',
+      data: format(addDays(hoje, 17), 'yyyy-MM-dd'),
+      pessoas: 25,
+      obs: 'Festa de 15 anos, queremos as duas quadras à tarde e porções do bar.',
+      criadoEm: addDays(hoje, -1).toISOString(),
+      respondido: false,
+    },
+    {
+      id: 'e2',
+      nome: 'RH Metalúrgica Guaçu',
+      telefone: '(11) 4661-2030',
+      tipo: 'Confraternização de empresa',
+      data: format(addDays(hoje, 30), 'yyyy-MM-dd'),
+      pessoas: 40,
+      obs: 'Torneio interno de futevôlei para os funcionários.',
+      criadoEm: addDays(hoje, -3).toISOString(),
+      respondido: true,
+    },
+  ]
+
+  // gente na lista de espera dos primeiros horários de pico ocupados dos próximos dias
+  const amanha = format(addDays(hoje, 1), 'yyyy-MM-dd')
+  const espera: Espera[] = semFixos
+    .filter((r) => r.data >= amanha && r.hora >= 17 && r.telefone !== CLIENTE_DEMO.telefone)
+    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora))
+    .slice(0, 2)
+    .flatMap((r, i) =>
+      [0, 1].slice(0, 2 - i).map((j) => ({
+        id: novoId(),
+        data: r.data,
+        hora: r.hora,
+        quadraId: r.quadraId,
+        ...pessoaFicticia(500 + i * 10 + j),
+        criadaEm: addDays(hoje, -1).toISOString(),
+      })),
+    )
 
   return {
     versao: VERSAO,
-    reservas,
+    reservas: [...semFixos, ...fixas],
+    mensalistas,
+    espera,
+    eventos,
+    planos: [
+      { id: 'p1', nome: '1x por semana', preco: 160, descricao: '4 aulas no mês na turma do seu nível' },
+      { id: 'p2', nome: '2x por semana', preco: 280, descricao: '8 aulas no mês, evolução mais rápida' },
+      { id: 'p3', nome: 'Livre', preco: 380, descricao: 'Todas as turmas do seu nível, quantas quiser' },
+    ],
+    modulos: { aulas: true, torneios: true, bar: true, eventos: true },
     aulas: structuredClone(AULAS_INICIAIS),
     professores: structuredClone(PROFESSORES_INICIAIS),
     torneios: [

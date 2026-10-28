@@ -1,10 +1,17 @@
 import { useState, type ReactNode } from 'react'
-import { CircleCheck, Copy, CreditCard, LoaderCircle, QrCode, ShieldCheck, Store } from 'lucide-react'
-import { CLIENTE_DEMO } from '../data/mock'
-import { linkWhatsApp } from '../lib/agenda'
-import { sorteio, useLoginDemo, type FormaPagamento } from '../lib/store'
+import { CloudRain, CircleCheck, Copy, CreditCard, LoaderCircle, Minus, Plus, QrCode, Repeat, ShieldCheck, Store, Users } from 'lucide-react'
+import { CLIENTE_DEMO, POLITICA } from '../data/mock'
+import { fmtReais, linkWhatsApp } from '../lib/agenda'
+import { SEMANAS_FIXO, sorteio, useLoginDemo, type FormaPagamento } from '../lib/store'
 import { IconeWhatsApp } from './Icones'
 import { Detalhes, Janela } from './Pecas'
+
+export interface Confirmacao {
+  nome: string
+  telefone: string
+  forma?: FormaPagamento
+  repetir: boolean
+}
 
 interface Props {
   onFechar: () => void
@@ -12,12 +19,18 @@ interface Props {
   etiqueta?: ReactNode
   detalhes: { rotulo: string; valor: string }[]
   preco?: string
+  // valor numérico, usado para dividir a conta entre os amigos
+  valor?: number
   // mostra a escolha Pix / cartão / balcão (só faz sentido quando há valor a pagar)
   pagamento?: boolean
+  // oferece "repetir toda semana" (horário fixo / mensalista)
+  fixo?: boolean
   textoConfirmar: string
   textoSucesso: string
   mensagemWhatsApp: (nome: string) => string
-  onConfirmar: (nome: string, telefone: string, forma?: FormaPagamento) => void
+  // texto usado ao compartilhar a divisão da conta com o grupo
+  resumoParaGrupo?: string
+  onConfirmar: (c: Confirmacao) => void
 }
 
 export function mascaraTelefone(v: string) {
@@ -45,18 +58,24 @@ export default function ModalReserva(p: Props) {
   const [nome, setNome] = useState(logado ? CLIENTE_DEMO.nome : '')
   const [telefone, setTelefone] = useState(logado ? CLIENTE_DEMO.telefone : '')
   const [forma, setForma] = useState<FormaPagamento>('Pix')
+  const [repetir, setRepetir] = useState(false)
   const [processando, setProcessando] = useState(false)
   const [feito, setFeito] = useState(false)
   const [copiado, setCopiado] = useState(false)
   const valido = nome.trim().length >= 2 && telefone.replace(/\D/g, '').length >= 10
 
   const confirmar = () => {
-    p.onConfirmar(nome.trim(), telefone, p.pagamento ? forma : undefined)
+    p.onConfirmar({ nome: nome.trim(), telefone, forma: p.pagamento ? forma : undefined, repetir })
     setFeito(true)
   }
 
   if (feito) {
     const pix = p.pagamento && forma === 'Pix'
+    const detalhesFinais = [
+      ...p.detalhes,
+      ...(repetir ? [{ rotulo: 'Horário fixo', valor: `Toda semana (${SEMANAS_FIXO} semanas)` }] : []),
+      ...(p.pagamento ? [{ rotulo: 'Pagamento', valor: FORMAS.find((f) => f.id === forma)!.rotulo }] : []),
+    ]
     return (
       <Janela onFechar={p.onFechar}>
         <div className="text-center py-2">
@@ -64,10 +83,13 @@ export default function ModalReserva(p: Props) {
             <>
               <p className="text-xs font-bold uppercase tracking-widest text-onda">Reserva garantida · pague com Pix</p>
               <h2 className="titulo text-4xl mt-1 text-petroleo">Escaneie o QR Code</h2>
-              <div className="mt-4 mx-auto w-48 rounded-2xl border-2 border-petroleo/10 p-3 bg-white">
+              <div className="mt-4 mx-auto w-44 rounded-2xl border-2 border-petroleo/10 p-3 bg-white">
                 <QrFalso semente={nome + telefone} />
               </div>
-              <p className="mt-3 text-sm font-extrabold text-petroleo">{p.preco}</p>
+              <p className="mt-3 text-sm font-extrabold text-petroleo">
+                {p.preco}
+                {repetir && ' (1ª semana)'}
+              </p>
               <div className="mt-3 flex items-center gap-2 rounded-xl bg-areia-claro p-2 text-left">
                 <code className="flex-1 truncate text-xs text-petroleo-noite/70">{PIX_DEMO}</code>
                 <button
@@ -93,8 +115,11 @@ export default function ModalReserva(p: Props) {
               </p>
             </>
           )}
-          <div className="mt-6 text-left">
-            <Detalhes itens={p.pagamento ? [...p.detalhes, { rotulo: 'Pagamento', valor: FORMAS.find((f) => f.id === forma)!.rotulo }] : p.detalhes} />
+
+          {p.valor !== undefined && p.resumoParaGrupo && <DividirConta valor={p.valor} resumo={p.resumoParaGrupo} />}
+
+          <div className="mt-5 text-left">
+            <Detalhes itens={detalhesFinais} />
           </div>
           <button onClick={p.onFechar} className="mt-6 w-full rounded-full bg-petroleo text-white py-3 font-bold">
             {pix ? 'Já paguei' : 'Fechar'}
@@ -120,7 +145,10 @@ export default function ModalReserva(p: Props) {
           p.preco && (
             <div className="flex justify-between gap-4 border-t border-areia pt-2 mt-2">
               <dt className="font-semibold">Valor</dt>
-              <dd className="font-extrabold text-lg text-petroleo">{p.preco}</dd>
+              <dd className="font-extrabold text-lg text-petroleo">
+                {p.preco}
+                {repetir && <span className="text-xs font-semibold text-petroleo-noite/60"> / semana</span>}
+              </dd>
             </div>
           )
         }
@@ -154,6 +182,22 @@ export default function ModalReserva(p: Props) {
           />
         </label>
 
+        {p.fixo && (
+          <label
+            className={`flex items-start gap-3 rounded-2xl border-2 p-3 cursor-pointer transition ${
+              repetir ? 'border-sol bg-sol/15' : 'border-petroleo/10 hover:border-petroleo/30'
+            }`}
+          >
+            <input type="checkbox" checked={repetir} onChange={(e) => setRepetir(e.target.checked)} className="mt-1 accent-petroleo size-4" />
+            <span className="text-sm">
+              <b className="inline-flex items-center gap-1.5"><Repeat className="size-4" /> Repetir toda semana</b>
+              <span className="block text-xs text-petroleo-noite/60">
+                Seu grupo fica com este horário fixo nas próximas {SEMANAS_FIXO} semanas. Paga semana a semana.
+              </span>
+            </span>
+          </label>
+        )}
+
         {p.pagamento && (
           <fieldset>
             <legend className="text-sm font-semibold">Forma de pagamento</legend>
@@ -186,6 +230,12 @@ export default function ModalReserva(p: Props) {
           </fieldset>
         )}
 
+        {p.pagamento && (
+          <p className="flex items-start gap-2 rounded-xl bg-onda-claro/50 p-3 text-xs text-petroleo">
+            <CloudRain className="size-4 shrink-0 mt-px" /> {POLITICA.textoCurto}
+          </p>
+        )}
+
         <button
           type="submit"
           disabled={!valido || processando}
@@ -207,8 +257,48 @@ export default function ModalReserva(p: Props) {
         >
           <IconeWhatsApp /> Prefiro confirmar pelo WhatsApp
         </a>
+        <p className="text-center text-[11px] text-petroleo-noite/50">
+          Ao confirmar, você concorda com a <a href="/privacidade" target="_blank" className="underline">política de privacidade</a>.
+        </p>
       </form>
     </Janela>
+  )
+}
+
+// Divide o valor da quadra entre os amigos e gera a mensagem para o grupo
+function DividirConta({ valor, resumo }: { valor: number; resumo: string }) {
+  const [pessoas, setPessoas] = useState(4)
+  const cada = valor / pessoas
+  const cadaTexto = cada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  const texto = `🏐 Quadra fechada no Quati Beach Sport!\n${resumo}\nTotal ${fmtReais(valor)} ÷ ${pessoas} = ${cadaTexto} pra cada.\nManda o Pix pra quem reservou 😉`
+
+  return (
+    <div className="mt-5 rounded-2xl border-2 border-dashed border-onda/40 p-4 text-left">
+      <p className="font-bold flex items-center gap-2 text-petroleo"><Users className="size-5" /> Dividir com a galera</p>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => setPessoas((n) => Math.max(2, n - 1))} className="size-9 rounded-full border border-petroleo/20 grid place-items-center" aria-label="Menos pessoas">
+            <Minus className="size-4" />
+          </button>
+          <span className="w-16 text-center text-sm"><b className="text-lg">{pessoas}</b> pessoas</span>
+          <button type="button" onClick={() => setPessoas((n) => Math.min(12, n + 1))} className="size-9 rounded-full border border-petroleo/20 grid place-items-center" aria-label="Mais pessoas">
+            <Plus className="size-4" />
+          </button>
+        </div>
+        <p className="text-right leading-tight">
+          <span className="titulo text-3xl text-petroleo">{cadaTexto}</span>
+          <span className="block text-[11px] text-petroleo-noite/60">por pessoa</span>
+        </p>
+      </div>
+      <a
+        href={`https://wa.me/?text=${encodeURIComponent(texto)}`}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-3 flex items-center justify-center gap-2 rounded-full bg-[#25d366] text-white py-2.5 text-sm font-bold"
+      >
+        <IconeWhatsApp className="size-4" /> Mandar no grupo do WhatsApp
+      </a>
+    </div>
   )
 }
 

@@ -12,6 +12,28 @@ export const classeInput =
 
 export const precoReserva = (db: DB, r: Reserva) => precoDoHorario(db, dataDeChave(r.data), r.hora)
 
+// Esconde faturamento quando o painel fica aberto no balcão (vale só neste navegador)
+export function useOcultarValores() {
+  const k = 'quati:ocultarValores'
+  const [oculto, setOculto] = useState(() => {
+    try {
+      return localStorage.getItem(k) === '1'
+    } catch {
+      return false
+    }
+  })
+  const alternar = () =>
+    setOculto((v) => {
+      try {
+        localStorage.setItem(k, v ? '0' : '1')
+      } catch {
+        // sem armazenamento: vale só nesta visita
+      }
+      return !v
+    })
+  return { oculto, alternar }
+}
+
 export function TituloPagina({ titulo, sub, acoes }: { titulo: string; sub?: ReactNode; acoes?: ReactNode }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
@@ -118,6 +140,7 @@ export function JanelaReserva({ reserva, onFechar }: { reserva: Reserva; onFecha
   const { db, set } = useDB()
   const r = db.reservas.find((x) => x.id === reserva.id) ?? reserva
   const d = dataDeChave(r.data)
+  const fila = db.espera.filter((e) => e.data === r.data && e.hora === r.hora && e.quadraId === r.quadraId)
   const atualizar = (mud: Partial<Reserva>) => set((db) => ({ ...db, reservas: db.reservas.map((x) => (x.id === r.id ? { ...x, ...mud } : x)) }))
 
   return (
@@ -134,6 +157,35 @@ export function JanelaReserva({ reserva, onFechar }: { reserva: Reserva; onFecha
           { rotulo: 'Pagamento', valor: <SeloPago pago={r.pago} onClick={() => atualizar({ pago: !r.pago })} /> },
         ]}
       />
+      {r.fixoId && (
+        <p className="mt-3 rounded-xl bg-sol/20 p-3 text-xs font-semibold">Horário fixo (mensalista). Cancelar aqui libera só esta semana.</p>
+      )}
+      {fila.length > 0 && (
+        <div className="mt-3 rounded-xl border border-laranja/30 bg-laranja/5 p-3">
+          <p className="text-xs font-bold uppercase tracking-wide text-laranja">Lista de espera deste horário</p>
+          <ul className="mt-1 space-y-1 text-sm">
+            {fila.map((e, i) => (
+              <li key={e.id} className="flex items-center gap-2">
+                <span className="text-petroleo-noite/40 font-bold w-5">{i + 1}º</span>
+                <span className="flex-1 truncate">{e.nome}</span>
+                <a
+                  href={linkWhatsApp(
+                    `Olá, ${e.nome.split(' ')[0]}! Vagou o horário de ${fmtDataLonga(d)} às ${r.hora}h na ${quadraPorId(r.quadraId).nome}. Quer ficar com ele?`,
+                    whatsDoTelefone(e.telefone),
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#128c4a]"
+                  aria-label={`Avisar ${e.nome}`}
+                >
+                  <IconeWhatsApp className="size-4" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1 text-[11px] text-petroleo-noite/60">Se cancelar esta reserva, avise o 1º da fila.</p>
+        </div>
+      )}
       {r.telefone === CLIENTE_DEMO.telefone && (
         <p className="mt-3 text-xs text-petroleo-noite/60">Este é o cliente usado na demonstração da Área do cliente.</p>
       )}

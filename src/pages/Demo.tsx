@@ -1,4 +1,4 @@
-import quadraAerea from '../assets/quadra-aerea.png'
+import quadraAerea from '../assets/quadra-aerea.jpg'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Globe, LayoutDashboard, Lightbulb } from 'lucide-react'
 import { Logo } from '../components/Icones'
