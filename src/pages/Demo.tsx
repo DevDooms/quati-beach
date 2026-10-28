@@ -1,6 +1,6 @@
 import quadraAerea from '../assets/quadra-aerea.png'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CircleUser, Globe, LayoutDashboard, Lightbulb } from 'lucide-react'
+import { ArrowRight, Globe, LayoutDashboard, Lightbulb } from 'lucide-react'
 import { Logo } from '../components/Icones'
 
 const VISOES = [
@@ -9,16 +9,14 @@ const VISOES = [
     icone: Globe,
     titulo: 'Site do Quati',
     quem: 'O que o cliente vê',
-    itens: ['Mapa das quadras para escolher onde jogar', 'Calendário de cada quadra', 'Grade de aulas e professores', 'Torneios e inscrições'],
+    itens: [
+      'Mapa das quadras para escolher onde jogar',
+      'Calendário de cada quadra',
+      'Grade de aulas e professores',
+      'Torneios e inscrições',
+      'Login e área do cliente (botão "Entrar")',
+    ],
     cor: 'from-onda to-petroleo',
-  },
-  {
-    to: '/entrar',
-    icone: CircleUser,
-    titulo: 'Área do cliente',
-    quem: 'Login do jogador',
-    itens: ['Tela de login', 'Próximas reservas e histórico', 'Turmas em que está matriculado', 'Inscrições em torneios'],
-    cor: 'from-sol to-laranja',
   },
   {
     to: '/admin',
@@ -42,7 +40,7 @@ export default function Demo() {
           <p className="mt-3 text-white/70 max-w-xl mx-auto">Escolha por qual lado quer ver o sistema.</p>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 mx-auto max-w-4xl grid gap-5 md:grid-cols-2">
           {VISOES.map(({ to, icone: Icone, titulo, quem, itens, cor }) => (
             <Link key={to} to={to} className="group rounded-3xl bg-white text-petroleo-noite overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40 transition">
               <div className={`bg-gradient-to-br ${cor} p-6 text-white`}>
