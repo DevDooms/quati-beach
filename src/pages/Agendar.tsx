@@ -32,7 +32,11 @@ export default function Agendar() {
   const dia = dataParam && dias.some((d) => chaveData(d) === dataParam) ? dataDeChave(dataParam) : dias[0]
   const quadraParam = params.get('quadra')
   const quadraId = QUADRAS.some((q) => q.id === quadraParam) ? quadraParam! : null
-  const [hora, setHora] = useState<number | null>(() => Number(params.get('hora')) || null)
+  // horário com a janela de reserva aberta; vindo da página inicial (?hora=), só abre se estiver livre
+  const [hora, setHora] = useState<number | null>(() => {
+    const h = Number(params.get('hora'))
+    return h && quadraId && horasDoDia(db, dia).includes(h) && slotDe(db, dia, h, quadraId).status === 'livre' ? h : null
+  })
 
   const livresHoje = Object.fromEntries(
     QUADRAS.map((q) => [q.id, horasDoDia(db, dias[0]).filter((h) => slotDe(db, dias[0], h, q.id).status === 'livre').length]),
@@ -199,7 +203,8 @@ export default function Agendar() {
         </aside>
       </div>
 
-      {quadraId && hora !== null && horasDoDia(db, dia).includes(hora) && slotDe(db, dia, hora, quadraId).status === 'livre' && (
+      {/* não depende do horário continuar livre: depois de confirmar, a janela mostra o Pix/sucesso */}
+      {quadraId && hora !== null && (
         <ModalReserva
           onFechar={() => setHora(null)}
           titulo="Confirmar reserva"
@@ -210,17 +215,31 @@ export default function Agendar() {
             { rotulo: 'Horário', valor: fmtFaixa(hora) },
           ]}
           preco={fmtReais(precoDoHorario(db, dia, hora))}
+          pagamento
           textoConfirmar="Confirmar reserva"
           textoSucesso="Quadra reservada!"
           mensagemWhatsApp={(nome) =>
             `Olá! ${nome ? `Sou ${nome} e ` : ''}gostaria de reservar a ${quadraPorId(quadraId).nome} no dia ${fmtDataCurta(dia)} das ${fmtFaixa(hora)}.`
           }
-          onConfirmar={(nome, telefone) =>
+          onConfirmar={(nome, telefone, forma) =>
             set((db) => ({
               ...db,
               reservas: [
                 ...db.reservas,
-                { id: novoId(), data: chaveData(dia), hora, quadraId, nome, telefone, origem: 'Site', pago: false, minha: true, criadaEm: new Date().toISOString() },
+                {
+                  id: novoId(),
+                  data: chaveData(dia),
+                  hora,
+                  quadraId,
+                  nome,
+                  telefone,
+                  origem: 'Site',
+                  // na demo, Pix e cartão contam como pagos na hora
+                  pago: forma === 'Pix' || forma === 'Cartão',
+                  formaPagamento: forma,
+                  minha: true,
+                  criadaEm: new Date().toISOString(),
+                },
               ],
             }))
           }

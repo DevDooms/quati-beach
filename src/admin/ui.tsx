@@ -130,6 +130,7 @@ export function JanelaReserva({ reserva, onFechar }: { reserva: Reserva; onFecha
           { rotulo: 'Horário', valor: fmtFaixa(r.hora) },
           { rotulo: 'Valor', valor: fmtReais(precoReserva(db, r)) },
           { rotulo: 'Origem', valor: <SeloOrigem origem={r.origem} /> },
+          ...(r.formaPagamento ? [{ rotulo: 'Forma de pagamento', valor: r.formaPagamento === 'Balcão' ? 'No balcão' : r.formaPagamento }] : []),
           { rotulo: 'Pagamento', valor: <SeloPago pago={r.pago} onClick={() => atualizar({ pago: !r.pago })} /> },
         ]}
       />

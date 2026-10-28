@@ -19,6 +19,7 @@ import {
 // vira uma API (e o bot de WhatsApp escreve nas mesmas tabelas).
 
 export type Origem = 'Site' | 'WhatsApp' | 'Balcão'
+export type FormaPagamento = 'Pix' | 'Cartão' | 'Balcão'
 
 export interface Reserva {
   id: string
@@ -29,6 +30,7 @@ export interface Reserva {
   telefone: string
   origem: Origem
   pago: boolean
+  formaPagamento?: FormaPagamento
   minha?: boolean // feita neste navegador pelo site
   criadaEm?: string // ISO; só nas reservas feitas durante a demonstração
 }
