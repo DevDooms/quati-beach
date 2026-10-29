@@ -47,7 +47,7 @@ export default function AulasAdmin() {
         sub={`${db.aulas.length} turmas por semana · ${alunos} de ${vagas} vagas preenchidas`}
         acoes={<Botao onClick={() => setNova({ diaSemana: 1, hora: 18 })}><Plus className="size-4" /> Nova turma</Botao>}
       />
-      <p className="-mt-3 mb-4 text-sm text-petroleo-noite/60">Clique numa turma para editar ou em um espaço vazio para criar. O site e a agenda das quadras são atualizados na hora.</p>
+      <p className="-mt-3 mb-4 text-sm text-petroleo-noite/70">Clique numa turma para editar ou em um espaço vazio para criar. O site e a agenda das quadras são atualizados na hora.</p>
 
       <Cartao className="overflow-x-auto">
         <table className="w-full min-w-[860px] table-fixed border-collapse text-sm">
@@ -69,7 +69,7 @@ export default function AulasAdmin() {
                         <button key={a.id} onClick={() => abrir(a.id)} className="w-full text-left rounded-xl bg-white border border-petroleo/10 p-2 hover:border-onda hover:shadow">
                           <SeloModalidade id={a.modalidade} pequeno />
                           <p className="mt-1 text-xs font-bold leading-tight">{a.nivel}</p>
-                          <p className="text-[11px] text-petroleo-noite/60 leading-tight truncate">
+                          <p className="text-[11px] text-petroleo-noite/70 leading-tight truncate">
                             {primeiroNome(acharProfessor(db, a.professorId).nome)} · {a.quadraId.toUpperCase()}
                           </p>
                           <p className={`text-[11px] font-semibold ${estaLotada(a) ? 'text-red-600' : 'text-emerald-700'}`}>
@@ -80,7 +80,7 @@ export default function AulasAdmin() {
                       {daCelula.length < QUADRAS.length && (
                         <button
                           onClick={() => setNova({ diaSemana: d, hora: h })}
-                          className="w-full rounded-xl border border-dashed border-petroleo/10 py-1.5 text-xs font-semibold text-petroleo-noite/25 hover:text-onda hover:border-onda"
+                          className="w-full rounded-xl border border-dashed border-petroleo/10 py-1.5 text-xs font-semibold text-petroleo-noite/60 hover:text-onda hover:border-onda"
                         >
                           + turma
                         </button>

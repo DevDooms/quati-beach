@@ -15,7 +15,7 @@ import { agendaRestanteDeHoje, origensDasReservas, reservasPorDia, reservasRecen
 export function Kpi({ icone, rotulo, valor, detalhe, barra, alerta }: { icone: ReactNode; rotulo: string; valor: string; detalhe: string; barra?: number; alerta?: boolean }) {
   return (
     <Cartao className="p-4">
-      <div className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wide ${alerta ? 'text-amber-700' : 'text-petroleo-noite/60'} [&>svg]:size-4`}>
+      <div className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wide ${alerta ? 'text-amber-700' : 'text-petroleo-noite/70'} [&>svg]:size-4`}>
         {icone} {rotulo}
       </div>
       <p className="titulo text-4xl text-petroleo mt-2">{valor}</p>
@@ -24,7 +24,7 @@ export function Kpi({ icone, rotulo, valor, detalhe, barra, alerta }: { icone: R
           <div className="h-full bg-onda rounded-full" style={{ width: `${barra}%` }} />
         </div>
       )}
-      <p className="text-xs text-petroleo-noite/60 mt-1">{detalhe}</p>
+      <p className="text-xs text-petroleo-noite/70 mt-1">{detalhe}</p>
     </Cartao>
   )
 }
@@ -61,7 +61,7 @@ export function AgendaDeHoje({ onAbrir }: { onAbrir: (r: Reserva) => void }) {
         <Link to="/admin/agenda" className="text-sm font-semibold text-onda inline-flex items-center gap-1 shrink-0">Ver tudo <ArrowRight className="size-4" /></Link>
       </div>
       <ul className="divide-y divide-petroleo/10">
-        {linhas.length === 0 && <li className="px-5 pb-5 text-sm text-petroleo-noite/60">Nada mais marcado para hoje.</li>}
+        {linhas.length === 0 && <li className="px-5 pb-5 text-sm text-petroleo-noite/70">Nada mais marcado para hoje.</li>}
         {linhas.map((s) => {
           const quadra = quadraPorId(s.quadraId).nome
           if (s.reserva) {
@@ -72,7 +72,7 @@ export function AgendaDeHoje({ onAbrir }: { onAbrir: (r: Reserva) => void }) {
                   <span className="titulo text-2xl text-petroleo w-12">{fmtHora(s.hora)}</span>
                   <span className="flex-1 min-w-0">
                     <b className="block truncate">{r.nome}</b>
-                    <span className="text-xs text-petroleo-noite/60">{quadra} · {r.telefone}</span>
+                    <span className="text-xs text-petroleo-noite/70">{quadra} · {r.telefone}</span>
                   </span>
                   <span className="hidden sm:inline-flex"><SeloOrigem origem={r.origem} /></span>
                   <SeloPago pago={r.pago} />
@@ -86,7 +86,7 @@ export function AgendaDeHoje({ onAbrir }: { onAbrir: (r: Reserva) => void }) {
               <span className="titulo text-2xl text-petroleo w-12">{fmtHora(s.hora)}</span>
               <span className="flex-1 min-w-0">
                 <b className="block truncate">Aula de {modalidadePorId(a.modalidade).nome} · {a.nivel}</b>
-                <span className="text-xs text-petroleo-noite/60">
+                <span className="text-xs text-petroleo-noite/70">
                   {quadra} · Prof. {acharProfessor(db, a.professorId).nome} · {a.alunos.length}/{a.vagas} alunos
                 </span>
               </span>
@@ -105,7 +105,7 @@ export function ChegouAgora({ onAbrir }: { onAbrir: (r: Reserva) => void }) {
     <Cartao className="p-5">
       <h2 className="titulo text-3xl text-petroleo flex items-center gap-2"><Sparkles className="size-6 text-sol-escuro" /> Chegou agora</h2>
       {recentes.length === 0 ? (
-        <p className="mt-2 text-sm text-petroleo-noite/60">
+        <p className="mt-2 text-sm text-petroleo-noite/70">
           Faça uma reserva pelo <Link to="/agendar" target="_blank" className="font-semibold text-onda underline">site</Link> em outra aba: ela aparece aqui na hora.
         </p>
       ) : (
@@ -117,11 +117,11 @@ export function ChegouAgora({ onAbrir }: { onAbrir: (r: Reserva) => void }) {
                 <button onClick={() => onAbrir(r)} className="w-full flex items-center gap-3 rounded-xl bg-sol/15 px-3 py-2 text-left text-sm hover:bg-sol/25">
                   <span className="flex-1 min-w-0">
                     <b className="block truncate">{r.nome}</b>
-                    <span className="text-xs text-petroleo-noite/60 first-letter:uppercase inline-block">
+                    <span className="text-xs text-petroleo-noite/70 first-letter:uppercase inline-block">
                       {fmtDiaSemana(d)} {fmtDataCurta(d)} · {fmtFaixa(r.hora)} · {quadraPorId(r.quadraId).nome}
                     </span>
                   </span>
-                  <span className="text-[11px] text-petroleo-noite/50 shrink-0">{formatDistanceToNow(new Date(r.criadaEm!), { locale: ptBR, addSuffix: true })}</span>
+                  <span className="text-[11px] text-petroleo-noite/70 shrink-0">{formatDistanceToNow(new Date(r.criadaEm!), { locale: ptBR, addSuffix: true })}</span>
                 </button>
               </li>
             )
@@ -144,7 +144,7 @@ export function GraficoProximosDias() {
           <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
             <span className="text-xs font-bold text-petroleo">{qtd}</span>
             <div className="w-full rounded-t-lg bg-onda" style={{ height: `${(qtd / maximo) * 100}%`, minHeight: 4 }} />
-            <span className="text-[11px] text-petroleo-noite/60 capitalize">{i === 0 ? 'Hoje' : fmtDiaSemana(d)}</span>
+            <span className="text-[11px] text-petroleo-noite/70 capitalize">{i === 0 ? 'Hoje' : fmtDiaSemana(d)}</span>
           </div>
         ))}
       </div>
@@ -159,13 +159,13 @@ export function OrigemDasReservas() {
   return (
     <Cartao className="p-5">
       <h2 className="titulo text-3xl text-petroleo">De onde vêm as reservas</h2>
-      <p className="text-xs text-petroleo-noite/60">Últimos 30 dias</p>
+      <p className="text-xs text-petroleo-noite/70">Últimos 30 dias</p>
       <div className="mt-4 space-y-3">
         {origensDasReservas(db).map(({ origem, qtd, pct }) => (
           <div key={origem}>
             <div className="flex justify-between text-sm">
               <span className="font-semibold">{origem}</span>
-              <span className="text-petroleo-noite/60">{qtd} · {pct}%</span>
+              <span className="text-petroleo-noite/70">{qtd} · {pct}%</span>
             </div>
             <div className="mt-1 h-2.5 rounded-full bg-petroleo/10 overflow-hidden">
               <div className={`h-full rounded-full ${COR_ORIGEM[origem]}`} style={{ width: `${pct}%` }} />

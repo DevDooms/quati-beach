@@ -1,9 +1,13 @@
 // Tudo o que é específico do Quati Beach Sport. Para outro cliente, troca-se
 // este arquivo (e as cores em index.css); no futuro, isto vem do banco.
-import type { Funcionamento, Modalidade, ModalidadeId, Modulos, Nivel, Plano, Precos, Quadra } from '../tipos'
+import type { Funcionamento, Modalidade, ModalidadeId, Modulos, Nivel, Plano, Politica, Precos, Quadra } from '../tipos'
 
 export const NEGOCIO = {
   nome: 'Quati Beach Sport',
+  apelido: 'Quati', // usado em "Painel Quati", "Bar do Quati"…
+  marca: ['Quati', 'Beach', 'Sport'] as [string, string, string], // como aparece no cabeçalho
+  cidadeCurta: 'Embu-Guaçu',
+  descricao: 'Futevôlei, beach tennis e vôlei de praia em Embu-Guaçu.',
   endereco: 'R. Serafim Luís Martins, 865 — Vila Louro',
   cidade: 'Embu-Guaçu — SP, 06900-210',
   telefone: '(11) 99935-8944',
@@ -18,14 +22,11 @@ export const NEGOCIO = {
   mapaLink: 'https://maps.google.com/?q=Quati+Beach+Sport+Embu-Gua%C3%A7u',
 }
 
-// Regras mostradas no site (combinar com o dono antes de publicar)
-export const POLITICA = {
-  cancelamentoHoras: 12,
-  textoCurto: 'Cancelamento grátis até 12h antes. Choveu forte? Remarcamos sem custo.',
-}
+// Ponto de partida; o dono ajusta em Painel → Configurações
+export const POLITICA_PADRAO: Politica = { duracaoReserva: 1, cancelamentoHoras: 12 }
 
-// Duração de cada reserva de quadra, em horas
-export const DURACAO_RESERVA = 1
+export const textoPolitica = (p: Politica) =>
+  `Dá para cancelar ou remarcar pelo site até ${p.cancelamentoHoras}h antes do horário.`
 
 export const FUNCIONAMENTO_PADRAO: Funcionamento = {
   0: [8, 20],
@@ -39,7 +40,8 @@ export const FUNCIONAMENTO_PADRAO: Funcionamento = {
 
 export const PRECOS_PADRAO: Precos = { normal: 70, pico: 90, inicioPico: 17 }
 
-export const MODULOS_PADRAO: Modulos = { aulas: true, torneios: true, bar: true, eventos: true }
+// Pacotes de horas começam desligados: só aparecem se o dono quiser vender
+export const MODULOS_PADRAO: Modulos = { aulas: true, torneios: true, bar: true, eventos: true, pacotes: false }
 
 export const PLANOS_PADRAO: Plano[] = [
   { id: 'p1', nome: '1x por semana', preco: 160, descricao: '4 aulas no mês na turma do seu nível' },

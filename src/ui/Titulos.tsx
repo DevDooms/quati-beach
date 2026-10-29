@@ -32,7 +32,7 @@ export function TituloPagina({ titulo, sub, acoes }: { titulo: string; sub?: Rea
     <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
       <div>
         <h1 className="titulo text-4xl sm:text-5xl text-petroleo">{titulo}</h1>
-        {sub && <p className="text-sm text-petroleo-noite/60 mt-1">{sub}</p>}
+        {sub && <p className="text-sm text-petroleo-noite/70 mt-1">{sub}</p>}
       </div>
       {acoes && <div className="flex flex-wrap gap-2">{acoes}</div>}
     </div>

@@ -16,13 +16,13 @@ const quandoTorneio = (t: Torneio) => {
 }
 
 export default function PaginaTorneios() {
-  const { db, set } = useDB()
+  const { db, aplicar } = useDB()
   const t = proximoTorneio(db.torneios)
   const [categoria, setCategoria] = useState<string | null>(null)
 
   return (
     <>
-      <CabecalhoPagina sobre="Competições" titulo={<>Torneios <span className="text-sol">Quati</span></>}>
+      <CabecalhoPagina sobre="Competições" titulo={<>Torneios <span className="text-sol">{NEGOCIO.apelido}</span></>}>
         Campeonatos abertos com categorias para todos os níveis. Junte sua dupla e venha competir.
       </CabecalhoPagina>
 
@@ -42,8 +42,8 @@ export default function PaginaTorneios() {
             <ul className="mt-3 space-y-3 text-sm">
               {EDICOES_ANTERIORES.map((e) => (
                 <li key={e.nome} className="flex justify-between gap-3 border-b border-petroleo/10 pb-3 last:border-0">
-                  <span><b>{e.nome}</b><br /><span className="text-petroleo-noite/60">{e.data}</span></span>
-                  <span className="text-petroleo-noite/60 shrink-0">{e.duplas} duplas</span>
+                  <span><b>{e.nome}</b><br /><span className="text-petroleo-noite/70">{e.data}</span></span>
+                  <span className="text-petroleo-noite/70 shrink-0">{e.duplas} duplas</span>
                 </li>
               ))}
             </ul>
@@ -64,7 +64,7 @@ export default function PaginaTorneios() {
           textoConfirmar="Reservar vaga da dupla"
           textoSucesso="Vaga reservada!"
           mensagemWhatsApp={(nome) => doCliente.inscricaoTorneio(nome, t.nome, categoria)}
-          onConfirmar={({ nome, telefone }) => set((db) => inscreverDupla(db, t.id, { categoria, atleta1: nome, atleta2: '', telefone, pago: false }))}
+          onConfirmar={({ nome, telefone }) => aplicar((db) => inscreverDupla(db, t.id, { categoria, atleta1: nome, atleta2: '', telefone, pago: false }))}
         />
       )}
     </>
@@ -99,7 +99,7 @@ function CartazTorneio({ torneio: t, onInscrever }: { torneio: Torneio; onInscre
                 <div className="mt-2 h-2 rounded-full bg-petroleo/10 overflow-hidden">
                   <div className={`h-full rounded-full ${quaseLotado ? 'bg-laranja' : 'bg-onda'}`} style={{ width: `${pct}%` }} />
                 </div>
-                <p className="mt-1.5 text-xs text-petroleo-noite/60">
+                <p className="mt-1.5 text-xs text-petroleo-noite/70">
                   {inscritas}/{t.vagasPorCategoria} duplas · <b className={quaseLotado ? 'text-laranja' : ''}>{restantes} vagas</b>
                 </p>
                 <Botao onClick={() => onInscrever(c)} disabled={restantes === 0} redondo largo className="mt-3">

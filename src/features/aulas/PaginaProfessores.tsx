@@ -31,7 +31,7 @@ export default function PaginaProfessores() {
                 <h2 className="titulo text-4xl text-petroleo mt-2">Prof. {p.nome}</h2>
                 {p.destaque && <p className="text-xs font-semibold text-sol-escuro inline-flex items-center gap-1"><Award className="size-4" /> {p.destaque}</p>}
                 <p className="mt-3 text-sm text-petroleo-noite/70 flex-1">{p.bio}</p>
-                <p className="mt-4 text-xs text-petroleo-noite/60">
+                <p className="mt-4 text-xs text-petroleo-noite/70">
                   {turmas.length} turmas{dias.length > 0 && ` · ${dias.map((d) => DIAS_CURTOS[d]).join(', ')}`}
                 </p>
                 <Botao para={`/aulas?professor=${p.id}`} redondo className="mt-4">

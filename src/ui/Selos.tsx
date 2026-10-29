@@ -17,9 +17,13 @@ export function Selo({ children, className, pequeno = true }: { children: ReactN
 export function SeloModalidade({ id, pequeno = false }: { id: ModalidadeId; pequeno?: boolean }) {
   const m = modalidadePorId(id)
   return (
-    <Selo pequeno={pequeno} className={`uppercase tracking-wide ${pequeno ? '!text-[10px]' : ''} ${m.cor} ${id === 'volei' ? 'text-petroleo-noite' : 'text-white'}`}>
+    <span
+      className={`inline-flex items-center rounded-full font-bold whitespace-nowrap uppercase tracking-wide ${pequeno ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs'} ${m.cor} ${
+        id === 'volei' ? 'text-petroleo-noite' : 'text-white'
+      }`}
+    >
       {m.curto}
-    </Selo>
+    </span>
   )
 }
 
@@ -46,12 +50,10 @@ const CORES_ORIGEM: Record<Origem, string> = {
 
 export const SeloOrigem = ({ origem }: { origem: Origem }) => <Selo className={CORES_ORIGEM[origem]}>{origem}</Selo>
 
-export const SeloFixo = () => <Selo className="bg-sol/40 text-petroleo-noite">Fixo</Selo>
-
 // Quantas pessoas esperam este horário vagar
 export const SeloFila = ({ quantidade }: { quantidade: number }) =>
   quantidade > 0 ? (
-    <Selo className="bg-laranja/15 text-laranja !text-[10px] font-extrabold">
+    <Selo className="bg-laranja/15 text-laranja font-extrabold">
       <span title="Na lista de espera">+{quantidade} fila</span>
     </Selo>
   ) : null

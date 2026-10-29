@@ -17,12 +17,16 @@ O navegador abre em `/demo`, a tela para escolher entre o site e o painel.
 | Endereço | O que é |
 |---|---|
 | `/demo` | Escolher entre site e painel |
-| `/` | Site público: mapa das quadras, agenda por quadra (horário fixo, Pix/cartão/balcão, dividir a conta, lista de espera), aulas e planos, professores, torneios, bar, eventos, privacidade |
-| `/entrar` → `/minha-conta` | Área do cliente (login só visual, por código no WhatsApp) |
-| `/admin` | Painel: visão geral, agenda (com aviso de chuva), reservas, mensalistas, solicitações, grade de aulas, torneios, professores, configurações |
+| `/` | Site público: mapa das quadras, agenda por quadra (Pix/cartão/balcão, dividir a conta, lista de espera, adicionar à agenda), aulas e planos, professores, torneios, bar, eventos, pacotes (se ligado), privacidade |
+| `/entrar` → `/minha-conta` | Área do cliente (login só visual): remarcar e cancelar dentro da regra do dono, créditos |
+| `/admin` | Painel: visão geral, agenda (bloqueios, feriados), reservas, caixa do dia, relatório do mês, solicitações, grade de aulas, torneios, professores, configurações |
 
 Dica: abra o site e o painel em abas lado a lado — o que muda num aparece no outro na hora.
-Em **Painel → Configurações** há um botão para restaurar os dados de exemplo.
+Em **Painel → Configurações** há um botão para restaurar os dados de exemplo (a base também se renova sozinha depois de 7 dias).
+
+**O que é decisão do dono começa desligado ou vazio:** pacotes de horas, promoções, feriados e bloqueios. Duração da reserva e prazo para cancelar ficam em Configurações → Regras de reserva.
+
+`.env` tem `VITE_URL_SITE`, usado nas tags de compartilhamento (WhatsApp/Instagram). Troque pelo domínio real antes de publicar.
 
 ## Estrutura
 
@@ -32,18 +36,20 @@ src/
   app/Rotas.tsx         todas as rotas (painel carregado sob demanda)
   tipos.ts              tipos do domínio (Reserva, Aula, DataISO…)
   config/
-    estabelecimento.ts  tudo que é do Quati: contato, quadras, preços padrão, cardápio…
+    estabelecimento.ts  tudo que é do Quati: contato, quadras, preços e regras padrão, cardápio…
   demo/                 dados fictícios e a "semente" da base (some quando houver backend)
   lib/                  utilidades sem tela
-    banco.tsx           base no navegador (useDB) com validação zod
-    auth.tsx            login visual (useLogin)
-    datas.ts formatos.ts whatsapp.ts mensagens.ts validacao.ts armazenamento.ts aleatorio.ts
+    banco.tsx           base no navegador (useDB: db, set, aplicar) com validação zod
+    erros.ts            ErroRegra: regra recusada vira mensagem na tela
+    auth.tsx            login visual (useUsuario, useAdmin)
+    datas.ts formatos.ts whatsapp.ts mensagens.ts validacao.ts calendario.ts armazenamento.ts aleatorio.ts
   ui/                   design system: Botao, Campo, Janela, Selos, Cartao, Titulos, Icones…
   site/Layout.tsx       cabeçalho, menu e rodapé do site
-  admin/                esqueleto do painel (layout, login, visão geral, configurações)
+  admin/                painel: layout, login, visão geral, caixa, relatório, configurações
   features/
     reservas/           agenda.ts + regras.ts, página de agendar, mapa, janela de reserva, telas do painel
-    mensalistas/        horários fixos
+    agenda-dono/        bloqueios, feriados/dias especiais, promoções
+    pacotes/            pacotes de horas e créditos do cliente
     aulas/              grade, planos, professores
     torneios/
     eventos/            pedidos de evento + caixa de solicitações do painel

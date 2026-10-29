@@ -16,7 +16,7 @@ export function CartaoAula({ aula, professor, onParticipar }: { aula: Aula; prof
     <article className="rounded-2xl bg-white border border-petroleo/10 p-4 grid grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)_auto] gap-x-4 gap-y-3 items-center shadow-sm">
       <div className="text-center w-16 shrink-0">
         <p className="titulo text-4xl text-petroleo">{fmtHora(aula.hora)}</p>
-        <p className="text-[11px] text-petroleo-noite/50">1 hora</p>
+        <p className="text-[11px] text-petroleo-noite/70">1 hora</p>
       </div>
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
@@ -27,7 +27,7 @@ export function CartaoAula({ aula, professor, onParticipar }: { aula: Aula; prof
           <Avatar professor={professor} tamanho="size-7 text-[11px]" />
           <p className="font-semibold truncate">Prof. {professor.nome}</p>
         </div>
-        <p className="mt-1.5 text-xs text-petroleo-noite/60 flex flex-wrap gap-x-3 gap-y-1">
+        <p className="mt-1.5 text-xs text-petroleo-noite/70 flex flex-wrap gap-x-3 gap-y-1">
           <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{quadraPorId(aula.quadraId).nome}</span>
           <span className="inline-flex items-center gap-1"><Clock className="size-3.5" />{fmtFaixa(aula.hora)}</span>
           <span className={`inline-flex items-center gap-1 font-semibold ${corVagas(aula)}`}>
@@ -53,7 +53,7 @@ export function CartaoAulaCompacto({ aula, professor, onClick }: { aula: Aula; p
     <button onClick={onClick} className="w-full text-left rounded-xl bg-white border border-petroleo/10 p-2.5 hover:border-onda hover:shadow-md transition">
       <SeloModalidade id={aula.modalidade} pequeno />
       <p className="mt-1.5 text-xs font-bold leading-tight">{aula.nivel}</p>
-      <p className="text-[11px] text-petroleo-noite/60 leading-tight truncate">
+      <p className="text-[11px] text-petroleo-noite/70 leading-tight truncate">
         {primeiroNome(professor.nome)} · {quadraPorId(aula.quadraId).nome.replace('Quadra ', 'Q')}
       </p>
       <p className={`mt-1 text-[11px] font-semibold ${corVagas(aula)}`}>

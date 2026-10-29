@@ -13,7 +13,7 @@ import { PlanosAulas } from './PlanosAulas'
 import { acharProfessor, estaLotada, matricular, proximaDataDaAula } from './regras'
 
 export default function PaginaAulas() {
-  const { db, set } = useDB()
+  const { db, aplicar } = useDB()
   const [params, setParams] = useSearchParams()
   const filtros = { modalidade: params.get('modalidade') ?? '', professor: params.get('professor') ?? '', nivel: params.get('nivel') ?? '' }
   const [visao, setVisao] = useState<'dia' | 'semana'>('dia')
@@ -77,7 +77,7 @@ export default function PaginaAulas() {
         <PlanosAulas />
       </div>
 
-      {aula && <ModalAula aula={aula} onFechar={() => setAulaId(null)} onConfirmar={(p) => set((db) => matricular(db, aula.id, p))} />}
+      {aula && <ModalAula aula={aula} onFechar={() => setAulaId(null)} onConfirmar={(p) => aplicar((db) => matricular(db, aula.id, p))} />}
     </>
   )
 }
@@ -116,7 +116,7 @@ function VisaoDia({ aulas, dia, onDia, onEscolher }: { aulas: Aula[]; dia: DiaSe
               className={`rounded-xl py-2 text-center border transition ${dia === d ? 'bg-petroleo text-white border-petroleo' : 'bg-white border-petroleo/10 hover:border-onda'}`}
             >
               <span className="block text-sm font-bold">{DIAS_CURTOS[d]}</span>
-              <span className={`block text-[11px] ${dia === d ? 'text-sol' : 'text-petroleo-noite/50'}`}>{qtd} aula{qtd !== 1 && 's'}</span>
+              <span className={`block text-[11px] ${dia === d ? 'text-sol' : 'text-petroleo-noite/70'}`}>{qtd} aula{qtd !== 1 && 's'}</span>
             </button>
           )
         })}
@@ -164,12 +164,12 @@ function VisaoSemana({ aulas, onEscolher }: { aulas: Aula[]; onEscolher: (id: st
           ))}
         </tbody>
       </table>
-      {horas.length === 0 && <p className="p-8 text-center text-petroleo-noite/60">Nenhuma aula com esses filtros.</p>}
+      {horas.length === 0 && <p className="p-8 text-center text-petroleo-noite/70">Nenhuma aula com esses filtros.</p>}
     </Cartao>
   )
 }
 
-function ModalAula({ aula, onFechar, onConfirmar }: { aula: Aula; onFechar: () => void; onConfirmar: (p: { nome: string; telefone: string }) => void }) {
+function ModalAula({ aula, onFechar, onConfirmar }: { aula: Aula; onFechar: () => void; onConfirmar: (p: { nome: string; telefone: string }) => string | null }) {
   const { db } = useDB()
   // data e lotação calculadas ao abrir: depois de confirmar, a turma pode lotar com a própria pessoa
   const [data] = useState(() => proximaDataDaAula(aula))
@@ -193,7 +193,7 @@ function ModalAula({ aula, onFechar, onConfirmar }: { aula: Aula; onFechar: () =
       textoConfirmar={lotada ? 'Entrar na lista de espera' : 'Garantir minha vaga'}
       textoSucesso={lotada ? 'Você está na lista!' : 'Vaga garantida!'}
       mensagemWhatsApp={(nome) => doCliente.aulaExperimental(nome, modalidade, aula.nivel, professor, dataISO(data), aula.hora)}
-      onConfirmar={(c) => !lotada && onConfirmar(c)}
+      onConfirmar={(c) => (lotada ? null : onConfirmar(c))}
     />
   )
 }

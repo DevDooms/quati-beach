@@ -3,8 +3,7 @@ import { addDays, startOfWeek } from 'date-fns'
 import { QUADRAS } from '../../config/estabelecimento'
 import { dataISO, diaDaSemana, proximosDias } from '../../lib/datas'
 import type { DB, Origem } from '../../tipos'
-import { horasDoDia, montarGrade } from '../../features/reservas/agenda'
-import { precoReserva } from '../../features/reservas/regras'
+import { VER_TUDO, horasDoDia, montarGrade } from '../../features/reservas/agenda'
 
 const ORIGENS: Origem[] = ['Site', 'WhatsApp', 'Balcão']
 
@@ -23,9 +22,9 @@ export function indicadoresDaSemana(db: DB, agora = new Date()) {
   const pendentes = db.reservas.filter((r) => !r.pago && r.data <= dias[6])
   return {
     reservas: daSemana.length,
-    faturamento: daSemana.reduce((s, r) => s + precoReserva(db, r), 0),
+    faturamento: daSemana.reduce((s, r) => s + r.valor, 0),
     pendentes: pendentes.length,
-    aReceber: pendentes.reduce((s, r) => s + precoReserva(db, r), 0),
+    aReceber: pendentes.reduce((s, r) => s + r.valor, 0),
   }
 }
 
@@ -49,7 +48,7 @@ export const reservasRecentes = (db: DB, quantas = 5) =>
 
 // Reservas e aulas que ainda vão acontecer hoje, por horário
 export function agendaRestanteDeHoje(db: DB, agora = new Date()) {
-  return montarGrade(db, agora, new Date(0))
+  return montarGrade(db, agora, VER_TUDO)
     .flatMap((linha) => linha.filter((s) => s.reserva || s.aula))
-    .filter((s) => s.hora >= agora.getHours())
+    .filter((s) => s.hora + s.duracao > agora.getHours() + agora.getMinutes() / 60)
 }

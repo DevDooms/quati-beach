@@ -1,4 +1,5 @@
 import { novoId } from '../../lib/aleatorio'
+import { exigir } from '../../lib/erros'
 import { hojeISO, paraDataISO } from '../../lib/datas'
 import type { DB, Dupla, Torneio } from '../../tipos'
 
@@ -23,7 +24,8 @@ const mudarDuplas = (db: DB, torneioId: string, fn: (d: Dupla[]) => Dupla[]): DB
 
 export function inscreverDupla(db: DB, torneioId: string, dados: Omit<Dupla, 'id'>): DB {
   const t = db.torneios.find((x) => x.id === torneioId)
-  if (!t || vagasNaCategoria(t, dados.categoria) === 0) return db
+  exigir(t, 'Torneio não encontrado.')
+  exigir(vagasNaCategoria(t, dados.categoria) > 0, `A categoria ${dados.categoria} acabou de lotar.`)
   const nova: Dupla = { ...dados, atleta1: dados.atleta1.trim(), atleta2: dados.atleta2.trim() || 'A definir', id: novoId() }
   return mudarDuplas(db, torneioId, (ds) => [...ds, nova])
 }

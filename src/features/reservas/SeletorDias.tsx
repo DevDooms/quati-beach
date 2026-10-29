@@ -15,11 +15,11 @@ export function SeletorDias({ dias, selecionado, onEscolher }: { dias: Date[]; s
               ativo ? 'bg-petroleo text-white border-petroleo shadow-lg shadow-petroleo/25' : 'bg-white border-petroleo/10 hover:border-onda'
             }`}
           >
-            <span className={`block text-[11px] uppercase font-semibold ${ativo ? 'text-sol' : 'text-petroleo-noite/50'}`}>
+            <span className={`block text-[11px] uppercase font-semibold ${ativo ? 'text-sol' : 'text-petroleo-noite/70'}`}>
               {i === 0 ? 'Hoje' : i === 1 ? 'Amanhã' : fmtDiaSemana(d)}
             </span>
             <span className="titulo block text-3xl">{d.getDate()}</span>
-            <span className={`block text-[11px] ${ativo ? 'text-white/70' : 'text-petroleo-noite/50'}`}>{fmtDataCurta(d).slice(3)}</span>
+            <span className={`block text-[11px] ${ativo ? 'text-white/70' : 'text-petroleo-noite/70'}`}>{fmtDataCurta(d).slice(3)}</span>
           </button>
         )
       })}

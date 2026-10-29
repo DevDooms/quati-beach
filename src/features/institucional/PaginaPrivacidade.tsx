@@ -16,7 +16,7 @@ export default function PaginaPrivacidade() {
           Não pedimos CPF, endereço nem dados de cartão: pagamentos com cartão são processados por um parceiro de pagamento.
         </Bloco>
         <Bloco titulo="Para que usamos">
-          Para confirmar e lembrar reservas e aulas, avisar sobre remarcações por chuva, lista de espera e inscrições em torneios. Só mandamos
+          Para confirmar e lembrar reservas e aulas, avisar sobre remarcações, lista de espera e inscrições em torneios. Só mandamos
           mensagens relacionadas ao que você reservou ou pediu.
         </Bloco>
         <Bloco titulo="Com quem compartilhamos">
@@ -30,7 +30,7 @@ export default function PaginaPrivacidade() {
           Você pode pedir a qualquer momento para ver, corrigir ou apagar seus dados, ou para não receber mais mensagens. É só chamar no WhatsApp{' '}
           <b>{NEGOCIO.telefone}</b>.
         </Bloco>
-        <p className="text-xs text-petroleo-noite/50">Modelo para a demonstração. Antes de publicar, revisar o texto com o responsável pelo negócio.</p>
+        <p className="text-xs text-petroleo-noite/70">Modelo para a demonstração. Antes de publicar, revisar o texto com o responsável pelo negócio.</p>
       </article>
     </>
   )

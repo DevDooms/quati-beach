@@ -7,7 +7,7 @@ import type { ModalidadeId, Professor } from '../../../tipos'
 import { AreaTexto, Botao, Campo, Confirmar, Entrada, Janela } from '../../../ui'
 import { removerProfessor, salvarProfessor, turmasDoProfessor } from '../regras'
 
-const Rotulo = ({ children }: { children: string }) => <span className="text-xs font-bold uppercase tracking-wide text-petroleo-noite/60">{children}</span>
+const Rotulo = ({ children }: { children: string }) => <span className="text-xs font-bold uppercase tracking-wide text-petroleo-noite/70">{children}</span>
 
 export function JanelaProfessor({ professor, onFechar }: { professor: Professor; onFechar: () => void }) {
   const { db, set } = useDB()
@@ -69,7 +69,7 @@ export function JanelaProfessor({ professor, onFechar }: { professor: Professor;
         {ehNovo ? (
           <span />
         ) : turmas > 0 ? (
-          <p className="text-xs text-petroleo-noite/60 self-center">Tem {turmas} turma(s): troque o professor delas antes de remover.</p>
+          <p className="text-xs text-petroleo-noite/70 self-center">Tem {turmas} turma(s): troque o professor delas antes de remover.</p>
         ) : (
           <Confirmar
             rotulo="Remover"

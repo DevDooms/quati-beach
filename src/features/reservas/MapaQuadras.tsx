@@ -1,14 +1,16 @@
+import { NEGOCIO } from '../../config/estabelecimento'
 import { QUADRAS, modalidadePorId, type QuadraId } from '../../config/estabelecimento'
 
 // Planta simplificada do Quati (vista de cima, baseada na foto aérea):
-// duas quadras de areia, bar/vestiário laranja na esquina e a entrada pela rua.
+// duas quadras de areia deitadas, uma acima da outra, bar/vestiário laranja na esquina e a entrada pela rua.
 
 const POS: Record<QuadraId, { x: number; y: number }> = {
-  q1: { x: 62, y: 52 },
-  q2: { x: 262, y: 52 },
+  q1: { x: 80, y: 182 }, // lado da rua
+  q2: { x: 80, y: 54 },
 }
-const L = 176 // largura da quadra no desenho
-const A = 230 // altura da quadra no desenho
+const L = 340 // largura da quadra no desenho
+const A = 104 // altura da quadra no desenho
+const meio = A / 2
 
 interface Props {
   selecionada: QuadraId | null
@@ -49,7 +51,7 @@ export default function MapaQuadras({ selecionada, onEscolher, livres }: Props) 
       {/* muro com a faixa azul da fachada */}
       <rect x="24" y="304" width="448" height="14" fill="#1e6fb5" />
       <text x="248" y="314.5" fontSize="8.5" fill="#fff" fontWeight="800" textAnchor="middle" letterSpacing="2">
-        QUATI BEACH SPORT · FUTEVÔLEI · BEACH TENNIS · VÔLEI
+        {NEGOCIO.nome.toUpperCase()} · FUTEVÔLEI · BEACH TENNIS · VÔLEI
       </text>
       <rect x="24" y="20" width="10" height="298" fill="#1e6fb5" />
       <rect x="500" y="304" width="116" height="14" fill="#1e6fb5" />
@@ -112,30 +114,31 @@ export default function MapaQuadras({ selecionada, onEscolher, livres }: Props) 
               strokeWidth="3"
             />
             <rect x={x} y={y} width={L} height={A} fill="none" stroke="#e05a2b" strokeWidth="2.5" />
-            <line x1={x + L / 2} y1={y} x2={x + L / 2} y2={y + A} stroke="#e05a2b" strokeOpacity=".25" strokeDasharray="4 6" />
+            <line x1={x} y1={y + meio} x2={x + L} y2={y + meio} stroke="#e05a2b" strokeOpacity=".25" strokeDasharray="4 6" />
             {/* rede */}
-            <line x1={x - 10} y1={y + A / 2} x2={x + L + 10} y2={y + A / 2} stroke="#0a3f45" strokeWidth="3" />
-            <circle cx={x - 10} cy={y + A / 2} r="4" fill="#0a3f45" />
-            <circle cx={x + L + 10} cy={y + A / 2} r="4" fill="#0a3f45" />
+            <line x1={x + L / 2} y1={y - 10} x2={x + L / 2} y2={y + A + 10} stroke="#0a3f45" strokeWidth="3" />
+            <circle cx={x + L / 2} cy={y - 10} r="4" fill="#0a3f45" />
+            <circle cx={x + L / 2} cy={y + A + 10} r="4" fill="#0a3f45" />
 
-            {/* rótulo */}
-            <rect x={x + L / 2 - 62} y={y + 34} width="124" height="54" rx="12" className={ativa ? 'fill-petroleo' : 'fill-white'} stroke="#0f5c63" strokeOpacity=".15" />
-            <text x={x + L / 2} y={y + 62} textAnchor="middle" fontSize="22" className={`font-display ${ativa ? 'fill-sol' : 'fill-petroleo'}`} letterSpacing="1">
+            {/* rótulo (lado esquerdo da rede) */}
+            <rect x={x + L / 4 - 62} y={y + meio - 27} width="124" height="54" rx="12" className={ativa ? 'fill-petroleo' : 'fill-white'} stroke="#0f5c63" strokeOpacity=".15" />
+            <text x={x + L / 4} y={y + meio + 1} textAnchor="middle" fontSize="22" className={`font-display ${ativa ? 'fill-sol' : 'fill-petroleo'}`} letterSpacing="1">
               {q.nome.toUpperCase()}
             </text>
-            <text x={x + L / 2} y={y + 78} textAnchor="middle" fontSize="9.5" fontWeight="600" className={ativa ? 'fill-white/80' : 'fill-petroleo-noite/60'}>
+            <text x={x + L / 4} y={y + meio + 17} textAnchor="middle" fontSize="9.5" fontWeight="600" className={ativa ? 'fill-white/80' : 'fill-petroleo-noite/60'}>
               {q.modalidades.map((m) => modalidadePorId(m).curto).join(' · ')}
             </text>
 
+            {/* disponibilidade (lado direito da rede) */}
             {qtd !== undefined && (
               <g>
-                <rect x={x + L / 2 - 50} y={y + A - 66} width="100" height="26" rx="13" fill={qtd > 0 ? '#10b981' : '#94a3b8'} />
-                <text x={x + L / 2} y={y + A - 49} textAnchor="middle" fontSize="11" fontWeight="800" fill="#fff">
+                <rect x={x + (L * 3) / 4 - 50} y={y + meio - 28} width="100" height="26" rx="13" fill={qtd > 0 ? '#10b981' : '#94a3b8'} />
+                <text x={x + (L * 3) / 4} y={y + meio - 11} textAnchor="middle" fontSize="11" fontWeight="800" fill="#fff">
                   {qtd > 1 ? `${qtd} livres hoje` : qtd === 1 ? '1 livre hoje' : 'Lotada hoje'}
                 </text>
               </g>
             )}
-            <text x={x + L / 2} y={y + A - 18} textAnchor="middle" fontSize="10.5" fontWeight="700" className={ativa ? 'fill-petroleo' : 'fill-onda'}>
+            <text x={x + (L * 3) / 4} y={y + meio + (qtd !== undefined ? 18 : 4)} textAnchor="middle" fontSize="10.5" fontWeight="700" className={ativa ? 'fill-petroleo' : 'fill-onda'}>
               {ativa ? '✓ Selecionada' : 'Toque para ver horários'}
             </text>
           </g>

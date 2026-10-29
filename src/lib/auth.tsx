@@ -1,34 +1,64 @@
-// Login apenas visual da demonstração: guarda só se a pessoa "entrou" como
-// cliente e/ou como administrador. Com backend, vira o contexto de sessão real.
+// Login apenas visual da demonstração: guarda quem "entrou" como cliente e se
+// o painel está aberto. Com backend, vira o contexto de sessão real.
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
+import type { Pessoa } from '../tipos'
 import { gravarLocal, lerLocal } from './armazenamento'
 
-type Papel = 'cliente' | 'admin'
-const chave = (p: Papel) => `quati:login:${p}`
+const CHAVE_CLIENTE = 'quati:login:cliente'
+const CHAVE_ADMIN = 'quati:login:admin'
+
+function lerCliente(): Pessoa | null {
+  try {
+    const p = JSON.parse(lerLocal(CHAVE_CLIENTE) ?? 'null')
+    return p && typeof p.nome === 'string' && typeof p.telefone === 'string' ? p : null
+  } catch {
+    return null
+  }
+}
 
 interface Ctx {
-  logados: Record<Papel, boolean>
-  definir: (p: Papel, v: boolean) => void
+  cliente: Pessoa | null
+  admin: boolean
+  entrarCliente: (p: Pessoa) => void
+  sairCliente: () => void
+  definirAdmin: (v: boolean) => void
 }
 
 const Contexto = createContext<Ctx | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [logados, setLogados] = useState<Record<Papel, boolean>>(() => ({
-    cliente: lerLocal(chave('cliente')) === '1',
-    admin: lerLocal(chave('admin')) === '1',
-  }))
+  const [cliente, setCliente] = useState(lerCliente)
+  const [admin, setAdmin] = useState(() => lerLocal(CHAVE_ADMIN) === '1')
 
-  const definir = useCallback((p: Papel, v: boolean) => {
-    gravarLocal(chave(p), v ? '1' : null)
-    setLogados((atual) => ({ ...atual, [p]: v }))
+  const entrarCliente = useCallback((p: Pessoa) => {
+    gravarLocal(CHAVE_CLIENTE, JSON.stringify(p))
+    setCliente(p)
+  }, [])
+  const sairCliente = useCallback(() => {
+    gravarLocal(CHAVE_CLIENTE, null)
+    setCliente(null)
+  }, [])
+  const definirAdmin = useCallback((v: boolean) => {
+    gravarLocal(CHAVE_ADMIN, v ? '1' : null)
+    setAdmin(v)
   }, [])
 
-  return <Contexto.Provider value={{ logados, definir }}>{children}</Contexto.Provider>
+  return <Contexto.Provider value={{ cliente, admin, entrarCliente, sairCliente, definirAdmin }}>{children}</Contexto.Provider>
 }
 
-export function useLogin(papel: Papel) {
+function useAuth() {
   const c = useContext(Contexto)
-  if (!c) throw new Error('useLogin precisa estar dentro do AuthProvider')
-  return { logado: c.logados[papel], entrar: () => c.definir(papel, true), sair: () => c.definir(papel, false) }
+  if (!c) throw new Error('precisa estar dentro do AuthProvider')
+  return c
+}
+
+// Cliente que "entrou" no site (null se ninguém)
+export function useUsuario() {
+  const { cliente, entrarCliente, sairCliente } = useAuth()
+  return { usuario: cliente, entrar: entrarCliente, sair: sairCliente }
+}
+
+export function useAdmin() {
+  const { admin, definirAdmin } = useAuth()
+  return { logado: admin, entrar: () => definirAdmin(true), sair: () => definirAdmin(false) }
 }

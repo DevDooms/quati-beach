@@ -28,7 +28,7 @@ export function PixDemo({ semente, valor }: { semente: string; valor: string }) 
           <Copy className="size-3.5" /> {copiado ? 'Copiado!' : 'Copiar'}
         </button>
       </div>
-      <p className="mt-2 text-[11px] text-petroleo-noite/50">Demonstração: este Pix não é real.</p>
+      <p className="mt-2 text-[11px] text-petroleo-noite/70">Demonstração: este Pix não é real.</p>
     </>
   )
 }

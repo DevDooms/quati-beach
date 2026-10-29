@@ -70,7 +70,7 @@ export function Janela({
                 {etiqueta}
                 <h2 id={idTitulo} className="titulo text-4xl text-petroleo mt-1">{titulo}</h2>
               </div>
-              <button onClick={onFechar} className="p-1 -mr-1 text-petroleo-noite/50 hover:text-petroleo-noite" aria-label="Fechar">
+              <button onClick={onFechar} className="p-1 -mr-1 text-petroleo-noite/70 hover:text-petroleo-noite" aria-label="Fechar">
                 <X />
               </button>
             </div>

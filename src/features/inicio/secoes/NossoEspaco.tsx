@@ -1,3 +1,4 @@
+import { NEGOCIO } from '../../../config/estabelecimento'
 import { useNavigate } from 'react-router-dom'
 import quadraAerea from '../../../assets/quadra-aerea.jpg'
 import { TituloSecao } from '../../../ui'
@@ -24,7 +25,7 @@ export function NossoEspaco() {
               </li>
             ))}
           </ol>
-          <img src={quadraAerea} alt="Vista aérea das quadras do Quati Beach Sport" className="mt-6 rounded-3xl shadow-lg w-full max-h-60 object-cover" />
+          <img src={quadraAerea} alt={`Vista aérea das quadras do ${NEGOCIO.nome}`} className="mt-6 rounded-3xl shadow-lg w-full max-h-60 object-cover" />
         </div>
         <div className="rounded-3xl bg-white p-3 sm:p-5 shadow-xl">
           <MapaQuadras selecionada={null} onEscolher={(id) => navegar(linkAgendar(id))} />

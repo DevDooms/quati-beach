@@ -23,7 +23,7 @@ export function Avaliacoes() {
             <Estrelas tamanho="size-4" />
             <blockquote className="mt-3 text-petroleo-noite/80">“{a.texto}”</blockquote>
             <figcaption className="mt-4 text-sm">
-              <b>{a.nome}</b> <span className="text-petroleo-noite/50">· {a.quando}</span>
+              <b>{a.nome}</b> <span className="text-petroleo-noite/70">· {a.quando}</span>
             </figcaption>
           </figure>
         ))}

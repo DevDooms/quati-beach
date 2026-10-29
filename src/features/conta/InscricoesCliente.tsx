@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom'
 import { CircleCheck, GraduationCap, Trophy } from 'lucide-react'
 import { modalidadePorId, quadraPorId } from '../../config/estabelecimento'
-import { CLIENTE_DEMO } from '../../demo/dados'
 import { useDB } from '../../lib/banco'
 import { DIAS_SEMANA, dataDeISO, dataISO, fmtDataCurta, fmtDiaSemana, fmtFaixa } from '../../lib/datas'
 import { doCliente } from '../../lib/mensagens'
 import { linkWhatsApp } from '../../lib/whatsapp'
-import type { Aula } from '../../tipos'
+import { soDigitos } from '../../lib/formatos'
+import type { Aula, Pessoa } from '../../tipos'
 import { Botao, SeloModalidade, Vazio } from '../../ui'
 import { acharProfessor, proximaDataDaAula } from '../aulas/regras'
 import { TituloConta } from './TituloConta'
 
-export function TurmasCliente({ turmas }: { turmas: Aula[] }) {
+export function TurmasCliente({ turmas, pessoa }: { turmas: Aula[]; pessoa: Pessoa }) {
   const { db } = useDB()
   return (
     <section>
@@ -32,13 +32,13 @@ export function TurmasCliente({ turmas }: { turmas: Aula[] }) {
                   <span className="text-xs font-semibold text-petroleo-noite/70">{a.nivel}</span>
                 </div>
                 <p className="mt-1 font-bold">{DIAS_SEMANA[a.diaSemana]}s, {fmtFaixa(a.hora)}</p>
-                <p className="text-sm text-petroleo-noite/60">
+                <p className="text-sm text-petroleo-noite/70">
                   Prof. {acharProfessor(db, a.professorId).nome} · {quadraPorId(a.quadraId).nome}
                 </p>
                 <p className="text-xs text-onda font-semibold mt-1">Próxima: {fmtDiaSemana(prox)} {fmtDataCurta(prox)}</p>
               </div>
               <Botao
-                href={linkWhatsApp(doCliente.avisarFalta(CLIENTE_DEMO.nome, modalidadePorId(a.modalidade).nome, a.nivel, dataISO(prox)))}
+                href={linkWhatsApp(doCliente.avisarFalta(pessoa.nome, modalidadePorId(a.modalidade).nome, a.nivel, dataISO(prox)))}
                 variante="secundario"
                 tamanho="sm"
                 redondo
@@ -53,9 +53,9 @@ export function TurmasCliente({ turmas }: { turmas: Aula[] }) {
   )
 }
 
-export function TorneiosCliente() {
+export function TorneiosCliente({ pessoa }: { pessoa: Pessoa }) {
   const { db } = useDB()
-  const inscricoes = db.torneios.flatMap((t) => t.duplas.filter((d) => d.telefone === CLIENTE_DEMO.telefone).map((d) => ({ t, d })))
+  const inscricoes = db.torneios.flatMap((t) => t.duplas.filter((d) => soDigitos(d.telefone) === soDigitos(pessoa.telefone)).map((d) => ({ t, d })))
   return (
     <section>
       <TituloConta icone={<Trophy />}>Torneios</TituloConta>

@@ -9,7 +9,7 @@ export const classeEntrada = (compacto = false) =>
 export function Campo({ rotulo, children, compacto, className = '' }: { rotulo: string; children: ReactNode; compacto?: boolean; className?: string }) {
   return (
     <label className={`block ${className}`}>
-      <span className={compacto ? 'text-xs font-bold uppercase tracking-wide text-petroleo-noite/60' : 'text-sm font-semibold'}>{rotulo}</span>
+      <span className={compacto ? 'text-xs font-bold uppercase tracking-wide text-petroleo-noite/70' : 'text-sm font-semibold'}>{rotulo}</span>
       <span className="block mt-1">{children}</span>
     </label>
   )
@@ -21,7 +21,7 @@ export function Entrada({ compacto, icone, className = '', ...props }: ComCompac
   if (!icone) return <input {...props} className={`${classeEntrada(compacto)} ${className}`} />
   return (
     <span className="relative block">
-      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-petroleo-noite/40 [&>svg]:size-4">{icone}</span>
+      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-petroleo-noite/70 [&>svg]:size-4">{icone}</span>
       <input {...props} className={`${classeEntrada(compacto)} pl-10 ${className}`} />
     </span>
   )

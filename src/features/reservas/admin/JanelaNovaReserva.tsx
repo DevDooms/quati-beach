@@ -4,17 +4,19 @@ import { useDB } from '../../../lib/banco'
 import { dataDeISO, fmtFaixa, paraDataISO } from '../../../lib/datas'
 import { fmtReais, mascaraTelefone } from '../../../lib/formatos'
 import { esquemaNome, valido } from '../../../lib/validacao'
-import type { DataISO, Origem } from '../../../tipos'
+import type { DataISO, FormaRecebida, Origem } from '../../../tipos'
 import { Aviso, Botao, Campo, Entrada, EtiquetaJanela, Janela, Selecao } from '../../../ui'
-import { horasDoDia, precoDoHorario, slotDe } from '../agenda'
+import { VER_TUDO, horasDoDia, precoDoHorario, slotDe } from '../agenda'
 import { criarReserva } from '../regras'
 
 const ORIGENS: Origem[] = ['Balcão', 'WhatsApp', 'Site']
-const VER_TUDO = new Date(0) // no painel dá para lançar reservas de horários que já passaram
+const RECEBIMENTOS: FormaRecebida[] = ['Dinheiro', 'Pix', 'Cartão']
 
 // Lançamento manual de reserva (balcão, telefone…)
 export function JanelaNovaReserva({ inicial, onFechar }: { inicial: { data: DataISO; hora?: number; quadraId?: QuadraId }; onFechar: () => void }) {
-  const { db, set } = useDB()
+  const { db, aplicar } = useDB()
+  const [erro, setErro] = useState<string | null>(null)
+  const [recebido, setRecebido] = useState<FormaRecebida>('Dinheiro')
   const [f, setF] = useState({
     data: inicial.data,
     hora: inicial.hora ?? horasDoDia(db, dataDeISO(inicial.data))[0] ?? 8,
@@ -38,8 +40,10 @@ export function JanelaNovaReserva({ inicial, onFechar }: { inicial: { data: Data
         onSubmit={(e) => {
           e.preventDefault()
           if (!pode) return
-          set((db) => criarReserva(db, f))
-          onFechar()
+          // no painel dá para lançar horários que já passaram (só o site bloqueia o passado)
+          const resultado = aplicar((db) => criarReserva(db, { ...f, formaPagamento: f.pago ? recebido : 'Balcão' }))
+          if (resultado) setErro(resultado)
+          else onFechar()
         }}
       >
         <Campo rotulo="Data" compacto>
@@ -47,7 +51,7 @@ export function JanelaNovaReserva({ inicial, onFechar }: { inicial: { data: Data
         </Campo>
         <Campo rotulo="Horário" compacto>
           <Selecao compacto value={f.hora} onChange={(e) => setF({ ...f, hora: Number(e.target.value) })}>
-            {horas.map((h) => <option key={h} value={h}>{fmtFaixa(h)}</option>)}
+            {horas.map((h) => <option key={h} value={h}>{fmtFaixa(h, db.politica.duracaoReserva)}</option>)}
           </Selecao>
         </Campo>
         <Campo rotulo="Quadra" compacto>
@@ -70,9 +74,23 @@ export function JanelaNovaReserva({ inicial, onFechar }: { inicial: { data: Data
           <input type="checkbox" checked={f.pago} onChange={(e) => setF({ ...f, pago: e.target.checked })} className="accent-petroleo size-4" /> Já foi pago (
           {fmtReais(precoDoHorario(db, d, f.hora))})
         </label>
+        {f.pago && (
+          <Campo rotulo="Recebido em" compacto className="col-span-2">
+            <Selecao compacto value={recebido} onChange={(e) => setRecebido(e.target.value as FormaRecebida)}>
+              {RECEBIMENTOS.map((r) => <option key={r}>{r}</option>)}
+            </Selecao>
+          </Campo>
+        )}
         {ocupado && (
           <div className="col-span-2">
-            <Aviso>Este horário já está {slot.status === 'aula' ? 'ocupado por uma aula' : 'reservado'}. Escolha outro.</Aviso>
+            <Aviso>
+              Este horário já está {slot.status === 'aula' ? 'ocupado por uma aula' : slot.status === 'bloqueado' ? 'bloqueado' : 'reservado'}. Escolha outro.
+            </Aviso>
+          </div>
+        )}
+        {erro && (
+          <div className="col-span-2" role="alert">
+            <Aviso>{erro}</Aviso>
           </div>
         )}
         <div className="col-span-2 flex justify-end gap-2 pt-2">

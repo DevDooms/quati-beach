@@ -1,3 +1,4 @@
+import { NEGOCIO } from '../../config/estabelecimento'
 import { Beer, Sandwich, UtensilsCrossed } from 'lucide-react'
 import { CARDAPIO } from '../../config/estabelecimento'
 import { fmtReais } from '../../lib/formatos'
@@ -10,7 +11,7 @@ const ICONES = [UtensilsCrossed, Sandwich, Beer]
 export default function PaginaBar() {
   return (
     <>
-      <CabecalhoPagina sobre="Bar do Quati" titulo={<>Pós-jogo é <span className="text-sol">aqui</span></>}>
+      <CabecalhoPagina sobre={`Bar do ${NEGOCIO.apelido}`} titulo={<>Pós-jogo é <span className="text-sol">aqui</span></>}>
         Porções, lanches e bebida gelada para a galera e para a família. Peça no balcão ou já deixe encomendado pelo WhatsApp.
       </CabecalhoPagina>
 
@@ -27,7 +28,7 @@ export default function PaginaBar() {
                   <li key={item.nome} className="flex items-baseline gap-2">
                     <span className="min-w-0">
                       <b className="block">{item.nome}</b>
-                      {item.descricao && <span className="text-xs text-petroleo-noite/60">{item.descricao}</span>}
+                      {item.descricao && <span className="text-xs text-petroleo-noite/70">{item.descricao}</span>}
                     </span>
                     <span className="flex-1 border-b border-dotted border-petroleo/20 translate-y-[-4px]" />
                     <span className="font-extrabold text-petroleo whitespace-nowrap">{fmtReais(item.preco)}</span>
@@ -49,7 +50,7 @@ export default function PaginaBar() {
             <IconeWhatsApp className="size-5 text-whatsapp-escuro" /> Encomendar no WhatsApp
           </Botao>
         </div>
-        <p className="mt-3 text-center text-xs text-petroleo-noite/50">Cardápio e preços ilustrativos para a demonstração.</p>
+        <p className="mt-3 text-center text-xs text-petroleo-noite/70">Cardápio e preços ilustrativos para a demonstração.</p>
       </div>
     </>
   )

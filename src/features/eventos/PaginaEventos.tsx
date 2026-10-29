@@ -1,3 +1,4 @@
+import { NEGOCIO } from '../../config/estabelecimento'
 import { useState } from 'react'
 import { CircleCheck, Music, PartyPopper, Trophy, UtensilsCrossed } from 'lucide-react'
 import { TIPOS_EVENTO } from '../../config/estabelecimento'
@@ -45,7 +46,7 @@ export default function PaginaEventos() {
             <div className="text-center py-6">
               <CircleCheck className="size-16 mx-auto text-emerald-500" strokeWidth={1.5} />
               <h2 className="titulo text-4xl text-petroleo mt-3">Pedido enviado!</h2>
-              <p className="mt-2 text-sm text-petroleo-noite/70">A equipe do Quati vai te chamar no WhatsApp com a proposta.</p>
+              <p className="mt-2 text-sm text-petroleo-noite/70">A equipe do {NEGOCIO.apelido} vai te chamar no WhatsApp com a proposta.</p>
               <Botao
                 variante="secundario"
                 redondo

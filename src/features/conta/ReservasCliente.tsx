@@ -1,19 +1,21 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CalendarDays, Clock, History, MapPin, X } from 'lucide-react'
-import { POLITICA, quadraPorId } from '../../config/estabelecimento'
-import { CLIENTE_DEMO } from '../../demo/dados'
+import { CalendarClock, CalendarDays, Clock, History, MapPin, X } from 'lucide-react'
+import { quadraPorId } from '../../config/estabelecimento'
 import { useDB } from '../../lib/banco'
 import { dataDeISO, fmtDataCurta, fmtDataLonga, fmtDiaSemana, fmtFaixa } from '../../lib/datas'
 import { fmtReais } from '../../lib/formatos'
 import { doCliente } from '../../lib/mensagens'
 import { linkWhatsApp } from '../../lib/whatsapp'
 import type { Reserva } from '../../tipos'
-import { Botao, IconeWhatsApp, Selo, Vazio } from '../../ui'
+import { Botao, IconeWhatsApp, Vazio } from '../../ui'
 import { rotuloForma } from '../reservas/modal/EscolhaPagamento'
-import { cancelarReserva, podeCancelar, precoReserva } from '../reservas/regras'
+import { cancelarReserva, podeCancelar } from '../reservas/regras'
+import { JanelaRemarcar } from './JanelaRemarcar'
 import { TituloConta } from './TituloConta'
 
 export function ProximasReservas({ reservas }: { reservas: Reserva[] }) {
+  const [remarcando, setRemarcando] = useState<Reserva | null>(null)
   return (
     <section>
       <TituloConta icone={<CalendarDays />}>Próximas reservas</TituloConta>
@@ -23,16 +25,19 @@ export function ProximasReservas({ reservas }: { reservas: Reserva[] }) {
             Nenhuma reserva marcada. <Link to="/agendar" className="font-bold text-onda">Reservar agora</Link>
           </Vazio>
         )}
-        {reservas.map((r) => <CartaoReserva key={r.id} reserva={r} />)}
+        {reservas.map((r) => <CartaoReserva key={r.id} reserva={r} onRemarcar={() => setRemarcando(r)} />)}
       </div>
+      {remarcando && <JanelaRemarcar reserva={remarcando} onFechar={() => setRemarcando(null)} />}
     </section>
   )
 }
 
-function CartaoReserva({ reserva: r }: { reserva: Reserva }) {
+function CartaoReserva({ reserva: r, onRemarcar }: { reserva: Reserva; onRemarcar: () => void }) {
   const { db, set } = useDB()
   const d = dataDeISO(r.data)
   const quadra = quadraPorId(r.quadraId).nome
+  // dentro do prazo do dono dá para remarcar/cancelar pelo site; depois disso, pelo WhatsApp
+  const noPrazo = podeCancelar(r, db.politica)
   return (
     <article className="rounded-2xl bg-white border border-petroleo/10 p-4">
       <div className="flex items-start gap-4">
@@ -43,29 +48,31 @@ function CartaoReserva({ reserva: r }: { reserva: Reserva }) {
         <div className="flex-1 min-w-0">
           <p className="font-bold first-letter:uppercase">{fmtDataLonga(d)}</p>
           <p className="text-sm text-petroleo-noite/70 flex flex-wrap gap-x-3">
-            <span className="inline-flex items-center gap-1"><Clock className="size-3.5" />{fmtFaixa(r.hora)}</span>
+            <span className="inline-flex items-center gap-1"><Clock className="size-3.5" />{fmtFaixa(r.hora, r.duracao)}</span>
             <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{quadra}</span>
           </p>
           <p className={`mt-1 text-xs font-bold ${r.pago ? 'text-emerald-700' : 'text-laranja'}`}>
-            {r.pago ? `Pago${r.formaPagamento ? ` · ${rotuloForma(r.formaPagamento)}` : ''}` : `A pagar no local · ${fmtReais(precoReserva(db, r))}`}
-            {r.fixoId && <Selo className="ml-2 bg-sol/30 text-petroleo-noite">Horário fixo</Selo>}
+            {r.pago ? `Pago${r.formaPagamento ? ` · ${rotuloForma(r.formaPagamento)}` : ''}` : `A pagar no local · ${fmtReais(r.valor)}`}
           </p>
         </div>
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <Botao href={linkWhatsApp(doCliente.remarcar(CLIENTE_DEMO.nome, r.data, r.hora, quadra))} variante="secundario" redondo>
-          <IconeWhatsApp className="size-4 text-whatsapp-escuro" /> Remarcar
-        </Botao>
-        {podeCancelar(r) ? (
+      {noPrazo ? (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Botao variante="secundario" redondo onClick={onRemarcar}>
+            <CalendarClock className="size-4" /> Remarcar
+          </Botao>
           <Botao variante="perigo" redondo onClick={() => set((db) => cancelarReserva(db, r.id))}>
             <X className="size-4" /> Cancelar
           </Botao>
-        ) : (
-          <span className="inline-flex items-center justify-center rounded-full bg-petroleo/5 px-2 text-center text-[11px] leading-tight text-petroleo-noite/60">
-            Menos de {POLITICA.cancelamentoHoras}h: fale no WhatsApp
-          </span>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <span className="text-[11px] text-petroleo-noite/70">Faltam menos de {db.politica.cancelamentoHoras}h: mudanças pelo WhatsApp.</span>
+          <Botao href={linkWhatsApp(doCliente.remarcar(r.nome, r.data, r.hora, quadra))} variante="secundario" redondo tamanho="sm">
+            <IconeWhatsApp className="size-4 text-whatsapp-escuro" /> Falar com a gente
+          </Botao>
+        </div>
+      )}
     </article>
   )
 }
@@ -75,15 +82,15 @@ export function Historico({ reservas }: { reservas: Reserva[] }) {
     <section>
       <TituloConta icone={<History />}>Histórico</TituloConta>
       <div className="mt-3 rounded-2xl bg-white border border-petroleo/10 divide-y divide-petroleo/10">
-        {reservas.length === 0 && <p className="p-4 text-sm text-petroleo-noite/60">Nada por aqui ainda.</p>}
+        {reservas.length === 0 && <p className="p-4 text-sm text-petroleo-noite/70">Nada por aqui ainda.</p>}
         {reservas.map((r) => {
           const d = dataDeISO(r.data)
           return (
             <div key={r.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
               <span className="first-letter:uppercase">
-                {fmtDiaSemana(d)} {fmtDataCurta(d)} · {fmtFaixa(r.hora)}
+                {fmtDiaSemana(d)} {fmtDataCurta(d)} · {fmtFaixa(r.hora, r.duracao)}
               </span>
-              <span className="text-petroleo-noite/60">{quadraPorId(r.quadraId).nome}</span>
+              <span className="text-petroleo-noite/70">{quadraPorId(r.quadraId).nome}</span>
             </div>
           )
         })}

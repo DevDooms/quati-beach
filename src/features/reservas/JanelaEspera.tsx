@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import type { Pessoa } from '../../tipos'
-import { Botao, Detalhes, EtiquetaJanela, Janela } from '../../ui'
+import { Aviso, Botao, Detalhes, EtiquetaJanela, Janela } from '../../ui'
 import { CamposContato, useContato } from '../conta/CamposContato'
 
 interface Props {
   detalhes: { rotulo: string; valor: string }[]
   naFila: number // quantos já estavam esperando antes desta pessoa
   onFechar: () => void
-  onConfirmar: (p: Pessoa) => void
+  onConfirmar: (p: Pessoa) => string | null // mensagem de erro, ou null se entrou na fila
 }
 
 export function JanelaEspera({ detalhes, naFila, onFechar, onConfirmar }: Props) {
   const { contato, setContato, ok } = useContato()
   // posição guardada na hora de entrar (depois disso `naFila` já inclui a própria pessoa)
   const [posicao, setPosicao] = useState<number | null>(null)
+  const [erro, setErro] = useState<string | null>(null)
   const feito = posicao !== null
 
   return (
@@ -32,8 +33,10 @@ export function JanelaEspera({ detalhes, naFila, onFechar, onConfirmar }: Props)
           onSubmit={(e) => {
             e.preventDefault()
             if (!ok) return
-            setPosicao(naFila + 1)
-            onConfirmar(contato)
+            const posicaoNaFila = naFila + 1
+            const resultado = onConfirmar(contato)
+            if (resultado) setErro(resultado)
+            else setPosicao(posicaoNaFila)
           }}
         >
           <p className="text-sm text-petroleo-noite/70">
@@ -41,6 +44,11 @@ export function JanelaEspera({ detalhes, naFila, onFechar, onConfirmar }: Props)
             avisamos se vagar.
           </p>
           <CamposContato contato={contato} onChange={setContato} />
+          {erro && (
+            <div role="alert">
+              <Aviso>{erro}</Aviso>
+            </div>
+          )}
           <Botao type="submit" variante="destaque" tamanho="lg" largo disabled={!ok}>
             Entrar na lista de espera
           </Botao>

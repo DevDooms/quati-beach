@@ -2,7 +2,7 @@
 // que o Quati envia (seção "do estabelecimento") viram modelos aprovados.
 import { NEGOCIO } from '../config/estabelecimento'
 import type { DataISO } from '../tipos'
-import { DIAS_SEMANA, dataDeISO, fmtDataCurta, fmtDataLonga, fmtFaixa, fmtHora, hojeISO } from './datas'
+import { dataDeISO, fmtDataCurta, fmtDataLonga, fmtFaixa, fmtHora, hojeISO } from './datas'
 import { fmtReais, fmtReaisCentavos, primeiroNome } from './formatos'
 
 const souEu = (nome: string) => (nome ? `Sou ${nome} e ` : '')
@@ -37,10 +37,6 @@ export const doEstabelecimento = {
     `Olá, ${primeiroNome(nome)}! Vagou o horário de ${dia(data)} às ${hora}h na ${quadra}. Quer ficar com ele?`,
   naFila: (nome: string, data: DataISO, hora: number) =>
     `Olá, ${primeiroNome(nome)}! Você está na lista de espera de ${dia(data)} às ${hora}h. Avisamos se vagar!`,
-  chuva: (nome: string, data: DataISO, hora: number) =>
-    `Olá, ${primeiroNome(nome)}! Aqui é do ${NEGOCIO.nome}. Por causa da chuva, seu horário de ${dia(data)} às ${hora}h não vai rolar 🌧️. Podemos remarcar sem custo: qual dia fica bom pra você?`,
-  mensalista: (nome: string, diaSemana: number, hora: number) =>
-    `Olá, ${nome}! Aqui é do ${NEGOCIO.nome}, sobre o horário fixo de ${DIAS_SEMANA[diaSemana].toLowerCase()} às ${hora}h.`,
   respostaEvento: (nome: string, tipo: string, data: DataISO) =>
     `Olá, ${primeiroNome(nome)}! Aqui é do ${NEGOCIO.nome}, sobre o seu pedido de ${tipo.toLowerCase()} para ${fmtDataCurta(dataDeISO(data))}.`,
   inscricaoTorneio: (nome: string, torneio: string) => `Olá, ${primeiroNome(nome)}! Aqui é do ${NEGOCIO.nome}, sobre a inscrição no ${torneio}.`,

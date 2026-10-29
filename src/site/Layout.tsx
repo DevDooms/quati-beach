@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { CalendarDays, CircleUser, MapPin, Menu, Phone, X } from 'lucide-react'
 import { NEGOCIO } from '../config/estabelecimento'
-import { useLogin } from '../lib/auth'
+import { useUsuario } from '../lib/auth'
 import { useDB } from '../lib/banco'
 import { doCliente } from '../lib/mensagens'
 import { linkWhatsApp } from '../lib/whatsapp'
@@ -19,6 +19,7 @@ const TODOS_NAV: { to: string; label: string; modulo?: keyof Modulos }[] = [
   { to: '/torneios', label: 'Torneios', modulo: 'torneios' },
   { to: '/bar', label: 'Bar', modulo: 'bar' },
   { to: '/eventos', label: 'Eventos', modulo: 'eventos' },
+  { to: '/pacotes', label: 'Pacotes', modulo: 'pacotes' },
 ]
 
 export default function Layout() {
@@ -26,9 +27,10 @@ export default function Layout() {
   const tipoNavegacao = useNavigationType()
   const [menu, setMenu] = useState(false)
   const { db } = useDB()
-  const { logado } = useLogin('cliente')
-  const nav = TODOS_NAV.filter((n) => !n.modulo || db.modulos[n.modulo])
-  const conta = logado ? { to: '/minha-conta', label: 'Minha conta' } : { to: '/entrar', label: 'Entrar' }
+  const { usuario } = useUsuario()
+  // pacotes só aparece se o dono ligou o módulo E criou algum pacote
+  const nav = TODOS_NAV.filter((n) => (!n.modulo || db.modulos[n.modulo]) && (n.modulo !== 'pacotes' || db.pacotes.length > 0))
+  const conta = usuario ? { to: '/minha-conta', label: 'Minha conta' } : { to: '/entrar', label: 'Entrar' }
   const status = statusFuncionamento(db)
 
   // Ao trocar de página, volta ao topo. É um layout effect para rodar ANTES dos
@@ -51,7 +53,7 @@ export default function Layout() {
             {status.texto}
           </span>
           <span className="hidden sm:flex items-center gap-1.5">
-            <MapPin className="size-3.5" /> {NEGOCIO.endereco}, Embu-Guaçu
+            <MapPin className="size-3.5" /> {NEGOCIO.endereco}, {NEGOCIO.cidadeCurta}
           </span>
         </div>
       </div>
@@ -61,8 +63,8 @@ export default function Layout() {
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <Logo className="size-10" />
             <span className="titulo text-2xl leading-none">
-              Quati <span className="text-sol">Beach</span>
-              <span className="block text-[11px] font-sans font-semibold tracking-[0.3em] text-onda-claro/80">SPORT</span>
+              {NEGOCIO.marca[0]} <span className="text-sol">{NEGOCIO.marca[1]}</span>
+              <span className="block text-[11px] font-sans font-semibold tracking-[0.3em] text-onda-claro/80 uppercase">{NEGOCIO.marca[2]}</span>
             </span>
           </Link>
 
@@ -71,7 +73,7 @@ export default function Layout() {
               <NavLink
                 key={n.to}
                 to={n.to}
-                className={({ isActive }) => `px-3 py-2 rounded-full text-sm font-medium transition ${isActive ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white'}`}
+                className={({ isActive }) => `px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${isActive ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white'}`}
               >
                 {n.label}
               </NavLink>
@@ -135,7 +137,7 @@ function Rodape({ nav }: { nav: { to: string; label: string }[] }) {
             <Logo className="size-9" />
             <span className="titulo text-2xl">{NEGOCIO.nome}</span>
           </div>
-          <p className="mt-3 text-sm">Futevôlei, beach tennis e vôlei de praia em Embu-Guaçu.</p>
+          <p className="mt-3 text-sm">{NEGOCIO.descricao}</p>
         </div>
         <div className="text-sm space-y-2">
           <p className="font-semibold text-white">Contato</p>
@@ -156,7 +158,7 @@ function Rodape({ nav }: { nav: { to: string; label: string }[] }) {
       <div className="border-t border-white/10 py-4 px-4 text-center text-xs text-white/50">
         Protótipo de demonstração · horários, professores e preços são ilustrativos ·{' '}
         <Link to="/demo" className="underline hover:text-white">Trocar de visão</Link> ·{' '}
-        <Link to="/admin" className="underline hover:text-white">Painel do Quati</Link>
+        <Link to="/admin" className="underline hover:text-white">Painel do {NEGOCIO.apelido}</Link>
       </div>
     </footer>
   )

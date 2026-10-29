@@ -35,7 +35,7 @@ export function Detalhes({ itens, rodape }: { itens: { rotulo: string; valor: Re
     <dl className="rounded-2xl bg-areia-claro p-4 text-sm space-y-1.5">
       {itens.map((d) => (
         <div key={d.rotulo} className="flex justify-between gap-4">
-          <dt className="text-petroleo-noite/60">{d.rotulo}</dt>
+          <dt className="text-petroleo-noite/70">{d.rotulo}</dt>
           <dd className="font-semibold text-right first-letter:uppercase">{d.valor}</dd>
         </div>
       ))}
@@ -49,14 +49,14 @@ export function MiniNumero({ valor, rotulo }: { valor: ReactNode; rotulo: string
   return (
     <div className="rounded-xl bg-areia-claro py-2 text-center">
       <p className="titulo text-2xl sm:text-3xl text-petroleo">{valor}</p>
-      <p className="text-[11px] text-petroleo-noite/60">{rotulo}</p>
+      <p className="text-[11px] text-petroleo-noite/70">{rotulo}</p>
     </div>
   )
 }
 
 // Estado vazio de listas
 export function Vazio({ children }: { children: ReactNode }) {
-  return <p className="rounded-2xl border-2 border-dashed border-petroleo/15 p-6 text-center text-sm text-petroleo-noite/60">{children}</p>
+  return <p className="rounded-2xl border-2 border-dashed border-petroleo/15 p-6 text-center text-sm text-petroleo-noite/70">{children}</p>
 }
 
 // Aviso colorido curto (alertas de conflito, dicas)

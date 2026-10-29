@@ -22,7 +22,7 @@ export function ListaPedidos() {
               <span className="size-11 shrink-0 rounded-2xl bg-laranja/15 text-laranja grid place-items-center"><PartyPopper className="size-6" /></span>
               <div className="min-w-0">
                 <p className="font-extrabold truncate">{e.nome}</p>
-                <p className="text-xs text-petroleo-noite/60">{e.telefone} · {formatDistanceToNow(new Date(e.criadoEm), { locale: ptBR, addSuffix: true })}</p>
+                <p className="text-xs text-petroleo-noite/70">{e.telefone} · {formatDistanceToNow(new Date(e.criadoEm), { locale: ptBR, addSuffix: true })}</p>
               </div>
             </div>
             {e.respondido ? (
@@ -44,7 +44,7 @@ export function ListaPedidos() {
             <Botao variante="secundario" onClick={() => set((db) => marcarRespondido(db, e.id, !e.respondido))}>
               {e.respondido ? 'Marcar como novo' : 'Marcar respondido'}
             </Botao>
-            <button onClick={() => set((db) => removerPedido(db, e.id))} className="p-2.5 text-petroleo-noite/40 hover:text-red-600" aria-label="Apagar pedido">
+            <button onClick={() => set((db) => removerPedido(db, e.id))} className="p-2.5 text-petroleo-noite/70 hover:text-red-600" aria-label="Apagar pedido">
               <Trash2 className="size-4" />
             </button>
           </div>

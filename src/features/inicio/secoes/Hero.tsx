@@ -65,7 +65,7 @@ function ProximosLivres() {
               <span className="titulo text-3xl text-petroleo w-14">{fmtHora(l.hora)}</span>
               <span className="flex-1 text-sm leading-tight">
                 <b className="first-letter:uppercase block">{dataISO(l.data) === hoje ? 'Hoje' : `${fmtDiaSemana(l.data)} ${fmtDataCurta(l.data)}`}</b>
-                <span className="text-petroleo-noite/60">{quadraPorId(l.quadraId).nome}</span>
+                <span className="text-petroleo-noite/70">{quadraPorId(l.quadraId).nome}</span>
               </span>
               <span className="text-xs font-bold rounded-full bg-sol px-3 py-1.5">Reservar</span>
             </Link>

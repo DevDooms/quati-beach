@@ -1,6 +1,7 @@
 // Chamadas para bar, eventos e o próximo torneio (somem se o módulo estiver desligado)
 import { Link } from 'react-router-dom'
 import { ArrowRight, PartyPopper, Trophy, UtensilsCrossed } from 'lucide-react'
+import { NEGOCIO } from '../../../config/estabelecimento'
 import { useDB } from '../../../lib/banco'
 import { DIAS_SEMANA, dataDeISO, fmtDataCurta } from '../../../lib/datas'
 import { fmtReais } from '../../../lib/formatos'
@@ -15,7 +16,7 @@ export function BarEventos() {
       {db.modulos.bar && (
         <Link to="/bar" className="group rounded-3xl bg-laranja text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
           <UtensilsCrossed className="absolute -right-4 -bottom-4 size-36 text-white/15" />
-          <p className="text-xs font-bold uppercase tracking-widest text-white/80">Bar do Quati</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-white/80">Bar do {NEGOCIO.apelido}</p>
           <h2 className="titulo text-5xl mt-1">Porções e bebida gelada</h2>
           <p className="mt-2 text-white/90 max-w-sm">O pós-jogo favorito da galera. Veja o cardápio e encomende para o fim do seu horário.</p>
           <span className="mt-4 inline-flex items-center gap-1 font-bold">Ver cardápio <ArrowRight className="size-4 group-hover:translate-x-1 transition" /></span>

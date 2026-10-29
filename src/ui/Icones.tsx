@@ -1,8 +1,9 @@
 // Logo e ícones de marca desenhados à mão (a lib de ícones não traz marcas).
 import logo from '../assets/logo.png'
+import { NEGOCIO } from '../config/estabelecimento'
 
 export function Logo({ className = 'size-10' }: { className?: string }) {
-  return <img src={logo} alt="Quati Beach Sport" className={`${className} rounded-full object-contain`} />
+  return <img src={logo} alt={NEGOCIO.nome} className={`${className} rounded-full object-contain`} />
 }
 
 export function IconeWhatsApp({ className = 'size-5' }: { className?: string }) {

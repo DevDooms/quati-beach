@@ -1,23 +1,23 @@
 // Grade de horários de uma quadra num dia (site)
-import { Bell } from 'lucide-react'
+import { Bell, Lock, Tag } from 'lucide-react'
 import { modalidadePorId } from '../../config/estabelecimento'
 import { useDB } from '../../lib/banco'
 import { fmtFaixa } from '../../lib/datas'
-import { fmtReais } from '../../lib/formatos'
-import { primeiroNome } from '../../lib/formatos'
+import { fmtReais, primeiroNome } from '../../lib/formatos'
+import type { Hora } from '../../tipos'
 import { acharProfessor } from '../aulas/regras'
-import { precoDoHorario, type Slot } from './agenda'
+import { precoDoHorario, promocaoNoHorario, type Slot } from './agenda'
 
 interface Props {
   dia: Date
   slots: Slot[]
-  onReservar: (hora: number) => void
-  onAvisar: (hora: number) => void
+  onReservar: (hora: Hora) => void
+  onAvisar: (hora: Hora) => void
 }
 
 export function HorariosDaQuadra({ dia, slots, onReservar, onAvisar }: Props) {
   const { db } = useDB()
-  if (slots.length === 0) return <p className="mt-4 rounded-2xl bg-white p-6 text-center text-petroleo-noite/60">Não há mais horários hoje. Escolha outro dia.</p>
+  if (slots.length === 0) return <p className="mt-4 rounded-2xl bg-white p-6 text-center text-petroleo-noite/70">Não há mais horários hoje. Escolha outro dia.</p>
   return (
     <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
       {slots.map((s) => (
@@ -25,6 +25,7 @@ export function HorariosDaQuadra({ dia, slots, onReservar, onAvisar }: Props) {
           key={s.hora}
           slot={s}
           preco={precoDoHorario(db, dia, s.hora)}
+          promocao={promocaoNoHorario(db, dia, s.hora)?.nome}
           professor={s.aula ? primeiroNome(acharProfessor(db, s.aula.professorId).nome) : ''}
           onReservar={() => onReservar(s.hora)}
           onAvisar={() => onAvisar(s.hora)}
@@ -53,14 +54,32 @@ export function Legenda() {
 }
 
 const BASE = 'w-full h-20 rounded-2xl text-center px-2 flex flex-col items-center justify-center gap-0.5'
-const LISTRADO = 'bg-[repeating-linear-gradient(135deg,#0f5c6314_0_6px,transparent_6px_12px)]'
+const LISTRADO = 'bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-petroleo)_8%,transparent)_0_6px,transparent_6px_12px)]'
 
-function Celula({ slot, preco, professor, onReservar, onAvisar }: { slot: Slot; preco: number; professor: string; onReservar: () => void; onAvisar: () => void }) {
-  const hora = <span className="titulo text-2xl leading-none">{fmtFaixa(slot.hora).replace(' – ', '–')}</span>
+interface PropsCelula {
+  slot: Slot
+  preco: number
+  promocao?: string
+  professor: string
+  onReservar: () => void
+  onAvisar: () => void
+}
+
+function Celula({ slot, preco, promocao, professor, onReservar, onAvisar }: PropsCelula) {
+  const hora = <span className="titulo text-2xl leading-none">{fmtFaixa(slot.hora, slot.duracao).replace(' – ', '–')}</span>
   switch (slot.status) {
     case 'livre':
       return (
-        <button onClick={onReservar} className={`${BASE} group bg-white border-2 border-onda/40 text-petroleo hover:bg-onda hover:text-white hover:border-onda transition`}>
+        <button
+          onClick={onReservar}
+          title={promocao ? `Promoção: ${promocao}` : undefined}
+          className={`${BASE} group relative bg-white border-2 text-petroleo hover:bg-onda hover:text-white hover:border-onda transition ${promocao ? 'border-laranja' : 'border-onda/40'}`}
+        >
+          {promocao && (
+            <span className="absolute -top-2 right-2 inline-flex items-center gap-0.5 rounded-full bg-laranja text-white px-1.5 text-[10px] font-extrabold">
+              <Tag className="size-2.5" /> PROMO
+            </span>
+          )}
           {hora}
           <span className="text-xs font-semibold text-emerald-700 group-hover:text-white">Livre · {fmtReais(preco)}</span>
         </button>
@@ -81,12 +100,19 @@ function Celula({ slot, preco, professor, onReservar, onAvisar }: { slot: Slot; 
           </span>
         </div>
       )
+    case 'bloqueado':
+      return (
+        <div className={`${BASE} ${LISTRADO} text-petroleo-noite/70`} title={slot.bloqueio?.motivo}>
+          {hora}
+          <span className="text-xs inline-flex items-center gap-1"><Lock className="size-3" /> Indisponível</span>
+        </div>
+      )
     case 'reservado':
       return (
-        <button onClick={onAvisar} title="Entrar na lista de espera" className={`${BASE} ${LISTRADO} text-petroleo-noite/40 hover:text-petroleo hover:ring-2 hover:ring-petroleo/20`}>
+        <button onClick={onAvisar} title="Entrar na lista de espera" className={`${BASE} ${LISTRADO} text-petroleo-noite/70 hover:text-petroleo hover:ring-2 hover:ring-petroleo/20`}>
           {hora}
           <span className="text-xs inline-flex items-center gap-1">
-            {slot.reserva?.fixoId ? 'Horário fixo' : 'Ocupado'} · <Bell className="size-3" /> avise-me
+            Ocupado · <Bell className="size-3" /> avise-me
           </span>
         </button>
       )

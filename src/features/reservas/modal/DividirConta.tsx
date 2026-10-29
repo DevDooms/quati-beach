@@ -23,7 +23,7 @@ export function DividirConta({ valor, resumo }: { valor: number; resumo: string 
         </div>
         <p className="text-right leading-tight">
           <span className="titulo text-3xl text-petroleo">{fmtReaisCentavos(valor / pessoas)}</span>
-          <span className="block text-[11px] text-petroleo-noite/60">por pessoa</span>
+          <span className="block text-[11px] text-petroleo-noite/70">por pessoa</span>
         </p>
       </div>
       <Botao href={linkCompartilhar(doCliente.dividirConta(resumo, valor, pessoas))} variante="whatsapp" tamanho="lg" largo className="mt-3">

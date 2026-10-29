@@ -3,15 +3,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Phone } from 'lucide-react'
 import quadraAerea from '../../assets/quadra-aerea.jpg'
 import { CLIENTE_DEMO } from '../../demo/dados'
-import { useLogin } from '../../lib/auth'
-import { mascaraTelefone } from '../../lib/formatos'
+import { useUsuario } from '../../lib/auth'
+import { mascaraTelefone, soDigitos } from '../../lib/formatos'
 import { Botao, Campo, Entrada, IconeWhatsApp, Logo, TituloSecao } from '../../ui'
 
 const CODIGO_DEMO = '482915'
 
 // Login só visual, sem senha: telefone → código "recebido" no WhatsApp → área do cliente.
 export default function PaginaEntrar() {
-  const { entrar } = useLogin('cliente')
+  const { entrar } = useUsuario()
   const navegar = useNavigate()
   const [etapa, setEtapa] = useState<'telefone' | 'codigo'>('telefone')
   const [telefone, setTelefone] = useState(CLIENTE_DEMO.telefone)
@@ -48,14 +48,15 @@ export default function PaginaEntrar() {
               <Botao type="submit" variante="whatsapp" tamanho="lg" largo>
                 <IconeWhatsApp /> Receber código no WhatsApp
               </Botao>
-              <p className="text-center text-xs text-petroleo-noite/60">Primeira vez aqui? A conta é criada automaticamente.</p>
+              <p className="text-center text-xs text-petroleo-noite/70">Primeira vez aqui? A conta é criada automaticamente.</p>
             </form>
           ) : (
             <form
               className="mt-6 space-y-4"
               onSubmit={(e) => {
                 e.preventDefault()
-                entrar()
+                // demonstração: o número do cliente fictício entra com o histórico dele; outro número entra "zerado"
+                entrar(soDigitos(telefone) === soDigitos(CLIENTE_DEMO.telefone) ? CLIENTE_DEMO : { nome: 'Novo cliente', telefone })
                 navegar('/minha-conta')
               }}
             >
@@ -76,13 +77,13 @@ export default function PaginaEntrar() {
               </div>
               <Botao type="submit" variante="destaque" tamanho="lg" largo>Entrar</Botao>
               <div className="flex justify-between text-sm">
-                <button type="button" onClick={() => setEtapa('telefone')} className="font-semibold text-petroleo-noite/60">Trocar número</button>
+                <button type="button" onClick={() => setEtapa('telefone')} className="font-semibold text-petroleo-noite/70">Trocar número</button>
                 <button type="button" className="font-semibold text-onda">Reenviar código</button>
               </div>
             </form>
           )}
 
-          <p className="mt-6 rounded-xl bg-areia-claro p-3 text-center text-xs text-petroleo-noite/60">
+          <p className="mt-6 rounded-xl bg-areia-claro p-3 text-center text-xs text-petroleo-noite/70">
             Demonstração: o código já vem preenchido, é só tocar nos botões. <Link to="/demo" className="underline">Trocar de visão</Link>
           </p>
         </div>

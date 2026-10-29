@@ -17,12 +17,12 @@ export function JanelaAlunos({ aula, onFechar }: { aula: Aula; onFechar: () => v
         Prof. {acharProfessor(db, a.professorId).nome} · {fmtHora(a.hora)} · {a.alunos.length}/{a.vagas} alunos
       </p>
       <ul className="mt-4 divide-y divide-petroleo/10 rounded-2xl border border-petroleo/10">
-        {a.alunos.length === 0 && <li className="p-3 text-sm text-petroleo-noite/60">Nenhum aluno matriculado.</li>}
+        {a.alunos.length === 0 && <li className="p-3 text-sm text-petroleo-noite/70">Nenhum aluno matriculado.</li>}
         {a.alunos.map((p, i) => (
           <li key={`${p.telefone}-${i}`} className="flex items-center gap-3 px-3 py-2 text-sm">
             <span className="flex-1 min-w-0">
               <b className="block truncate">{p.nome}</b>
-              <span className="text-xs text-petroleo-noite/60">{p.telefone}</span>
+              <span className="text-xs text-petroleo-noite/70">{p.telefone}</span>
             </span>
             <a href={whatsPara(p, doEstabelecimento.lembreteAula(p.nome, a.hora))} target="_blank" rel="noreferrer" className="p-2 text-whatsapp-escuro" aria-label={`WhatsApp de ${p.nome}`}>
               <IconeWhatsApp />

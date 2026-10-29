@@ -1,21 +1,21 @@
-import { z } from 'zod'
+// Regras de formulário num lugar só (site e painel usam as mesmas).
+// Usa a versão "mini" do zod, bem menor no pacote final.
+import * as z from 'zod/v4-mini'
 import { soDigitos } from './formatos'
 
-// Regras de formulário num lugar só (site e painel usam as mesmas)
-
-export const esquemaNome = z.string().trim().min(2, 'Informe o nome')
-export const esquemaTelefone = z
-  .string()
-  .refine((v) => soDigitos(v).length >= 10 && soDigitos(v).length <= 11, 'WhatsApp com DDD')
+export const esquemaNome = z.string().check(z.refine((v) => v.trim().length >= 2, 'Informe o nome'))
+export const esquemaTelefone = z.string().check(z.refine((v) => [10, 11].includes(soDigitos(v).length), 'WhatsApp com DDD'))
 
 export const esquemaContato = z.object({ nome: esquemaNome, telefone: esquemaTelefone })
 
-export const esquemaPedidoEvento = esquemaContato.extend({
-  tipo: z.string().min(1),
-  data: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Escolha a data'),
-  pessoas: z.number().int().min(2).max(300),
+export const esquemaPedidoEvento = z.object({
+  nome: esquemaNome,
+  telefone: esquemaTelefone,
+  tipo: z.string().check(z.minLength(1)),
+  data: z.string().check(z.regex(/^\d{4}-\d{2}-\d{2}$/, 'Escolha a data')),
+  pessoas: z.number().check(z.int(), z.gte(2), z.lte(300)),
   obs: z.string(),
 })
 
 // true quando o valor passa no esquema (para habilitar botões)
-export const valido = <T,>(esquema: z.ZodType<T>, valor: unknown) => esquema.safeParse(valor).success
+export const valido = (esquema: z.ZodMiniType, valor: unknown) => esquema.safeParse(valor).success

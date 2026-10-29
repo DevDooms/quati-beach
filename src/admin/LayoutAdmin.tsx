@@ -1,8 +1,8 @@
 import { useLayoutEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { CalendarRange, ExternalLink, GraduationCap, Inbox, LayoutDashboard, ListChecks, LogOut, Repeat, Settings, Trophy, Users } from 'lucide-react'
+import { CalendarRange, ChartColumn,ExternalLink, GraduationCap, Inbox, LayoutDashboard, ListChecks, LogOut, Settings, Trophy, Users, Wallet } from 'lucide-react'
 import { NEGOCIO } from '../config/estabelecimento'
-import { useLogin } from '../lib/auth'
+import { useAdmin } from '../lib/auth'
 import { useDB } from '../lib/banco'
 import { Logo } from '../ui'
 import { pedidosNovos } from '../features/eventos/regras'
@@ -13,7 +13,8 @@ const NAV = [
   { to: '/admin', label: 'Visão geral', icone: LayoutDashboard, end: true },
   { to: '/admin/agenda', label: 'Agenda', icone: CalendarRange },
   { to: '/admin/reservas', label: 'Reservas', icone: ListChecks },
-  { to: '/admin/mensalistas', label: 'Mensalistas', icone: Repeat },
+  { to: '/admin/caixa', label: 'Caixa do dia', icone: Wallet },
+  { to: '/admin/relatorio', label: 'Relatório', icone: ChartColumn },
   { to: '/admin/solicitacoes', label: 'Solicitações', icone: Inbox },
   { to: '/admin/aulas', label: 'Grade de aulas', icone: GraduationCap },
   { to: '/admin/torneios', label: 'Torneios', icone: Trophy },
@@ -22,7 +23,7 @@ const NAV = [
 ]
 
 export default function LayoutAdmin() {
-  const { logado, sair } = useLogin('admin')
+  const { logado, sair } = useAdmin()
   const { db } = useDB()
   const { pathname } = useLocation()
   // número ao lado de "Solicitações"
@@ -42,8 +43,8 @@ export default function LayoutAdmin() {
           <Link to="/admin" className="flex items-center gap-2.5">
             <Logo className="size-10" />
             <span className="leading-tight">
-              <span className="titulo text-xl block">Painel Quati</span>
-              <span className="text-[11px] text-white/50">Beach Sport</span>
+              <span className="titulo text-xl block">Painel {NEGOCIO.apelido}</span>
+              <span className="text-[11px] text-white/60">{NEGOCIO.marca[1]} {NEGOCIO.marca[2]}</span>
             </span>
           </Link>
           <button onClick={sair} className="lg:hidden p-2 text-white/70" aria-label="Sair">
@@ -90,7 +91,7 @@ export default function LayoutAdmin() {
 
       <main className="min-w-0 px-4 sm:px-8 py-6 sm:py-8">
         <Outlet />
-        <p className="mt-10 text-center text-xs text-petroleo-noite/40">
+        <p className="mt-10 text-center text-xs text-petroleo-noite/70">
           Painel de demonstração · <Link to="/demo" className="underline">Trocar de visão</Link>
         </p>
       </main>

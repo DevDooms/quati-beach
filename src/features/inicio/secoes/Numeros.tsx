@@ -15,7 +15,7 @@ export function Numeros() {
         {itens.map(([n, t]) => (
           <div key={t} className="rounded-2xl bg-white border border-petroleo/10 p-4 text-center">
             <p className="titulo text-4xl text-petroleo">{n}</p>
-            <p className="text-xs text-petroleo-noite/60 font-medium">{t}</p>
+            <p className="text-xs text-petroleo-noite/70 font-medium">{t}</p>
           </div>
         ))}
       </div>

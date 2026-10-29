@@ -41,6 +41,32 @@ Formulários (`src/lib/validacao.ts`) e o que vem do `localStorage` (`src/lib/ba
 ### 2026-10 · Painel carregado sob demanda
 As telas do painel usam `React.lazy`: quem só visita o site não baixa o código do painel.
 
+### 2026-10 · Horário fixo (mensalista) removido
+**Substitui** a entrada "Horário fixo reserva 8 semanas à frente". Reservar semanas à frente em nome do cliente empurrava um jeito de trabalhar que não é o do Quati. Quem quer jogar toda semana reserva como os outros.
+
+### 2026-10 · O que é decisão do dono vem desligado
+Pacotes de horas, promoções, feriados e bloqueios são ferramentas que o dono liga e preenche em Configurações. Na base inicial estão vazios.
+**Por quê:** o sistema não deve inventar regra comercial. A gente mostra que existe, e o dono decide se usa.
+
+### 2026-10 · Duração da reserva e prazo de cancelamento configuráveis
+**Substitui** "Reserva de 1 hora fixa". Ficam em `db.politica` (`duracaoReserva`, `cancelamentoHoras`), com padrão de 1h e 12h em `POLITICA_PADRAO`. A grade passa a trabalhar com horas decimais (8.5 = 08h30) e checa sobreposição de intervalos (`sobrepoe`), não horário igual.
+
+### 2026-10 · Regras recusam com erro, a tela mostra a mensagem
+As funções de `regras.ts` lançam `ErroRegra` quando algo não pode (horário ocupado, bloqueado, turma cheia, crédito insuficiente). `aplicar(fn)` do `useDB` captura e devolve a mensagem.
+**Por quê:** antes a tela mostrava "Reserva confirmada" mesmo quando outra aba tinha reservado o horário um instante antes.
+
+### 2026-10 · A reserva guarda o próprio valor
+`Reserva.valor` é gravado na criação, já com promoção ou pacote aplicados. Mudar a tabela de preços não reescreve o passado, e caixa e relatório batem com o que foi cobrado.
+
+### 2026-10 · Troca de marca na demonstração
+`src/config/marcas.ts` sobrescreve nome, apelido e cores ao iniciar. Serve para mostrar a outros comércios que o sistema é o mesmo. Quando houver backend, isso vem do cadastro do estabelecimento.
+
+### 2026-10 · Troca de marca e aviso de chuva removidos
+**Substitui** a entrada anterior. A troca de marca não acrescentava nada à demonstração para o Quati. O aviso de chuva (no site e no painel) supunha uma política que não sabemos se o Quati tem. O site agora só fala do prazo de cancelamento, que o dono configura.
+
+### 2026-10 · Fontes no próprio site e tags de compartilhamento
+As fontes vêm do `@fontsource` (sem depender do Google Fonts). `index.html` tem as tags `og:*` usando `VITE_URL_SITE` do `.env`, para o link aparecer com foto no WhatsApp e no Instagram.
+
 ---
 
 ## Próximas decisões a tomar

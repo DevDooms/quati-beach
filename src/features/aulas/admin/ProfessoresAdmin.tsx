@@ -41,7 +41,7 @@ export default function ProfessoresAdmin() {
                 <Avatar professor={p} tamanho="size-14 text-lg" />
                 <div className="flex-1 min-w-0">
                   <p className="font-extrabold text-lg truncate">{p.nome}</p>
-                  <p className="text-xs text-petroleo-noite/60">{p.telefone}</p>
+                  <p className="text-xs text-petroleo-noite/70">{p.telefone}</p>
                 </div>
               </div>
               <div className="mt-3 flex flex-wrap gap-1.5">

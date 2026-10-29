@@ -2,23 +2,24 @@ import { useState } from 'react'
 import { UserPlus, X } from 'lucide-react'
 import { MODALIDADES, NIVEIS, QUADRAS, ehQuadraId } from '../../../config/estabelecimento'
 import { useDB } from '../../../lib/banco'
-import { DIAS_SEMANA, ORDEM_DIAS, fmtFaixa } from '../../../lib/datas'
+import { DIAS_SEMANA, ORDEM_DIAS, dataDeISO, fmtDataCurta, fmtFaixa } from '../../../lib/datas'
 import { mascaraTelefone } from '../../../lib/formatos'
 import { esquemaNome, valido } from '../../../lib/validacao'
 import type { Aula, DiaSemana, ModalidadeId, Nivel, Pessoa } from '../../../tipos'
 import { Aviso, Botao, Campo, Confirmar, Entrada, Janela, Selecao } from '../../../ui'
-import { conflitoDeTurma, foraDoHorario, removerAula, salvarAula } from '../regras'
+import { conflitosDaTurma, foraDoHorario, removerAula, salvarAula } from '../regras'
 
 const HORAS_POSSIVEIS = Array.from({ length: 17 }, (_, i) => i + 6) // 6h às 22h
 
 // Criar (aula.id vazio) ou editar uma turma, com a lista de alunos
 export function JanelaTurma({ aula, onFechar }: { aula: Aula; onFechar: () => void }) {
-  const { db, set } = useDB()
+  const { db, set, aplicar } = useDB()
   const [f, setF] = useState(aula)
+  const [erro, setErro] = useState<string | null>(null)
   const ehNova = !aula.id
   const campo = <K extends keyof Aula>(k: K, v: Aula[K]) => setF((x) => ({ ...x, [k]: v }))
 
-  const conflito = conflitoDeTurma(db, f)
+  const { turma: conflito, reservas: reservasNoHorario } = conflitosDaTurma(db, f)
   const fora = foraDoHorario(db, f)
   const [abre, fecha] = db.funcionamento[f.diaSemana]
 
@@ -62,6 +63,12 @@ export function JanelaTurma({ aula, onFechar }: { aula: Aula; onFechar: () => vo
 
       <div className="mt-3 space-y-2">
         {conflito && <Aviso>Já existe uma turma de {conflito.nivel.toLowerCase()} nesse dia, horário e quadra.</Aviso>}
+        {reservasNoHorario.length > 0 && (
+          <Aviso>
+            Há {reservasNoHorario.length} reserva(s) marcada(s) nesse horário (a próxima em {fmtDataCurta(dataDeISO(reservasNoHorario[0].data))}, {reservasNoHorario[0].nome}). Escolha outro horário ou mude essas reservas antes.
+          </Aviso>
+        )}
+        {erro && <Aviso>{erro}</Aviso>}
         {fora && <Aviso>Fora do horário de funcionamento de {DIAS_SEMANA[f.diaSemana].toLowerCase()} ({abre}h às {fecha}h).</Aviso>}
       </div>
 
@@ -83,10 +90,11 @@ export function JanelaTurma({ aula, onFechar }: { aula: Aula; onFechar: () => vo
         <div className="flex gap-2">
           <Botao variante="secundario" onClick={onFechar}>Cancelar</Botao>
           <Botao
-            disabled={!!conflito || fora}
+            disabled={!!conflito || fora || reservasNoHorario.length > 0}
             onClick={() => {
-              set((db) => salvarAula(db, f))
-              onFechar()
+              const resultado = aplicar((db) => salvarAula(db, f))
+              if (resultado) setErro(resultado)
+              else onFechar()
             }}
           >
             Salvar
@@ -103,13 +111,13 @@ function ListaAlunos({ alunos, vagas, onChange }: { alunos: Pessoa[]; vagas: num
     <>
       <h3 className="titulo text-2xl text-petroleo mt-6">Alunos ({alunos.length}/{vagas})</h3>
       <ul className="mt-2 divide-y divide-petroleo/10 rounded-2xl border border-petroleo/10">
-        {alunos.length === 0 && <li className="p-3 text-sm text-petroleo-noite/60">Nenhum aluno ainda.</li>}
+        {alunos.length === 0 && <li className="p-3 text-sm text-petroleo-noite/70">Nenhum aluno ainda.</li>}
         {alunos.map((p, i) => (
           <li key={`${p.telefone}-${i}`} className="flex items-center gap-3 px-3 py-2 text-sm">
             <span className="flex-1 min-w-0">
-              <b className="truncate">{p.nome}</b> <span className="text-xs text-petroleo-noite/60">{p.telefone}</span>
+              <b className="truncate">{p.nome}</b> <span className="text-xs text-petroleo-noite/70">{p.telefone}</span>
             </span>
-            <button onClick={() => onChange(alunos.filter((_, j) => j !== i))} className="p-1 text-petroleo-noite/40 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
+            <button onClick={() => onChange(alunos.filter((_, j) => j !== i))} className="p-1 text-petroleo-noite/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
               <X className="size-4" />
             </button>
           </li>

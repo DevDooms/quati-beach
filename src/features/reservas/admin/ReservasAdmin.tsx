@@ -3,13 +3,13 @@ import { Plus, Search } from 'lucide-react'
 import { QUADRAS, quadraPorId } from '../../../config/estabelecimento'
 import { useOcultarValores } from '../../../admin/useOcultarValores'
 import { useDB } from '../../../lib/banco'
-import { dataDeISO, fmtDataCurta, fmtDiaSemana, fmtHora, hojeISO } from '../../../lib/datas'
+import { chaveHorario, dataDeISO, fmtDataCurta, fmtDiaSemana, fmtHora, hojeISO } from '../../../lib/datas'
 import { fmtReais } from '../../../lib/formatos'
 import { doEstabelecimento } from '../../../lib/mensagens'
 import { whatsPara } from '../../../lib/whatsapp'
 import type { DB, Reserva } from '../../../tipos'
 import { Botao, Cartao, Chip, Entrada, IconeWhatsApp, SeloOrigem, SeloPago, Selecao, TituloPagina } from '../../../ui'
-import { alternarPago, buscaCorresponde, precoReserva } from '../regras'
+import { buscaCorresponde } from '../regras'
 import { JanelaNovaReserva } from './JanelaNovaReserva'
 import { JanelaReserva } from './JanelaReserva'
 
@@ -26,7 +26,7 @@ interface Filtros {
 
 function filtrar(db: DB, f: Filtros): Reserva[] {
   const hoje = hojeISO()
-  const chave = (r: Reserva) => r.data + fmtHora(r.hora)
+  const chave = (r: Reserva) => chaveHorario(r.data, r.hora)
   return db.reservas
     .filter(
       (r) =>
@@ -42,7 +42,7 @@ function filtrar(db: DB, f: Filtros): Reserva[] {
 }
 
 export default function ReservasAdmin() {
-  const { db, set } = useDB()
+  const { db } = useDB()
   const { valor } = useOcultarValores()
   const [f, setF] = useState<Filtros>({ busca: '', periodo: 'proximas', quadra: '', pagamento: '' })
   const [limite, setLimite] = useState(POR_PAGINA)
@@ -50,9 +50,9 @@ export default function ReservasAdmin() {
   const [nova, setNova] = useState(false)
 
   const lista = filtrar(db, f)
-  const total = lista.reduce((s, r) => s + precoReserva(db, r), 0)
-  const pendente = lista.filter((r) => !r.pago).reduce((s, r) => s + precoReserva(db, r), 0)
-  const pagar = (id: string) => set((db) => alternarPago(db, id))
+  const total = lista.reduce((s, r) => s + r.valor, 0)
+  const pendente = lista.filter((r) => !r.pago).reduce((s, r) => s + r.valor, 0)
+  const pagar = (id: string) => setAberta(lista.find((r) => r.id === id) ?? null)
 
   return (
     <>
@@ -93,7 +93,7 @@ export default function ReservasAdmin() {
 
       <TabelaReservas lista={lista.slice(0, limite)} onAbrir={setAberta} onPagar={pagar} />
       <CartoesReservas lista={lista.slice(0, limite)} onAbrir={setAberta} />
-      {lista.length === 0 && <p className="p-8 text-center text-petroleo-noite/60">Nenhuma reserva com esses filtros.</p>}
+      {lista.length === 0 && <p className="p-8 text-center text-petroleo-noite/70">Nenhuma reserva com esses filtros.</p>}
 
       {lista.length > limite && (
         <div className="mt-4 text-center">
@@ -109,7 +109,6 @@ export default function ReservasAdmin() {
 
 // Desktop
 function TabelaReservas({ lista, onAbrir, onPagar }: { lista: Reserva[]; onAbrir: (r: Reserva) => void; onPagar: (id: string) => void }) {
-  const { db } = useDB()
   if (lista.length === 0) return null
   return (
     <Cartao className="hidden md:block overflow-hidden">
@@ -131,10 +130,10 @@ function TabelaReservas({ lista, onAbrir, onPagar }: { lista: Reserva[]; onAbrir
                 <td className="px-4 py-3">{quadraPorId(r.quadraId).nome}</td>
                 <td className="px-4 py-3">
                   <b className="block">{r.nome}</b>
-                  <span className="text-xs text-petroleo-noite/60">{r.telefone}</span>
+                  <span className="text-xs text-petroleo-noite/70">{r.telefone}</span>
                 </td>
                 <td className="px-4 py-3"><SeloOrigem origem={r.origem} /></td>
-                <td className="px-4 py-3">{fmtReais(precoReserva(db, r))}</td>
+                <td className="px-4 py-3">{fmtReais(r.valor)}</td>
                 <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                   <SeloPago pago={r.pago} onClick={() => onPagar(r.id)} />
                 </td>
@@ -154,7 +153,6 @@ function TabelaReservas({ lista, onAbrir, onPagar }: { lista: Reserva[]; onAbrir
 
 // Celular
 function CartoesReservas({ lista, onAbrir }: { lista: Reserva[]; onAbrir: (r: Reserva) => void }) {
-  const { db } = useDB()
   return (
     <div className="md:hidden space-y-2">
       {lista.map((r) => {
@@ -168,7 +166,7 @@ function CartoesReservas({ lista, onAbrir }: { lista: Reserva[]; onAbrir: (r: Re
               </span>
               <span className="flex-1 min-w-0">
                 <b className="block truncate">{r.nome}</b>
-                <span className="text-xs text-petroleo-noite/60">{quadraPorId(r.quadraId).nome} · {fmtReais(precoReserva(db, r))}</span>
+                <span className="text-xs text-petroleo-noite/70">{quadraPorId(r.quadraId).nome} · {fmtReais(r.valor)}</span>
                 <span className="flex gap-1.5 mt-1"><SeloOrigem origem={r.origem} /><SeloPago pago={r.pago} /></span>
               </span>
             </button>
