@@ -15,11 +15,11 @@ export default function PaginaBar() {
         Porções, lanches e bebida gelada para a galera e para a família. Peça no balcão ou já deixe encomendado pelo WhatsApp.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 grid gap-6 md:grid-cols-3">
+      <div className="conteudo py-10 grid gap-6 md:grid-cols-3">
         {CARDAPIO.map((c, i) => {
           const Icone = ICONES[i % ICONES.length]
           return (
-            <section key={c.categoria} className="rounded-3xl bg-white border border-mar/10 p-6">
+            <section key={c.categoria} className="rounded-xl bg-white border border-mar/10 p-6">
               <h2 className="titulo text-3xl text-mar flex items-center gap-2">
                 <Icone className="size-6 text-laranja" /> {c.categoria}
               </h2>
@@ -40,8 +40,8 @@ export default function PaginaBar() {
         })}
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 pb-12">
-        <div className="rounded-3xl bg-laranja text-white p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
+      <div className="conteudo pb-12">
+        <div className="rounded-xl bg-laranja text-white p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="titulo text-4xl">Vai jogar e quer tudo pronto?</p>
             <p className="text-white/90">Encomende a porção para o fim do seu horário e ela chega na mesa.</p>

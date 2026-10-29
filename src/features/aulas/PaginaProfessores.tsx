@@ -13,12 +13,12 @@ export default function PaginaProfessores() {
         Gente que vive a areia e sabe ensinar — do iniciante ao atleta de torneio.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="conteudo py-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {db.professores.map((p) => {
           const turmas = turmasDoProfessor(db, p.id)
           const dias = ORDEM_DIAS.filter((d) => turmas.some((a) => a.diaSemana === d))
           return (
-            <article key={p.id} className="rounded-3xl bg-white border border-mar/10 overflow-hidden flex flex-col">
+            <article key={p.id} className="rounded-xl bg-white border border-mar/10 overflow-hidden flex flex-col">
               <div className={`h-28 bg-gradient-to-br ${p.cor} relative`}>
                 <div className="absolute -bottom-10 left-6 rounded-full ring-4 ring-white">
                   <Avatar professor={p} tamanho="size-20 text-2xl" />

@@ -77,10 +77,10 @@ export default function PaginaAgendar() {
         Escolha a quadra no mapa, depois o dia e o horário. Cada reserva é de {fmtDuracao(duracao)}.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-8 grid gap-8 lg:grid-cols-[1fr_300px]">
+      <div className="conteudo py-8 grid gap-8 lg:grid-cols-[1fr_300px]">
         <div className="min-w-0">
           <Passo n={1} titulo="Escolha a quadra" />
-          <div className="mt-3 rounded-3xl bg-white border border-mar/10 p-2 sm:p-4 shadow-sm">
+          <div className="mt-3 rounded-xl bg-white border border-mar/10 p-2 sm:p-4 shadow-sm">
             <MapaQuadras selecionada={quadraId} onEscolher={escolherQuadra} livres={livresHoje} />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
@@ -103,7 +103,7 @@ export default function PaginaAgendar() {
           <div ref={calendario} className="scroll-mt-24 mt-10">
             <Passo n={2} titulo={quadraId ? `Horários da ${quadraPorId(quadraId).nome}` : 'Escolha o dia e o horário'} />
             {!quadraId ? (
-              <div className="mt-3 rounded-3xl border-2 border-dashed border-mar/20 p-10 text-center text-marinho/70">
+              <div className="mt-3 rounded-xl border-2 border-dashed border-mar/20 p-10 text-center text-marinho/70">
                 <MousePointerClick className="size-10 mx-auto text-onda" />
                 <p className="mt-3 font-semibold">Toque em uma quadra no mapa para ver o calendário dela.</p>
               </div>

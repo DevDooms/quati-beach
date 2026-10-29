@@ -15,7 +15,7 @@ export function PlanosAulas() {
         {db.planos.map((pl, i) => {
           const destaque = i === DESTAQUE
           return (
-            <div key={pl.id} className={`relative rounded-3xl p-6 flex flex-col ${destaque ? 'bg-mar text-white shadow-xl shadow-mar/30' : 'bg-white border border-mar/10'}`}>
+            <div key={pl.id} className={`relative rounded-xl p-6 flex flex-col ${destaque ? 'bg-mar text-white' : 'bg-white border border-mar/10'}`}>
               {destaque && <span className="absolute -top-3 left-6 rounded-full bg-sol text-marinho px-3 py-1 text-xs font-extrabold uppercase">Mais escolhido</span>}
               <h3 className="titulo text-3xl">{pl.nome}</h3>
               <p className={`text-sm ${destaque ? 'text-white/75' : 'text-marinho/70'}`}>{pl.descricao}</p>

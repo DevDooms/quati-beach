@@ -1,6 +1,4 @@
-import { NEGOCIO } from '../../../config/estabelecimento'
 import { useNavigate } from 'react-router-dom'
-import quadraAerea from '../../../assets/quadra-aerea.jpg'
 import { TituloSecao } from '../../../ui'
 import MapaQuadras from '../../reservas/MapaQuadras'
 import { linkAgendar } from '../../reservas/PaginaAgendar'
@@ -11,25 +9,22 @@ export function NossoEspaco() {
   const navegar = useNavigate()
   return (
     <section className="bg-areia textura-areia">
-      <div className="mx-auto max-w-6xl px-4 py-16 grid gap-8 lg:grid-cols-[1fr_1.1fr] items-center">
+      <div className="conteudo py-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] items-center">
         <div>
           <TituloSecao sobre="Nosso espaço" titulo="Escolha a quadra pelo mapa" />
-          <p className="mt-3 text-marinho/75">
+          <p className="mt-3 text-marinho/75 max-w-md">
             Duas quadras de areia com iluminação noturna, bar com petiscos e área de mesas para a família. Toque em uma quadra para ver os horários dela.
           </p>
-          <ol className="mt-6 space-y-3">
+          <ol className="mt-8 space-y-4">
             {PASSOS.map((t, i) => (
-              <li key={t} className="flex items-center gap-3">
-                <span className="titulo text-2xl size-10 shrink-0 rounded-full bg-marinho text-sol grid place-items-center">{i + 1}</span>
+              <li key={t} className="flex items-baseline gap-4">
+                <span className="titulo text-4xl text-mar w-6">{i + 1}</span>
                 <span className="font-semibold">{t}</span>
               </li>
             ))}
           </ol>
-          <img src={quadraAerea} alt={`Vista aérea das quadras do ${NEGOCIO.nome}`} className="mt-6 rounded-3xl shadow-lg w-full max-h-60 object-cover ring-4 ring-white -rotate-1" />
         </div>
-        <div className="rounded-3xl bg-white p-3 sm:p-5 shadow-xl shadow-areia-escura/50">
-          <MapaQuadras selecionada={null} onEscolher={(id) => navegar(linkAgendar(id))} />
-        </div>
+        <MapaQuadras selecionada={null} onEscolher={(id) => navegar(linkAgendar(id))} />
       </div>
     </section>
   )

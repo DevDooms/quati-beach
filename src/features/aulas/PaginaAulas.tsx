@@ -42,7 +42,7 @@ export default function PaginaAulas() {
         Do primeiro toque na bola ao avançado. Escolha a modalidade, o nível e o professor — a primeira aula é experimental.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="conteudo py-8">
         <Cartao className="p-4 space-y-3">
           <div className="flex gap-2 overflow-x-auto sem-scrollbar">
             <Chip ativo={!filtros.modalidade} onClick={() => filtrar('modalidade', '')}>Todas</Chip>

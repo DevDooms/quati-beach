@@ -12,7 +12,7 @@ export function SeletorDias({ dias, selecionado, onEscolher }: { dias: Date[]; s
             onClick={() => onEscolher(d)}
             aria-pressed={ativo}
             className={`shrink-0 w-16 rounded-2xl py-2.5 text-center border transition ${
-              ativo ? 'bg-mar text-white border-mar shadow-lg shadow-mar/25' : 'bg-white border-mar/10 hover:border-onda'
+              ativo ? 'bg-mar text-white border-mar' : 'bg-white border-mar/10 hover:border-onda'
             }`}
           >
             <span className={`block text-[11px] uppercase font-semibold ${ativo ? 'text-sol' : 'text-marinho/70'}`}>

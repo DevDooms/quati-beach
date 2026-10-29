@@ -7,7 +7,7 @@ import { useDB } from '../lib/banco'
 import { doCliente } from '../lib/mensagens'
 import { linkWhatsApp } from '../lib/whatsapp'
 import type { Modulos } from '../tipos'
-import { Bola, Botao, IconeInstagram, IconeWhatsApp, Logo } from '../ui'
+import { Botao, IconeInstagram, IconeWhatsApp, Logo } from '../ui'
 import { statusFuncionamento } from '../features/reservas/agenda'
 
 // itens do menu; os de módulos desligados no painel somem do site
@@ -47,7 +47,7 @@ export default function Layout() {
   return (
     <div className="min-h-dvh flex flex-col">
       <div className="bg-sol text-marinho text-xs font-semibold">
-        <div className="mx-auto max-w-6xl px-4 h-8 flex items-center justify-between gap-4">
+        <div className="conteudo h-8 flex items-center justify-between gap-4">
           <span className="flex items-center gap-2">
             <span className={`size-2 rounded-full ${status.aberto ? 'bg-verde-quadra animate-pulse' : 'bg-red-500'}`} />
             {status.texto}
@@ -58,10 +58,10 @@ export default function Layout() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-30 bg-marinho/95 backdrop-blur text-white shadow-lg shadow-marinho/25 border-b-[3px] border-sol">
-        <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-30 bg-marinho text-white border-b-[3px] border-sol">
+        <div className="conteudo h-16 flex items-center justify-between gap-4">
           <Link to="/" className="group flex items-center gap-2.5 shrink-0">
-            <Logo className="size-11 ring-2 ring-sol/60 transition group-hover:rotate-12" />
+            <Logo className="size-11" />
             <span className="titulo text-2xl leading-none">
               {NEGOCIO.marca[0]} <span className="text-sol">{NEGOCIO.marca[1]}</span>
               <span className="block text-[11px] font-sans font-semibold tracking-[0.3em] text-ceu uppercase">{NEGOCIO.marca[2]}</span>
@@ -73,7 +73,7 @@ export default function Layout() {
               <NavLink
                 key={n.to}
                 to={n.to}
-                className={({ isActive }) => `px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${isActive ? 'bg-sol text-marinho' : 'text-white/75 hover:text-white hover:bg-white/10'}`}
+                className={({ isActive }) => `px-3 py-2 text-sm font-semibold whitespace-nowrap transition border-b-2 ${isActive ? 'border-sol text-sol' : 'border-transparent text-white/80 hover:text-white'}`}
               >
                 {n.label}
               </NavLink>
@@ -132,8 +132,7 @@ function Rodape({ nav }: { nav: { to: string; label: string }[] }) {
   return (
     <footer className="relative bg-marinho text-white/70 overflow-hidden">
       <div className="h-2 faixa-quadra" aria-hidden />
-      <Bola className="absolute -right-10 bottom-10 size-48 opacity-[0.07] rotate-12" />
-      <div className="relative mx-auto max-w-6xl px-4 py-12 grid gap-8 sm:grid-cols-3">
+      <div className="relative conteudo py-12 grid gap-8 sm:grid-cols-3">
         <div>
           <div className="flex items-center gap-2.5 text-white">
             <Logo className="size-9" />

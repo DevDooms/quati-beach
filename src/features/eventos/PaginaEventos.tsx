@@ -30,10 +30,10 @@ export default function PaginaEventos() {
         Aniversários, confraternizações de empresa e torneios entre amigos. Conte o que você imagina e a gente monta a proposta.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 grid gap-8 lg:grid-cols-[1fr_420px]">
+      <div className="conteudo py-10 grid gap-8 lg:grid-cols-[1fr_420px]">
         <div className="grid gap-4 sm:grid-cols-2 self-start">
           {DESTAQUES.map(({ icone: Icone, titulo, texto }) => (
-            <div key={titulo} className="rounded-3xl bg-white border border-mar/10 p-6">
+            <div key={titulo} className="rounded-xl bg-white border border-mar/10 p-6">
               <Icone className="size-8 text-laranja" />
               <h2 className="titulo text-3xl text-mar mt-3">{titulo}</h2>
               <p className="text-sm text-marinho/70 mt-1">{texto}</p>
@@ -41,7 +41,7 @@ export default function PaginaEventos() {
           ))}
         </div>
 
-        <div className="rounded-3xl bg-white border border-mar/10 p-6 shadow-lg self-start">
+        <div className="rounded-xl bg-white border border-mar/10 p-6 self-start">
           {enviado ? (
             <div className="text-center py-6">
               <CircleCheck className="size-16 mx-auto text-emerald-500" strokeWidth={1.5} />

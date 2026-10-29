@@ -1,18 +1,17 @@
 import type { ReactNode } from 'react'
-import { Ondas } from './Icones'
+import { FOTO_CAPA } from '../config/fotos'
 
-// Faixa de céu e mar no topo das páginas do site, terminando em onda na areia
+// Faixa no topo das páginas do site, com a foto do espaço ao fundo
 export function CabecalhoPagina({ sobre, titulo, children }: { sobre: string; titulo: ReactNode; children?: ReactNode }) {
   return (
-    <section className="ceu-mar text-white relative overflow-hidden">
-      <div className="absolute -right-20 -top-24 size-72 rounded-full border-[16px] border-sol/80" aria-hidden />
-      <div className="absolute inset-0 textura-rede opacity-50 [mask-image:linear-gradient(to_top,black,transparent_70%)]" aria-hidden />
-      <div className="relative mx-auto max-w-6xl px-4 pt-10 pb-20">
+    <section className="relative bg-marinho text-white overflow-hidden">
+      <img src={FOTO_CAPA} alt="" className="absolute inset-0 size-full object-cover opacity-25" aria-hidden />
+      <div className="relative conteudo pt-12 pb-12">
         <RotuloSecao claro>{sobre}</RotuloSecao>
-        <h1 className="titulo text-5xl sm:text-6xl mt-2 drop-shadow-[0_4px_0_rgb(12_31_77/0.35)]">{titulo}</h1>
+        <h1 className="titulo text-5xl sm:text-6xl mt-2">{titulo}</h1>
         {children && <div className="mt-3 max-w-2xl text-white/80">{children}</div>}
       </div>
-      <Ondas className="absolute bottom-0 left-0 w-full h-12 sm:h-14" />
+      <div className="relative h-1.5 faixa-quadra" aria-hidden />
     </section>
   )
 }

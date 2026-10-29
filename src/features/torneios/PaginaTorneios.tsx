@@ -26,18 +26,18 @@ export default function PaginaTorneios() {
         Campeonatos abertos com categorias para todos os níveis. Junte sua dupla e venha competir.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 grid gap-8 lg:grid-cols-[1fr_320px]">
+      <div className="conteudo py-10 grid gap-8 lg:grid-cols-[1fr_320px]">
         {t ? <CartazTorneio torneio={t} onInscrever={setCategoria} /> : <Vazio>Nenhum torneio com inscrições abertas agora. Fique de olho no nosso Instagram!</Vazio>}
 
         <aside className="space-y-4">
           {t && (
-            <div className="rounded-3xl bg-mar text-white p-6 text-center">
+            <div className="rounded-xl bg-mar text-white p-6 text-center">
               <p className="text-sm text-white/70">Valor da inscrição</p>
               <p className="titulo text-6xl text-sol">{fmtReais(t.valor)}</p>
               <p className="text-sm text-white/70">por atleta</p>
             </div>
           )}
-          <div className="rounded-3xl bg-white border border-mar/10 p-6">
+          <div className="rounded-xl bg-white border border-mar/10 p-6">
             <h3 className="titulo text-2xl text-mar inline-flex items-center gap-2"><History className="size-5" /> Edições anteriores</h3>
             <ul className="mt-3 space-y-3 text-sm">
               {EDICOES_ANTERIORES.map((e) => (
@@ -73,7 +73,7 @@ export default function PaginaTorneios() {
 
 function CartazTorneio({ torneio: t, onInscrever }: { torneio: Torneio; onInscrever: (categoria: string) => void }) {
   return (
-    <article className="rounded-3xl bg-white border border-mar/10 overflow-hidden">
+    <article className="rounded-xl bg-white border border-mar/10 overflow-hidden">
       <div className="relative bg-gradient-to-br from-sol via-sol to-laranja p-8 text-marinho overflow-hidden">
         <Trophy className="absolute right-4 top-4 size-32 text-white/30" />
         <p className="inline-block rounded-full bg-mar text-white text-xs font-extrabold px-3 py-1 uppercase tracking-wide">Inscrições abertas</p>

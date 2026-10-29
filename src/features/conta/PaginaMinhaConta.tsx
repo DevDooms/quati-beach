@@ -22,7 +22,7 @@ export default function PaginaMinhaConta() {
   return (
     <>
       <section className="bg-mar text-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 flex flex-wrap items-center gap-5">
+        <div className="conteudo py-10 flex flex-wrap items-center gap-5">
           <span className="size-16 rounded-full bg-sol text-marinho grid place-items-center titulo text-3xl">{iniciais(usuario.nome)}</span>
           <div className="flex-1 min-w-0">
             <p className="text-sol font-semibold text-sm uppercase tracking-[0.2em]">Área do cliente</p>
@@ -47,7 +47,7 @@ export default function PaginaMinhaConta() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-8 space-y-8">
+      <div className="conteudo py-8 space-y-8">
         <div className="grid grid-cols-3 gap-3">
           <Numero valor={proximas.length} rotulo="próximas reservas" />
           <Numero valor={turmas.length} rotulo={turmas.length === 1 ? 'turma' : 'turmas'} />
