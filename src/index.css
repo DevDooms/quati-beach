@@ -111,6 +111,24 @@ body {
   animation: sobe 0.25s ease-out;
 }
 
+/* Gaveta do menu no celular, entrando pela esquerda */
+@keyframes gaveta {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes aparece {
+  from {
+    opacity: 0;
+  }
+}
+.anim-gaveta {
+  animation: gaveta 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.anim-aparece {
+  animation: aparece 0.2s ease-out;
+}
+
 /* Entrada da página inicial, em cascata */
 .anim-entra {
   animation: sobe 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -154,6 +172,8 @@ body {
   .anim-sombra,
   .anim-mare,
   .anim-brilho,
+  .anim-gaveta,
+  .anim-aparece,
   .anim-entra {
     animation: none;
   }

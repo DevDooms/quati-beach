@@ -1,19 +1,18 @@
 import { useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { LayoutGrid, List, X } from 'lucide-react'
-import { MODALIDADES, NIVEIS, modalidadePorId, quadraPorId } from '../../config/estabelecimento'
+import { MODALIDADES, NIVEIS } from '../../config/estabelecimento'
 import { useDB } from '../../lib/banco'
-import { DIAS_CURTOS, DIAS_SEMANA, ORDEM_DIAS, dataISO, diaDaSemana, fmtDataLonga, fmtFaixa, fmtHora } from '../../lib/datas'
-import { doCliente } from '../../lib/mensagens'
+import { DIAS_CURTOS, DIAS_SEMANA, ORDEM_DIAS, diaDaSemana, fmtHora } from '../../lib/datas'
 import type { Aula, DiaSemana } from '../../tipos'
-import { CabecalhoPagina, Cartao, Chip, SeloModalidade, Selecao, Vazio } from '../../ui'
-import ModalReserva from '../reservas/modal/ModalReserva'
+import { CabecalhoPagina, Cartao, Chip, Selecao, Vazio } from '../../ui'
 import { CartaoAula, CartaoAulaCompacto } from './CartaoAula'
+import { ModalAula } from './ModalAula'
 import { PlanosAulas } from './PlanosAulas'
-import { acharProfessor, estaLotada, matricular, proximaDataDaAula } from './regras'
+import { acharProfessor } from './regras'
 
 export default function PaginaAulas() {
-  const { db, aplicar } = useDB()
+  const { db } = useDB()
   const [params, setParams] = useSearchParams()
   const filtros = { modalidade: params.get('modalidade') ?? '', professor: params.get('professor') ?? '', nivel: params.get('nivel') ?? '' }
   const [visao, setVisao] = useState<'dia' | 'semana'>('dia')
@@ -77,7 +76,7 @@ export default function PaginaAulas() {
         <PlanosAulas />
       </div>
 
-      {aula && <ModalAula aula={aula} onFechar={() => setAulaId(null)} onConfirmar={(p) => aplicar((db) => matricular(db, aula.id, p))} />}
+      {aula && <ModalAula aula={aula} onFechar={() => setAulaId(null)} />}
     </>
   )
 }
@@ -166,34 +165,5 @@ function VisaoSemana({ aulas, onEscolher }: { aulas: Aula[]; onEscolher: (id: st
       </table>
       {horas.length === 0 && <p className="p-8 text-center text-marinho/70">Nenhuma aula com esses filtros.</p>}
     </Cartao>
-  )
-}
-
-function ModalAula({ aula, onFechar, onConfirmar }: { aula: Aula; onFechar: () => void; onConfirmar: (p: { nome: string; telefone: string }) => string | null }) {
-  const { db } = useDB()
-  // data e lotação calculadas ao abrir: depois de confirmar, a turma pode lotar com a própria pessoa
-  const [data] = useState(() => proximaDataDaAula(aula))
-  const [lotada] = useState(() => estaLotada(aula))
-  const professor = acharProfessor(db, aula.professorId).nome
-  const modalidade = modalidadePorId(aula.modalidade).nome
-
-  return (
-    <ModalReserva
-      onFechar={onFechar}
-      titulo={lotada ? 'Lista de espera' : 'Aula experimental'}
-      etiqueta={<SeloModalidade id={aula.modalidade} />}
-      detalhes={[
-        { rotulo: 'Turma', valor: aula.nivel },
-        { rotulo: 'Professor', valor: professor },
-        { rotulo: 'Próxima aula', valor: fmtDataLonga(data) },
-        { rotulo: 'Horário', valor: fmtFaixa(aula.hora) },
-        { rotulo: 'Local', valor: quadraPorId(aula.quadraId).nome },
-      ]}
-      preco="Grátis (1ª aula)"
-      textoConfirmar={lotada ? 'Entrar na lista de espera' : 'Garantir minha vaga'}
-      textoSucesso={lotada ? 'Você está na lista!' : 'Vaga garantida!'}
-      mensagemWhatsApp={(nome) => doCliente.aulaExperimental(nome, modalidade, aula.nivel, professor, dataISO(data), aula.hora)}
-      onConfirmar={(c) => (lotada ? null : onConfirmar(c))}
-    />
   )
 }

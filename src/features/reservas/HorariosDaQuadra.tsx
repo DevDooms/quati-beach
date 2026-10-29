@@ -4,8 +4,8 @@ import { modalidadePorId } from '../../config/estabelecimento'
 import { useDB } from '../../lib/banco'
 import { fmtFaixa } from '../../lib/datas'
 import { fmtReais, primeiroNome } from '../../lib/formatos'
-import type { Hora } from '../../tipos'
-import { acharProfessor } from '../aulas/regras'
+import type { Aula, Hora } from '../../tipos'
+import { acharProfessor, estaLotada } from '../aulas/regras'
 import { precoDoHorario, promocaoNoHorario, type Slot } from './agenda'
 
 interface Props {
@@ -13,9 +13,10 @@ interface Props {
   slots: Slot[]
   onReservar: (hora: Hora) => void
   onAvisar: (hora: Hora) => void
+  onAula?: (aula: Aula) => void // sem ele, a aula aparece só como horário ocupado
 }
 
-export function HorariosDaQuadra({ dia, slots, onReservar, onAvisar }: Props) {
+export function HorariosDaQuadra({ dia, slots, onReservar, onAvisar, onAula }: Props) {
   const { db } = useDB()
   if (slots.length === 0) return <p className="mt-4 rounded-2xl bg-white p-6 text-center text-marinho/70">Não há mais horários hoje. Escolha outro dia.</p>
   return (
@@ -29,6 +30,7 @@ export function HorariosDaQuadra({ dia, slots, onReservar, onAvisar }: Props) {
           professor={s.aula ? primeiroNome(acharProfessor(db, s.aula.professorId).nome) : ''}
           onReservar={() => onReservar(s.hora)}
           onAvisar={() => onAvisar(s.hora)}
+          onAula={onAula && s.aula ? () => onAula(s.aula!) : undefined}
         />
       ))}
     </div>
@@ -63,9 +65,10 @@ interface PropsCelula {
   professor: string
   onReservar: () => void
   onAvisar: () => void
+  onAula?: () => void
 }
 
-function Celula({ slot, preco, promocao, professor, onReservar, onAvisar }: PropsCelula) {
+function Celula({ slot, preco, promocao, professor, onReservar, onAvisar, onAula }: PropsCelula) {
   const hora = <span className="titulo text-2xl leading-none">{fmtFaixa(slot.hora, slot.duracao).replace(' – ', '–')}</span>
   switch (slot.status) {
     case 'livre':
@@ -91,15 +94,31 @@ function Celula({ slot, preco, promocao, professor, onReservar, onAvisar }: Prop
           <span className="text-xs font-bold">Sua reserva</span>
         </div>
       )
-    case 'aula':
-      return (
-        <div className={`${BASE} bg-onda-claro text-mar`}>
-          {hora}
-          <span className="text-[11px] font-semibold truncate max-w-full">
-            Aula de {modalidadePorId(slot.aula!.modalidade).curto} · {professor}
-          </span>
-        </div>
+    case 'aula': {
+      const aula = slot.aula!
+      const descricao = (
+        <span className="text-[11px] font-semibold truncate max-w-full">
+          Aula de {modalidadePorId(aula.modalidade).curto} · {professor}
+        </span>
       )
+      if (!onAula) {
+        return (
+          <div className={`${BASE} bg-onda-claro text-mar`}>
+            {hora}
+            {descricao}
+          </div>
+        )
+      }
+      return (
+        <button onClick={onAula} title="Ver a turma e participar" className={`${BASE} group bg-onda-claro text-mar hover:bg-mar hover:text-white transition`}>
+          {hora}
+          {descricao}
+          <span className="text-[11px] font-bold text-onda group-hover:text-sol">
+            {estaLotada(aula) ? 'Turma cheia · lista de espera' : 'Participar'}
+          </span>
+        </button>
+      )
+    }
     case 'bloqueado':
       return (
         <div className={`${BASE} ${LISTRADO} text-marinho/70`} title={slot.bloqueio?.motivo}>

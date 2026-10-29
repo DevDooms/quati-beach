@@ -12,7 +12,7 @@ export function Hero() {
   const { db } = useDB()
   return (
     <section className="relative bg-marinho text-white overflow-hidden">
-      <img src={FOTO_CAPA} alt="" className="absolute inset-0 size-full object-cover" aria-hidden />
+      <img src={FOTO_CAPA} alt="" className="absolute inset-0 size-full object-cover object-[center_45%]" aria-hidden />
       <div className="absolute inset-0 bg-gradient-to-r from-marinho via-marinho/85 to-marinho/40" aria-hidden />
 
       <div className="relative conteudo pt-14 pb-16 sm:pt-24 sm:pb-24 grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-end">
