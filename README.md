@@ -10,26 +10,47 @@ npm install
 npm run dev
 ```
 
-Abra http://localhost:5173/demo — a página de escolha entre as três visões.
+O navegador abre em `/demo`, a tela para escolher entre o site e o painel.
 
 ## Visões
 
 | Endereço | O que é |
 |---|---|
-| `/demo` | Escolher entre site, área do cliente e painel |
+| `/demo` | Escolher entre site e painel |
 | `/` | Site público: mapa das quadras, agenda por quadra (horário fixo, Pix/cartão/balcão, dividir a conta, lista de espera), aulas e planos, professores, torneios, bar, eventos, privacidade |
 | `/entrar` → `/minha-conta` | Área do cliente (login só visual, por código no WhatsApp) |
-| `/admin` | Painel do Quati: visão geral, agenda (com aviso de chuva), reservas, mensalistas, solicitações (eventos e lista de espera), grade de aulas, torneios, professores, configurações (preços, horários, planos e módulos do site) |
+| `/admin` | Painel: visão geral, agenda (com aviso de chuva), reservas, mensalistas, solicitações, grade de aulas, torneios, professores, configurações |
 
 Dica: abra o site e o painel em abas lado a lado — o que muda num aparece no outro na hora.
 Em **Painel → Configurações** há um botão para restaurar os dados de exemplo.
 
-## Onde mexer
+## Estrutura
 
-- `src/data/mock.ts` — dados iniciais (quadras, professores, grade de aulas, torneio, preços, horários).
-- `src/lib/store.tsx` — a "base" compartilhada (hoje `localStorage`; no futuro, API + bot de WhatsApp).
-- `src/lib/agenda.ts` — regras de agenda (horários livres, preço por horário, links de WhatsApp).
-- `src/components/MapaQuadras.tsx` — planta das quadras, clicável.
-- `src/pages/` — site e área do cliente; `src/admin/` — painel.
+```
+src/
+  main.tsx              entrada: providers + rotas
+  app/Rotas.tsx         todas as rotas (painel carregado sob demanda)
+  tipos.ts              tipos do domínio (Reserva, Aula, DataISO…)
+  config/
+    estabelecimento.ts  tudo que é do Quati: contato, quadras, preços padrão, cardápio…
+  demo/                 dados fictícios e a "semente" da base (some quando houver backend)
+  lib/                  utilidades sem tela
+    banco.tsx           base no navegador (useDB) com validação zod
+    auth.tsx            login visual (useLogin)
+    datas.ts formatos.ts whatsapp.ts mensagens.ts validacao.ts armazenamento.ts aleatorio.ts
+  ui/                   design system: Botao, Campo, Janela, Selos, Cartao, Titulos, Icones…
+  site/Layout.tsx       cabeçalho, menu e rodapé do site
+  admin/                esqueleto do painel (layout, login, visão geral, configurações)
+  features/
+    reservas/           agenda.ts + regras.ts, página de agendar, mapa, janela de reserva, telas do painel
+    mensalistas/        horários fixos
+    aulas/              grade, planos, professores
+    torneios/
+    eventos/            pedidos de evento + caixa de solicitações do painel
+    conta/              login e área do cliente
+    bar/  inicio/  institucional/
+```
+
+Regra geral: **regras de negócio ficam em `features/*/regras.ts`** (funções puras: recebem o estado e devolvem o novo). As telas só chamam essas funções. Detalhes e motivos em [`docs/decisoes.md`](docs/decisoes.md).
 
 Obs.: o `package.json` usa `@rollup/wasm-node` no lugar do Rollup nativo porque o Controle de Aplicativo do Windows bloqueou o binário nativo nesta máquina.
