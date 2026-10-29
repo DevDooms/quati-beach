@@ -80,7 +80,7 @@ export default function PaginaAgendar() {
       <div className="mx-auto max-w-6xl px-4 py-8 grid gap-8 lg:grid-cols-[1fr_300px]">
         <div className="min-w-0">
           <Passo n={1} titulo="Escolha a quadra" />
-          <div className="mt-3 rounded-3xl bg-white border border-petroleo/10 p-2 sm:p-4 shadow-sm">
+          <div className="mt-3 rounded-3xl bg-white border border-mar/10 p-2 sm:p-4 shadow-sm">
             <MapaQuadras selecionada={quadraId} onEscolher={escolherQuadra} livres={livresHoje} />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
@@ -91,10 +91,10 @@ export default function PaginaAgendar() {
                   key={q.id}
                   onClick={() => escolherQuadra(q.id)}
                   aria-pressed={ativa}
-                  className={`rounded-2xl border p-3 text-left transition ${ativa ? 'bg-petroleo text-white border-petroleo' : 'bg-white border-petroleo/10 hover:border-onda'}`}
+                  className={`rounded-2xl border p-3 text-left transition ${ativa ? 'bg-mar text-white border-mar' : 'bg-white border-mar/10 hover:border-onda'}`}
                 >
                   <p className="titulo text-2xl">{q.nome}</p>
-                  <p className={`text-xs ${ativa ? 'text-white/70' : 'text-petroleo-noite/70'}`}>{q.descricao}</p>
+                  <p className={`text-xs ${ativa ? 'text-white/70' : 'text-marinho/70'}`}>{q.descricao}</p>
                 </button>
               )
             })}
@@ -103,7 +103,7 @@ export default function PaginaAgendar() {
           <div ref={calendario} className="scroll-mt-24 mt-10">
             <Passo n={2} titulo={quadraId ? `Horários da ${quadraPorId(quadraId).nome}` : 'Escolha o dia e o horário'} />
             {!quadraId ? (
-              <div className="mt-3 rounded-3xl border-2 border-dashed border-petroleo/20 p-10 text-center text-petroleo-noite/70">
+              <div className="mt-3 rounded-3xl border-2 border-dashed border-mar/20 p-10 text-center text-marinho/70">
                 <MousePointerClick className="size-10 mx-auto text-onda" />
                 <p className="mt-3 font-semibold">Toque em uma quadra no mapa para ver o calendário dela.</p>
               </div>
@@ -116,8 +116,8 @@ export default function PaginaAgendar() {
                   <SeletorDias dias={dias} selecionado={dia} onEscolher={(d) => mudarFiltro({ data: dataISO(d) })} />
                 </div>
                 <div className="mt-5 flex flex-wrap items-end justify-between gap-2">
-                  <h2 className="titulo text-3xl text-petroleo first-letter:uppercase">{fmtDataLonga(dia)}</h2>
-                  <p className="text-sm text-petroleo-noite/70">{qtdLivres} {qtdLivres === 1 ? 'horário livre' : 'horários livres'}</p>
+                  <h2 className="titulo text-3xl text-mar first-letter:uppercase">{fmtDataLonga(dia)}</h2>
+                  <p className="text-sm text-marinho/70">{qtdLivres} {qtdLivres === 1 ? 'horário livre' : 'horários livres'}</p>
                 </div>
                 {especial && (
                   <p className="mt-2 rounded-xl bg-sol/20 px-3 py-2 text-sm font-semibold">
@@ -183,8 +183,8 @@ export default function PaginaAgendar() {
 function Passo({ n, titulo }: { n: number; titulo: string }) {
   return (
     <h2 className="flex items-center gap-3">
-      <span className="size-8 rounded-full bg-sol text-petroleo-noite grid place-items-center font-extrabold">{n}</span>
-      <span className="titulo text-3xl text-petroleo">{titulo}</span>
+      <span className="size-8 rounded-full bg-sol text-marinho grid place-items-center font-extrabold">{n}</span>
+      <span className="titulo text-3xl text-mar">{titulo}</span>
     </h2>
   )
 }

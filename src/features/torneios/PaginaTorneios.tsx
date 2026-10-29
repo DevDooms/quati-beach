@@ -31,19 +31,19 @@ export default function PaginaTorneios() {
 
         <aside className="space-y-4">
           {t && (
-            <div className="rounded-3xl bg-petroleo text-white p-6 text-center">
+            <div className="rounded-3xl bg-mar text-white p-6 text-center">
               <p className="text-sm text-white/70">Valor da inscrição</p>
               <p className="titulo text-6xl text-sol">{fmtReais(t.valor)}</p>
               <p className="text-sm text-white/70">por atleta</p>
             </div>
           )}
-          <div className="rounded-3xl bg-white border border-petroleo/10 p-6">
-            <h3 className="titulo text-2xl text-petroleo inline-flex items-center gap-2"><History className="size-5" /> Edições anteriores</h3>
+          <div className="rounded-3xl bg-white border border-mar/10 p-6">
+            <h3 className="titulo text-2xl text-mar inline-flex items-center gap-2"><History className="size-5" /> Edições anteriores</h3>
             <ul className="mt-3 space-y-3 text-sm">
               {EDICOES_ANTERIORES.map((e) => (
-                <li key={e.nome} className="flex justify-between gap-3 border-b border-petroleo/10 pb-3 last:border-0">
-                  <span><b>{e.nome}</b><br /><span className="text-petroleo-noite/70">{e.data}</span></span>
-                  <span className="text-petroleo-noite/70 shrink-0">{e.duplas} duplas</span>
+                <li key={e.nome} className="flex justify-between gap-3 border-b border-mar/10 pb-3 last:border-0">
+                  <span><b>{e.nome}</b><br /><span className="text-marinho/70">{e.data}</span></span>
+                  <span className="text-marinho/70 shrink-0">{e.duplas} duplas</span>
                 </li>
               ))}
             </ul>
@@ -73,10 +73,10 @@ export default function PaginaTorneios() {
 
 function CartazTorneio({ torneio: t, onInscrever }: { torneio: Torneio; onInscrever: (categoria: string) => void }) {
   return (
-    <article className="rounded-3xl bg-white border border-petroleo/10 overflow-hidden">
-      <div className="relative bg-gradient-to-br from-sol via-sol to-laranja p-8 text-petroleo-noite overflow-hidden">
+    <article className="rounded-3xl bg-white border border-mar/10 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-sol via-sol to-laranja p-8 text-marinho overflow-hidden">
         <Trophy className="absolute right-4 top-4 size-32 text-white/30" />
-        <p className="inline-block rounded-full bg-petroleo text-white text-xs font-extrabold px-3 py-1 uppercase tracking-wide">Inscrições abertas</p>
+        <p className="inline-block rounded-full bg-mar text-white text-xs font-extrabold px-3 py-1 uppercase tracking-wide">Inscrições abertas</p>
         <h2 className="titulo text-6xl mt-3 relative">{t.nome}</h2>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold relative">
           <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4" />{quandoTorneio(t)}</span>
@@ -86,7 +86,7 @@ function CartazTorneio({ torneio: t, onInscrever }: { torneio: Torneio; onInscre
       </div>
 
       <div className="p-6 sm:p-8">
-        <h3 className="titulo text-3xl text-petroleo">Categorias</h3>
+        <h3 className="titulo text-3xl text-mar">Categorias</h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {t.categorias.map((c) => {
             const inscritas = duplasDaCategoria(t, c).length
@@ -94,12 +94,12 @@ function CartazTorneio({ torneio: t, onInscrever }: { torneio: Torneio; onInscre
             const pct = Math.min(100, Math.round((inscritas / t.vagasPorCategoria) * 100))
             const quaseLotado = restantes <= 2
             return (
-              <div key={c} className="rounded-2xl border border-petroleo/10 p-4">
+              <div key={c} className="rounded-2xl border border-mar/10 p-4">
                 <p className="font-extrabold text-lg">{c}</p>
-                <div className="mt-2 h-2 rounded-full bg-petroleo/10 overflow-hidden">
+                <div className="mt-2 h-2 rounded-full bg-mar/10 overflow-hidden">
                   <div className={`h-full rounded-full ${quaseLotado ? 'bg-laranja' : 'bg-onda'}`} style={{ width: `${pct}%` }} />
                 </div>
-                <p className="mt-1.5 text-xs text-petroleo-noite/70">
+                <p className="mt-1.5 text-xs text-marinho/70">
                   {inscritas}/{t.vagasPorCategoria} duplas · <b className={quaseLotado ? 'text-laranja' : ''}>{restantes} vagas</b>
                 </p>
                 <Botao onClick={() => onInscrever(c)} disabled={restantes === 0} redondo largo className="mt-3">

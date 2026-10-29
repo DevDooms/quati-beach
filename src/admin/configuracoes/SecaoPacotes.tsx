@@ -18,13 +18,13 @@ export function SecaoPacotes() {
   return (
     <Secao titulo={<><Ticket className="size-6" /> Pacotes de horas</>} descricao="O cliente compra no site e usa as horas ao reservar.">
       <ul className="mt-3 space-y-2">
-        {db.pacotes.length === 0 && <li className="text-sm text-petroleo-noite/70">Nenhum pacote criado: a página de pacotes fica escondida até ter um.</li>}
+        {db.pacotes.length === 0 && <li className="text-sm text-marinho/70">Nenhum pacote criado: a página de pacotes fica escondida até ter um.</li>}
         {db.pacotes.map((p) => (
           <li key={p.id} className="flex items-center gap-3 rounded-xl bg-areia-claro px-3 py-2 text-sm">
             <span className="flex-1">
-              <b>{p.nome}</b> · {p.horas}h por {fmtReais(p.preco)} <span className="text-petroleo-noite/70">({fmtReais(precoPorHoraDoPacote(p))}/h)</span>
+              <b>{p.nome}</b> · {p.horas}h por {fmtReais(p.preco)} <span className="text-marinho/70">({fmtReais(precoPorHoraDoPacote(p))}/h)</span>
             </span>
-            <button onClick={() => set((db) => removerPacote(db, p.id))} className="text-petroleo-noite/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
+            <button onClick={() => set((db) => removerPacote(db, p.id))} className="text-marinho/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
               <X className="size-4" />
             </button>
           </li>

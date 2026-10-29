@@ -25,14 +25,14 @@ export function TurmasCliente({ turmas, pessoa }: { turmas: Aula[]; pessoa: Pess
         {turmas.map((a) => {
           const prox = proximaDataDaAula(a)
           return (
-            <article key={a.id} className="rounded-2xl bg-white border border-petroleo/10 p-4 flex items-center gap-4">
+            <article key={a.id} className="rounded-2xl bg-white border border-mar/10 p-4 flex items-center gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <SeloModalidade id={a.modalidade} pequeno />
-                  <span className="text-xs font-semibold text-petroleo-noite/70">{a.nivel}</span>
+                  <span className="text-xs font-semibold text-marinho/70">{a.nivel}</span>
                 </div>
                 <p className="mt-1 font-bold">{DIAS_SEMANA[a.diaSemana]}s, {fmtFaixa(a.hora)}</p>
-                <p className="text-sm text-petroleo-noite/70">
+                <p className="text-sm text-marinho/70">
                   Prof. {acharProfessor(db, a.professorId).nome} · {quadraPorId(a.quadraId).nome}
                 </p>
                 <p className="text-xs text-onda font-semibold mt-1">Próxima: {fmtDiaSemana(prox)} {fmtDataCurta(prox)}</p>
@@ -66,7 +66,7 @@ export function TorneiosCliente({ pessoa }: { pessoa: Pessoa }) {
           </Vazio>
         )}
         {inscricoes.map(({ t, d }) => (
-          <article key={d.id} className="rounded-2xl bg-gradient-to-br from-sol to-laranja p-4 text-petroleo-noite">
+          <article key={d.id} className="rounded-2xl bg-gradient-to-br from-sol to-laranja p-4 text-marinho">
             <p className="titulo text-2xl">{t.nome}</p>
             <p className="text-sm font-semibold">{fmtDataCurta(dataDeISO(t.data))} · Categoria {d.categoria}</p>
             <p className="text-sm">Dupla: {d.atleta1} & {d.atleta2}</p>

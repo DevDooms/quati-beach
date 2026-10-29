@@ -31,7 +31,7 @@ const AulasAdmin = lazy(() => import('../features/aulas/admin/AulasAdmin'))
 const ProfessoresAdmin = lazy(() => import('../features/aulas/admin/ProfessoresAdmin'))
 const TorneiosAdmin = lazy(() => import('../features/torneios/admin/TorneiosAdmin'))
 
-const Carregando = () => <div className="min-h-dvh grid place-items-center text-petroleo-noite/70">Carregando…</div>
+const Carregando = () => <div className="min-h-dvh grid place-items-center text-marinho/70">Carregando…</div>
 
 // Página de um módulo desligado no painel volta para o início
 function Modulo({ nome, children }: { nome: keyof Modulos; children: ReactNode }) {

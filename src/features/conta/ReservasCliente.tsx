@@ -39,15 +39,15 @@ function CartaoReserva({ reserva: r, onRemarcar }: { reserva: Reserva; onRemarca
   // dentro do prazo do dono dá para remarcar/cancelar pelo site; depois disso, pelo WhatsApp
   const noPrazo = podeCancelar(r, db.politica)
   return (
-    <article className="rounded-2xl bg-white border border-petroleo/10 p-4">
+    <article className="rounded-2xl bg-white border border-mar/10 p-4">
       <div className="flex items-start gap-4">
-        <div className="rounded-xl bg-petroleo text-white text-center px-3 py-2 shrink-0">
+        <div className="rounded-xl bg-mar text-white text-center px-3 py-2 shrink-0">
           <p className="text-[11px] uppercase text-sol font-semibold">{fmtDiaSemana(d)}</p>
           <p className="titulo text-3xl leading-none">{d.getDate()}</p>
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-bold first-letter:uppercase">{fmtDataLonga(d)}</p>
-          <p className="text-sm text-petroleo-noite/70 flex flex-wrap gap-x-3">
+          <p className="text-sm text-marinho/70 flex flex-wrap gap-x-3">
             <span className="inline-flex items-center gap-1"><Clock className="size-3.5" />{fmtFaixa(r.hora, r.duracao)}</span>
             <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{quadra}</span>
           </p>
@@ -67,7 +67,7 @@ function CartaoReserva({ reserva: r, onRemarcar }: { reserva: Reserva; onRemarca
         </div>
       ) : (
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <span className="text-[11px] text-petroleo-noite/70">Faltam menos de {db.politica.cancelamentoHoras}h: mudanças pelo WhatsApp.</span>
+          <span className="text-[11px] text-marinho/70">Faltam menos de {db.politica.cancelamentoHoras}h: mudanças pelo WhatsApp.</span>
           <Botao href={linkWhatsApp(doCliente.remarcar(r.nome, r.data, r.hora, quadra))} variante="secundario" redondo tamanho="sm">
             <IconeWhatsApp className="size-4 text-whatsapp-escuro" /> Falar com a gente
           </Botao>
@@ -81,8 +81,8 @@ export function Historico({ reservas }: { reservas: Reserva[] }) {
   return (
     <section>
       <TituloConta icone={<History />}>Histórico</TituloConta>
-      <div className="mt-3 rounded-2xl bg-white border border-petroleo/10 divide-y divide-petroleo/10">
-        {reservas.length === 0 && <p className="p-4 text-sm text-petroleo-noite/70">Nada por aqui ainda.</p>}
+      <div className="mt-3 rounded-2xl bg-white border border-mar/10 divide-y divide-mar/10">
+        {reservas.length === 0 && <p className="p-4 text-sm text-marinho/70">Nada por aqui ainda.</p>}
         {reservas.map((r) => {
           const d = dataDeISO(r.data)
           return (
@@ -90,7 +90,7 @@ export function Historico({ reservas }: { reservas: Reserva[] }) {
               <span className="first-letter:uppercase">
                 {fmtDiaSemana(d)} {fmtDataCurta(d)} · {fmtFaixa(r.hora, r.duracao)}
               </span>
-              <span className="text-petroleo-noite/70">{quadraPorId(r.quadraId).nome}</span>
+              <span className="text-marinho/70">{quadraPorId(r.quadraId).nome}</span>
             </div>
           )
         })}

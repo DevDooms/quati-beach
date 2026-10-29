@@ -71,7 +71,7 @@ export function JanelaNovaReserva({ inicial, onFechar }: { inicial: { data: Data
           <Entrada compacto value={f.telefone} onChange={(e) => setF({ ...f, telefone: mascaraTelefone(e.target.value) })} placeholder="(11) 99999-9999" inputMode="tel" />
         </Campo>
         <label className="col-span-2 inline-flex items-center gap-2 text-sm font-semibold">
-          <input type="checkbox" checked={f.pago} onChange={(e) => setF({ ...f, pago: e.target.checked })} className="accent-petroleo size-4" /> Já foi pago (
+          <input type="checkbox" checked={f.pago} onChange={(e) => setF({ ...f, pago: e.target.checked })} className="accent-mar size-4" /> Já foi pago (
           {fmtReais(precoDoHorario(db, d, f.hora))})
         </label>
         {f.pago && (

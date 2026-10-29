@@ -53,7 +53,7 @@ export function Janela({
   }, [])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-petroleo-noite/60 backdrop-blur-sm" onClick={onFechar}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-marinho/60 backdrop-blur-sm" onClick={onFechar}>
       <div
         ref={caixa}
         role="dialog"
@@ -68,9 +68,9 @@ export function Janela({
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 {etiqueta}
-                <h2 id={idTitulo} className="titulo text-4xl text-petroleo mt-1">{titulo}</h2>
+                <h2 id={idTitulo} className="titulo text-4xl text-mar mt-1">{titulo}</h2>
               </div>
-              <button onClick={onFechar} className="p-1 -mr-1 text-petroleo-noite/70 hover:text-petroleo-noite" aria-label="Fechar">
+              <button onClick={onFechar} className="p-1 -mr-1 text-marinho/70 hover:text-marinho" aria-label="Fechar">
                 <X />
               </button>
             </div>

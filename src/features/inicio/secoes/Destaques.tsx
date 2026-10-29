@@ -5,7 +5,7 @@ import { NEGOCIO } from '../../../config/estabelecimento'
 import { useDB } from '../../../lib/banco'
 import { DIAS_SEMANA, dataDeISO, fmtDataCurta } from '../../../lib/datas'
 import { fmtReais } from '../../../lib/formatos'
-import { Botao } from '../../../ui'
+import { Bola, Botao } from '../../../ui'
 import { proximoTorneio } from '../../torneios/regras'
 
 export function BarEventos() {
@@ -14,7 +14,7 @@ export function BarEventos() {
   return (
     <section className="mx-auto max-w-6xl px-4 pt-16 grid gap-4 md:grid-cols-2">
       {db.modulos.bar && (
-        <Link to="/bar" className="group rounded-3xl bg-laranja text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
+        <Link to="/bar" className="group rounded-3xl bg-gradient-to-br from-laranja to-laranja-escuro text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
           <UtensilsCrossed className="absolute -right-4 -bottom-4 size-36 text-white/15" />
           <p className="text-xs font-bold uppercase tracking-widest text-white/80">Bar do {NEGOCIO.apelido}</p>
           <h2 className="titulo text-5xl mt-1">Porções e bebida gelada</h2>
@@ -23,7 +23,7 @@ export function BarEventos() {
         </Link>
       )}
       {db.modulos.eventos && (
-        <Link to="/eventos" className="group rounded-3xl bg-petroleo text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
+        <Link to="/eventos" className="group rounded-3xl bg-mar textura-rede text-white p-8 relative overflow-hidden hover:-translate-y-1 transition">
           <PartyPopper className="absolute -right-4 -bottom-4 size-36 text-white/10" />
           <p className="text-xs font-bold uppercase tracking-widest text-sol">Eventos</p>
           <h2 className="titulo text-5xl mt-1">Aniversário na areia?</h2>
@@ -42,10 +42,13 @@ export function BannerTorneio() {
   const d = dataDeISO(t.data)
   return (
     <section className="mx-auto max-w-6xl px-4 py-16">
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-onda to-petroleo text-white p-8 sm:p-12 grid gap-6 md:grid-cols-[1fr_auto] items-center">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-onda via-mar to-marinho text-white p-8 sm:p-12 grid gap-6 md:grid-cols-[1fr_auto] items-center">
+        <div className="absolute inset-0 textura-rede" aria-hidden />
+        <div className="absolute inset-x-0 top-1/2 h-1 bg-white/25" aria-hidden />
         <Trophy className="absolute -right-6 -bottom-6 size-48 text-white/10" />
+        <Bola className="absolute right-[28%] -top-10 size-28 opacity-25 rotate-45" />
         <div className="relative">
-          <p className="inline-block rounded-full bg-sol text-petroleo-noite text-xs font-extrabold px-3 py-1 uppercase tracking-wide">Inscrições abertas</p>
+          <p className="inline-block rounded-full bg-sol text-marinho text-xs font-extrabold px-3 py-1 uppercase tracking-wide">Inscrições abertas</p>
           <h2 className="titulo text-5xl sm:text-6xl mt-3">{t.nome}</h2>
           <p className="mt-2 text-white/85">
             {fmtDataCurta(d)} · {DIAS_SEMANA[d.getDay()].toLowerCase()} {t.horario} · categorias {t.categorias.join(', ').toLowerCase()}

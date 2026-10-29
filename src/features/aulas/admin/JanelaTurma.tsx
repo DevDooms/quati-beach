@@ -109,15 +109,15 @@ function ListaAlunos({ alunos, vagas, onChange }: { alunos: Pessoa[]; vagas: num
   const [novo, setNovo] = useState<Pessoa>({ nome: '', telefone: '' })
   return (
     <>
-      <h3 className="titulo text-2xl text-petroleo mt-6">Alunos ({alunos.length}/{vagas})</h3>
-      <ul className="mt-2 divide-y divide-petroleo/10 rounded-2xl border border-petroleo/10">
-        {alunos.length === 0 && <li className="p-3 text-sm text-petroleo-noite/70">Nenhum aluno ainda.</li>}
+      <h3 className="titulo text-2xl text-mar mt-6">Alunos ({alunos.length}/{vagas})</h3>
+      <ul className="mt-2 divide-y divide-mar/10 rounded-2xl border border-mar/10">
+        {alunos.length === 0 && <li className="p-3 text-sm text-marinho/70">Nenhum aluno ainda.</li>}
         {alunos.map((p, i) => (
           <li key={`${p.telefone}-${i}`} className="flex items-center gap-3 px-3 py-2 text-sm">
             <span className="flex-1 min-w-0">
-              <b className="truncate">{p.nome}</b> <span className="text-xs text-petroleo-noite/70">{p.telefone}</span>
+              <b className="truncate">{p.nome}</b> <span className="text-xs text-marinho/70">{p.telefone}</span>
             </span>
-            <button onClick={() => onChange(alunos.filter((_, j) => j !== i))} className="p-1 text-petroleo-noite/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
+            <button onClick={() => onChange(alunos.filter((_, j) => j !== i))} className="p-1 text-marinho/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
               <X className="size-4" />
             </button>
           </li>

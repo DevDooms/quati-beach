@@ -7,7 +7,7 @@ import { useDB } from '../lib/banco'
 import { doCliente } from '../lib/mensagens'
 import { linkWhatsApp } from '../lib/whatsapp'
 import type { Modulos } from '../tipos'
-import { Botao, IconeInstagram, IconeWhatsApp, Logo } from '../ui'
+import { Bola, Botao, IconeInstagram, IconeWhatsApp, Logo } from '../ui'
 import { statusFuncionamento } from '../features/reservas/agenda'
 
 // itens do menu; os de módulos desligados no painel somem do site
@@ -46,10 +46,10 @@ export default function Layout() {
 
   return (
     <div className="min-h-dvh flex flex-col">
-      <div className="bg-petroleo-noite text-white/80 text-xs">
+      <div className="bg-sol text-marinho text-xs font-semibold">
         <div className="mx-auto max-w-6xl px-4 h-8 flex items-center justify-between gap-4">
           <span className="flex items-center gap-2">
-            <span className={`size-2 rounded-full ${status.aberto ? 'bg-emerald-400' : 'bg-red-400'}`} />
+            <span className={`size-2 rounded-full ${status.aberto ? 'bg-verde-quadra animate-pulse' : 'bg-red-500'}`} />
             {status.texto}
           </span>
           <span className="hidden sm:flex items-center gap-1.5">
@@ -58,13 +58,13 @@ export default function Layout() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-30 bg-petroleo text-white shadow-lg shadow-petroleo-noite/20">
+      <header className="sticky top-0 z-30 bg-marinho/95 backdrop-blur text-white shadow-lg shadow-marinho/25 border-b-[3px] border-sol">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <Logo className="size-10" />
+          <Link to="/" className="group flex items-center gap-2.5 shrink-0">
+            <Logo className="size-11 ring-2 ring-sol/60 transition group-hover:rotate-12" />
             <span className="titulo text-2xl leading-none">
               {NEGOCIO.marca[0]} <span className="text-sol">{NEGOCIO.marca[1]}</span>
-              <span className="block text-[11px] font-sans font-semibold tracking-[0.3em] text-onda-claro/80 uppercase">{NEGOCIO.marca[2]}</span>
+              <span className="block text-[11px] font-sans font-semibold tracking-[0.3em] text-ceu uppercase">{NEGOCIO.marca[2]}</span>
             </span>
           </Link>
 
@@ -73,7 +73,7 @@ export default function Layout() {
               <NavLink
                 key={n.to}
                 to={n.to}
-                className={({ isActive }) => `px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${isActive ? 'bg-white/15 text-white' : 'text-white/75 hover:text-white'}`}
+                className={({ isActive }) => `px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${isActive ? 'bg-sol text-marinho' : 'text-white/75 hover:text-white hover:bg-white/10'}`}
               >
                 {n.label}
               </NavLink>
@@ -130,17 +130,20 @@ export default function Layout() {
 
 function Rodape({ nav }: { nav: { to: string; label: string }[] }) {
   return (
-    <footer className="bg-petroleo-noite text-white/70">
-      <div className="mx-auto max-w-6xl px-4 py-12 grid gap-8 sm:grid-cols-3">
+    <footer className="relative bg-marinho text-white/70 overflow-hidden">
+      <div className="h-2 faixa-quadra" aria-hidden />
+      <Bola className="absolute -right-10 bottom-10 size-48 opacity-[0.07] rotate-12" />
+      <div className="relative mx-auto max-w-6xl px-4 py-12 grid gap-8 sm:grid-cols-3">
         <div>
           <div className="flex items-center gap-2.5 text-white">
             <Logo className="size-9" />
             <span className="titulo text-2xl">{NEGOCIO.nome}</span>
           </div>
           <p className="mt-3 text-sm">{NEGOCIO.descricao}</p>
+          <p className="manuscrito mt-4 text-2xl text-sol -rotate-2">Nos vemos na areia!</p>
         </div>
         <div className="text-sm space-y-2">
-          <p className="font-semibold text-white">Contato</p>
+          <p className="titulo text-xl tracking-widest text-sol">Contato</p>
           <p className="flex items-center gap-2"><MapPin className="size-4 shrink-0" /> {NEGOCIO.endereco}<br />{NEGOCIO.cidade}</p>
           <a href={`tel:+${NEGOCIO.whatsapp}`} className="flex items-center gap-2 hover:text-white"><Phone className="size-4" /> {NEGOCIO.telefone}</a>
           <a href={NEGOCIO.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white">
@@ -148,14 +151,14 @@ function Rodape({ nav }: { nav: { to: string; label: string }[] }) {
           </a>
         </div>
         <div className="text-sm space-y-2">
-          <p className="font-semibold text-white">Navegar</p>
+          <p className="titulo text-xl tracking-widest text-sol">Navegar</p>
           {nav.map((n) => (
             <Link key={n.to} to={n.to} className="block hover:text-white">{n.label}</Link>
           ))}
           <Link to="/privacidade" className="block hover:text-white">Política de privacidade</Link>
         </div>
       </div>
-      <div className="border-t border-white/10 py-4 px-4 text-center text-xs text-white/50">
+      <div className="relative border-t border-white/10 py-4 px-4 text-center text-xs text-white/50">
         Protótipo de demonstração · horários, professores e preços são ilustrativos ·{' '}
         <Link to="/demo" className="underline hover:text-white">Trocar de visão</Link> ·{' '}
         <Link to="/admin" className="underline hover:text-white">Painel do {NEGOCIO.apelido}</Link>

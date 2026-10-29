@@ -32,7 +32,7 @@ export function JanelaReserva({ reserva, onFechar }: { reserva: Reserva; onFecha
             <ListaFila fila={fila} reserva={r} quadra={quadra} destaque />
           </>
         ) : (
-          <p className="text-sm text-petroleo-noite/70">O horário voltou a ficar livre no site.</p>
+          <p className="text-sm text-marinho/70">O horário voltou a ficar livre no site.</p>
         )}
         <Botao onClick={onFechar} largo className="mt-5">Fechar</Botao>
       </Janela>
@@ -55,8 +55,8 @@ export function JanelaReserva({ reserva, onFechar }: { reserva: Reserva; onFecha
         ]}
       />
 
-      <div className="mt-4 rounded-xl border border-petroleo/10 p-3">
-        <p className="text-xs font-bold uppercase tracking-wide text-petroleo-noite/70">{r.pago ? 'Pago' : 'Receber agora'}</p>
+      <div className="mt-4 rounded-xl border border-mar/10 p-3">
+        <p className="text-xs font-bold uppercase tracking-wide text-marinho/70">{r.pago ? 'Pago' : 'Receber agora'}</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {r.pago ? (
             <Botao variante="secundario" tamanho="sm" onClick={() => set((db) => marcarPendente(db, r.id))}>Voltar para pendente</Botao>
@@ -105,7 +105,7 @@ function ListaFila({ fila, reserva: r, quadra, destaque = false }: { fila: Esper
       <ol className="mt-1 space-y-1 text-sm">
         {fila.map((e, i) => (
           <li key={e.id} className="flex items-center gap-2">
-            <span className="text-petroleo-noite/70 font-bold w-5">{i + 1}º</span>
+            <span className="text-marinho/70 font-bold w-5">{i + 1}º</span>
             <span className="flex-1 truncate">{e.nome}</span>
             <a href={whatsPara(e, doEstabelecimento.vagouHorario(e.nome, r.data, r.hora, quadra))} target="_blank" rel="noreferrer" className="text-whatsapp-escuro" aria-label={`Avisar ${e.nome}`}>
               <IconeWhatsApp className="size-4" />
@@ -113,7 +113,7 @@ function ListaFila({ fila, reserva: r, quadra, destaque = false }: { fila: Esper
           </li>
         ))}
       </ol>
-      {!destaque && <p className="mt-1 text-[11px] text-petroleo-noite/70">Se cancelar esta reserva, avise o 1º da fila.</p>}
+      {!destaque && <p className="mt-1 text-[11px] text-marinho/70">Se cancelar esta reserva, avise o 1º da fila.</p>}
     </div>
   )
 }

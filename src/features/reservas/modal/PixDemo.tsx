@@ -11,24 +11,24 @@ export function PixDemo({ semente, valor }: { semente: string; valor: string }) 
   return (
     <>
       <p className="text-xs font-bold uppercase tracking-widest text-onda">Reserva garantida · pague com Pix</p>
-      <h2 className="titulo text-4xl mt-1 text-petroleo">Escaneie o QR Code</h2>
-      <div className="mt-4 mx-auto w-44 rounded-2xl border-2 border-petroleo/10 p-3 bg-white">
+      <h2 className="titulo text-4xl mt-1 text-mar">Escaneie o QR Code</h2>
+      <div className="mt-4 mx-auto w-44 rounded-2xl border-2 border-mar/10 p-3 bg-white">
         <QrIlustrativo semente={semente} />
       </div>
-      <p className="mt-3 text-sm font-extrabold text-petroleo">{valor}</p>
+      <p className="mt-3 text-sm font-extrabold text-mar">{valor}</p>
       <div className="mt-3 flex items-center gap-2 rounded-xl bg-areia-claro p-2 text-left">
-        <code className="flex-1 truncate text-xs text-petroleo-noite/70">{PIX_DEMO}</code>
+        <code className="flex-1 truncate text-xs text-marinho/70">{PIX_DEMO}</code>
         <button
           onClick={() => {
             navigator.clipboard?.writeText(PIX_DEMO).catch(() => {})
             setCopiado(true)
           }}
-          className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-petroleo text-white px-3 py-1.5 text-xs font-bold"
+          className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-mar text-white px-3 py-1.5 text-xs font-bold"
         >
           <Copy className="size-3.5" /> {copiado ? 'Copiado!' : 'Copiar'}
         </button>
       </div>
-      <p className="mt-2 text-[11px] text-petroleo-noite/70">Demonstração: este Pix não é real.</p>
+      <p className="mt-2 text-[11px] text-marinho/70">Demonstração: este Pix não é real.</p>
     </>
   )
 }

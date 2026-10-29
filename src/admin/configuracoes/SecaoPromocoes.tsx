@@ -20,19 +20,19 @@ export function SecaoPromocoes() {
   return (
     <Secao titulo={<><Tag className="size-6" /> Preços promocionais</>} descricao="Opcional. Ex.: horário de pouco movimento com preço menor.">
       <ul className="mt-3 space-y-2">
-        {db.promocoes.length === 0 && <li className="text-sm text-petroleo-noite/70">Nenhuma promoção cadastrada.</li>}
+        {db.promocoes.length === 0 && <li className="text-sm text-marinho/70">Nenhuma promoção cadastrada.</li>}
         {db.promocoes.map((p) => (
-          <li key={p.id} className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${p.ativa ? 'bg-sol/20' : 'bg-petroleo/5 opacity-70'}`}>
+          <li key={p.id} className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${p.ativa ? 'bg-sol/20' : 'bg-mar/5 opacity-70'}`}>
             <span className="flex-1">
               <b>{p.nome}</b> · {fmtReais(p.preco)}/h
-              <span className="block text-xs text-petroleo-noite/70">
+              <span className="block text-xs text-marinho/70">
                 {ORDEM_DIAS.filter((d) => p.dias.includes(d)).map((d) => DIAS_CURTOS[d]).join(', ')} · {fmtHora(p.inicio)} às {fmtHora(p.fim)}
               </span>
             </span>
             <label className="inline-flex items-center gap-1 text-xs font-semibold">
-              <input type="checkbox" checked={p.ativa} onChange={() => set((db) => salvarPromocao(db, { ...p, ativa: !p.ativa }))} className="accent-petroleo" /> Ativa
+              <input type="checkbox" checked={p.ativa} onChange={() => set((db) => salvarPromocao(db, { ...p, ativa: !p.ativa }))} className="accent-mar" /> Ativa
             </label>
-            <button onClick={() => set((db) => removerPromocao(db, p.id))} className="text-petroleo-noite/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
+            <button onClick={() => set((db) => removerPromocao(db, p.id))} className="text-marinho/70 hover:text-red-600" aria-label={`Remover ${p.nome}`}>
               <X className="size-4" />
             </button>
           </li>
@@ -57,7 +57,7 @@ export function SecaoPromocoes() {
           </Campo>
         </div>
         <fieldset>
-          <legend className="text-xs font-bold uppercase tracking-wide text-petroleo-noite/70">Dias</legend>
+          <legend className="text-xs font-bold uppercase tracking-wide text-marinho/70">Dias</legend>
           <div className="mt-1 flex flex-wrap gap-1.5">
             {ORDEM_DIAS.map((d) => (
               <button
@@ -65,7 +65,7 @@ export function SecaoPromocoes() {
                 type="button"
                 aria-pressed={f.dias.includes(d)}
                 onClick={() => alternarDia(d)}
-                className={`rounded-lg px-2.5 py-1.5 text-xs font-bold border ${f.dias.includes(d) ? 'bg-petroleo text-white border-petroleo' : 'border-petroleo/20'}`}
+                className={`rounded-lg px-2.5 py-1.5 text-xs font-bold border ${f.dias.includes(d) ? 'bg-mar text-white border-mar' : 'border-mar/20'}`}
               >
                 {DIAS_CURTOS[d]}
               </button>

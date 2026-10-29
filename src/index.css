@@ -1,24 +1,28 @@
 @import "tailwindcss";
 
+/* Paleta tirada da logo: anel amarelo, letras azul-marinho, onda em degradê azul, areia da quadra */
 @theme {
-  --color-petroleo: #0f5c63;
-  --color-petroleo-escuro: #0a3f45;
-  --color-petroleo-noite: #072a2e;
-  --color-onda: #1fa3a8;
-  --color-onda-claro: #d7f1f0;
-  --color-sol: #f5c518;
-  --color-sol-escuro: #a07c00;
-  --color-areia: #f3e3c3;
-  --color-areia-claro: #fbf6ec;
-  --color-laranja: #f08a24;
-  --color-laranja-escuro: #c96a10;
-  --color-verde-quadra: #2b8a6e;
+  --color-marinho: #0c1f4d;
+  --color-mar-fundo: #12357f;
+  --color-mar: #1a4fa3;
+  --color-onda: #0d84c6;
+  --color-onda-claro: #d9eefa;
+  --color-ceu: #5cc6ef;
+  --color-sol: #ffc915;
+  --color-sol-escuro: #9a7400;
+  --color-areia: #f1dcb0;
+  --color-areia-claro: #fcf6ea;
+  --color-areia-escura: #d8b97c;
+  --color-laranja: #f27d1e;
+  --color-laranja-escuro: #c95f0c;
+  --color-verde-quadra: #1f9a5e;
   --color-whatsapp: #25d366;
   --color-whatsapp-escuro: #128c4a;
-  --color-fundo-painel: #eef3f3;
+  --color-fundo-painel: #eef2f8;
 
   --font-display: "Bebas Neue", "Anton", Impact, sans-serif;
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mao: "Kaushan Script", cursive;
 }
 
 html {
@@ -26,11 +30,16 @@ html {
 }
 
 body {
-  @apply bg-areia-claro text-petroleo-noite font-sans antialiased;
+  @apply bg-areia-claro text-marinho font-sans antialiased;
 }
 
 .titulo {
   @apply font-display tracking-wide leading-[0.95];
+}
+
+/* Detalhe "escrito à mão", como pintura de prancha */
+.manuscrito {
+  @apply font-mao font-normal normal-case tracking-normal;
 }
 
 .sem-scrollbar {
@@ -39,6 +48,34 @@ body {
 .sem-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ---------- Texturas ---------- */
+
+/* Grão de areia: ruído fino por cima da cor de fundo */
+.textura-areia {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .2 0 0 0 .28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* Céu de fim de tarde descendo até o mar, com o sol da logo */
+.ceu-mar {
+  background:
+    radial-gradient(60% 55% at 78% 18%, rgb(255 201 21 / 0.35), transparent 60%),
+    linear-gradient(180deg, var(--color-marinho) 0%, var(--color-mar-fundo) 45%, var(--color-mar) 75%, var(--color-onda) 100%);
+}
+
+/* Malha da rede de futevôlei */
+.textura-rede {
+  background-image:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.09) 0 1.5px, transparent 1.5px 18px),
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.09) 0 1.5px, transparent 1.5px 18px);
+}
+
+/* Linha de quadra (fita da marcação) */
+.faixa-quadra {
+  background: repeating-linear-gradient(90deg, var(--color-sol) 0 28px, var(--color-marinho) 28px 34px);
+}
+
+/* ---------- Movimento ---------- */
 
 @keyframes sobe {
   from {
@@ -52,4 +89,52 @@ body {
 }
 .anim-sobe {
   animation: sobe 0.25s ease-out;
+}
+
+/* Entrada da página inicial, em cascata */
+.anim-entra {
+  animation: sobe 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--atraso, 0s);
+}
+
+/* Bola quicando na areia (a sombra encolhe quando ela sobe) */
+@keyframes quica {
+  0%, 100% { transform: translateY(0) rotate(0deg); animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
+  50% { transform: translateY(-88%) rotate(160deg); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+}
+@keyframes sombra-bola {
+  0%, 100% { transform: scaleX(1); opacity: 0.45; }
+  50% { transform: scaleX(0.55); opacity: 0.18; }
+}
+.anim-quica {
+  animation: quica 1.8s infinite;
+}
+.anim-sombra {
+  animation: sombra-bola 1.8s infinite;
+}
+
+/* Ondas deslizando em camadas */
+@keyframes mare {
+  to { transform: translateX(-50%); }
+}
+.anim-mare {
+  animation: mare var(--duracao, 14s) linear infinite;
+}
+
+/* Sol "respirando" */
+@keyframes brilho {
+  50% { transform: scale(1.06); opacity: 0.85; }
+}
+.anim-brilho {
+  animation: brilho 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-quica,
+  .anim-sombra,
+  .anim-mare,
+  .anim-brilho,
+  .anim-entra {
+    animation: none;
+  }
 }

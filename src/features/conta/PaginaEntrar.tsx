@@ -19,9 +19,9 @@ export default function PaginaEntrar() {
   return (
     <section className="mx-auto max-w-5xl px-4 py-10 sm:py-16">
       <div className="grid overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-2">
-        <div className="relative hidden md:block bg-petroleo">
+        <div className="relative hidden md:block bg-mar">
           <img src={quadraAerea} alt="" className="absolute inset-0 size-full object-cover opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-petroleo-noite via-petroleo-noite/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-marinho via-marinho/40 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-8 text-white">
             <Logo className="size-20" />
             <p className="titulo text-5xl mt-4">Sua areia, <span className="text-sol">sua agenda.</span></p>
@@ -41,14 +41,14 @@ export default function PaginaEntrar() {
                 setEtapa('codigo')
               }}
             >
-              <p className="text-sm text-petroleo-noite/70">Sem senha para lembrar: a gente manda um código no seu WhatsApp.</p>
+              <p className="text-sm text-marinho/70">Sem senha para lembrar: a gente manda um código no seu WhatsApp.</p>
               <Campo rotulo="Seu WhatsApp">
                 <Entrada icone={<Phone />} value={telefone} onChange={(e) => setTelefone(mascaraTelefone(e.target.value))} inputMode="tel" />
               </Campo>
               <Botao type="submit" variante="whatsapp" tamanho="lg" largo>
                 <IconeWhatsApp /> Receber código no WhatsApp
               </Botao>
-              <p className="text-center text-xs text-petroleo-noite/70">Primeira vez aqui? A conta é criada automaticamente.</p>
+              <p className="text-center text-xs text-marinho/70">Primeira vez aqui? A conta é criada automaticamente.</p>
             </form>
           ) : (
             <form
@@ -60,7 +60,7 @@ export default function PaginaEntrar() {
                 navegar('/minha-conta')
               }}
             >
-              <p className="text-sm text-petroleo-noite/70">
+              <p className="text-sm text-marinho/70">
                 Enviamos um código de 6 dígitos para <b>{telefone}</b>.
               </p>
               <div className="flex justify-between gap-2" role="group" aria-label="Código de verificação">
@@ -71,19 +71,19 @@ export default function PaginaEntrar() {
                     maxLength={1}
                     inputMode="numeric"
                     aria-label={`Dígito ${i + 1}`}
-                    className="w-full aspect-square max-w-14 rounded-xl border-2 border-petroleo/20 text-center titulo text-3xl text-petroleo outline-none focus:border-onda"
+                    className="w-full aspect-square max-w-14 rounded-xl border-2 border-mar/20 text-center titulo text-3xl text-mar outline-none focus:border-onda"
                   />
                 ))}
               </div>
               <Botao type="submit" variante="destaque" tamanho="lg" largo>Entrar</Botao>
               <div className="flex justify-between text-sm">
-                <button type="button" onClick={() => setEtapa('telefone')} className="font-semibold text-petroleo-noite/70">Trocar número</button>
+                <button type="button" onClick={() => setEtapa('telefone')} className="font-semibold text-marinho/70">Trocar número</button>
                 <button type="button" className="font-semibold text-onda">Reenviar código</button>
               </div>
             </form>
           )}
 
-          <p className="mt-6 rounded-xl bg-areia-claro p-3 text-center text-xs text-petroleo-noite/70">
+          <p className="mt-6 rounded-xl bg-areia-claro p-3 text-center text-xs text-marinho/70">
             Demonstração: o código já vem preenchido, é só tocar nos botões. <Link to="/demo" className="underline">Trocar de visão</Link>
           </p>
         </div>

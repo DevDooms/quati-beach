@@ -4,8 +4,8 @@ import { Cartao } from '../../ui'
 export function Secao({ titulo, descricao, children, className = '' }: { titulo: ReactNode; descricao?: string; children: ReactNode; className?: string }) {
   return (
     <Cartao className={`p-5 ${className}`}>
-      <h2 className="titulo text-3xl text-petroleo flex items-center gap-2">{titulo}</h2>
-      {descricao && <p className="text-sm text-petroleo-noite/70">{descricao}</p>}
+      <h2 className="titulo text-3xl text-mar flex items-center gap-2">{titulo}</h2>
+      {descricao && <p className="text-sm text-marinho/70">{descricao}</p>}
       {children}
     </Cartao>
   )

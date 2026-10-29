@@ -49,9 +49,9 @@ export default function AgendaAdmin() {
       />
 
       <Cartao className="p-3 flex flex-wrap items-center gap-2 mb-4">
-        <button onClick={() => mover(-1)} className="p-2 rounded-xl hover:bg-petroleo/5" aria-label="Dia anterior"><ChevronLeft /></button>
-        <button onClick={() => mover(1)} className="p-2 rounded-xl hover:bg-petroleo/5" aria-label="Próximo dia"><ChevronRight /></button>
-        <h2 className="titulo text-2xl sm:text-3xl text-petroleo first-letter:uppercase flex-1 min-w-48">{fmtDataLonga(d)}</h2>
+        <button onClick={() => mover(-1)} className="p-2 rounded-xl hover:bg-mar/5" aria-label="Dia anterior"><ChevronLeft /></button>
+        <button onClick={() => mover(1)} className="p-2 rounded-xl hover:bg-mar/5" aria-label="Próximo dia"><ChevronRight /></button>
+        <h2 className="titulo text-2xl sm:text-3xl text-mar first-letter:uppercase flex-1 min-w-48">{fmtDataLonga(d)}</h2>
         {data !== hojeISO() && <Botao variante="secundario" onClick={() => setData(hojeISO())}>Hoje</Botao>}
         <span className="w-44">
           <Entrada compacto type="date" value={data} onChange={(e) => e.target.value && setData(paraDataISO(e.target.value))} aria-label="Escolher data" />
@@ -66,9 +66,9 @@ export default function AgendaAdmin() {
             </span>
           )}
           {bloqueios.map((b) => (
-            <span key={b.id} className="inline-flex items-center gap-2 rounded-xl bg-petroleo/10 px-3 py-2 text-sm">
+            <span key={b.id} className="inline-flex items-center gap-2 rounded-xl bg-mar/10 px-3 py-2 text-sm">
               <Lock className="size-4" /> {fmtHora(b.inicio)}–{fmtHora(b.fim)} · {b.quadraId ? quadraPorId(b.quadraId).nome : 'Todas'} · {b.motivo}
-              <button onClick={() => set((db) => removerBloqueio(db, b.id))} className="text-petroleo-noite/70 hover:text-red-600" aria-label="Desbloquear">
+              <button onClick={() => set((db) => removerBloqueio(db, b.id))} className="text-marinho/70 hover:text-red-600" aria-label="Desbloquear">
                 <X className="size-4" />
               </button>
             </span>
@@ -78,22 +78,22 @@ export default function AgendaAdmin() {
 
       <Cartao className="overflow-x-auto">
         <div className="grid min-w-[560px]" style={{ gridTemplateColumns: `64px repeat(${QUADRAS.length}, minmax(0, 1fr))` }}>
-          <div className="bg-petroleo-noite rounded-tl-2xl" />
+          <div className="bg-marinho rounded-tl-2xl" />
           {QUADRAS.map((q, i) => (
-            <div key={q.id} className={`bg-petroleo-noite text-white px-3 py-3 ${i === QUADRAS.length - 1 ? 'rounded-tr-2xl' : ''}`}>
+            <div key={q.id} className={`bg-marinho text-white px-3 py-3 ${i === QUADRAS.length - 1 ? 'rounded-tr-2xl' : ''}`}>
               <p className="titulo text-2xl">{q.nome}</p>
             </div>
           ))}
-          {grade.length === 0 && <p className="col-span-full p-6 text-center text-sm text-petroleo-noite/70">Fechado neste dia.</p>}
+          {grade.length === 0 && <p className="col-span-full p-6 text-center text-sm text-marinho/70">Fechado neste dia.</p>}
           {grade.map((linha) => {
             const fora = !normais.includes(linha[0].hora)
             return (
               <div key={linha[0].hora} className="contents">
-                <div className={`border-t border-petroleo/10 grid place-items-center text-sm font-bold ${fora ? 'text-red-600' : 'text-petroleo-noite/70'}`} title={fora ? 'Fora do horário de funcionamento' : undefined}>
+                <div className={`border-t border-mar/10 grid place-items-center text-sm font-bold ${fora ? 'text-red-600' : 'text-marinho/70'}`} title={fora ? 'Fora do horário de funcionamento' : undefined}>
                   {fmtHora(linha[0].hora)}
                 </div>
                 {linha.map((s) => (
-                  <div key={s.quadraId} className="border-t border-l border-petroleo/10 p-1.5 min-h-16">
+                  <div key={s.quadraId} className="border-t border-l border-mar/10 p-1.5 min-h-16">
                     <CelulaAgenda
                       slot={s}
                       fila={filaDoHorario(db, { data, hora: s.hora, quadraId: s.quadraId }).length}
@@ -136,11 +136,11 @@ function CelulaAgenda({ slot: s, fila, professor, onReserva, onAula, onLivre }: 
         className={`w-full h-full rounded-xl px-3 py-2 text-left transition hover:ring-2 hover:ring-onda ${r.falta ? 'bg-red-50' : s.status === 'minha' ? 'bg-sol/30' : 'bg-areia-claro'}`}
       >
         <span className="flex items-center justify-between gap-2">
-          <b className={`text-sm truncate ${r.falta ? 'line-through text-petroleo-noite/70' : ''}`}>{r.nome}</b>
+          <b className={`text-sm truncate ${r.falta ? 'line-through text-marinho/70' : ''}`}>{r.nome}</b>
           {r.falta ? <Selo className="bg-red-100 text-red-700">Faltou</Selo> : <SeloPago pago={r.pago} />}
         </span>
         <span className="flex items-center justify-between gap-2 mt-0.5">
-          <span className="text-xs text-petroleo-noite/70 truncate">{r.telefone}</span>
+          <span className="text-xs text-marinho/70 truncate">{r.telefone}</span>
           <span className="flex gap-1">
             <SeloFila quantidade={fila} />
             <SeloOrigem origem={r.origem} />
@@ -151,7 +151,7 @@ function CelulaAgenda({ slot: s, fila, professor, onReserva, onAula, onLivre }: 
   }
   if (s.status === 'bloqueado') {
     return (
-      <div className="w-full h-full min-h-13 rounded-xl bg-petroleo/10 px-3 py-2 text-xs text-petroleo-noite/70 flex items-center gap-1.5">
+      <div className="w-full h-full min-h-13 rounded-xl bg-mar/10 px-3 py-2 text-xs text-marinho/70 flex items-center gap-1.5">
         <Lock className="size-3.5" /> {s.bloqueio?.motivo}
       </div>
     )
@@ -164,7 +164,7 @@ function CelulaAgenda({ slot: s, fila, professor, onReserva, onAula, onLivre }: 
           <SeloModalidade id={a.modalidade} pequeno />
           <span className="text-xs font-bold">{a.nivel}</span>
         </span>
-        <span className="block text-xs text-petroleo-noite/70 mt-0.5 truncate">
+        <span className="block text-xs text-marinho/70 mt-0.5 truncate">
           Prof. {professor} · {a.alunos.length}/{a.vagas} alunos
         </span>
       </button>
@@ -173,7 +173,7 @@ function CelulaAgenda({ slot: s, fila, professor, onReserva, onAula, onLivre }: 
   return (
     <button
       onClick={onLivre}
-      className="w-full h-full min-h-13 rounded-xl border border-dashed border-petroleo/20 text-xs font-semibold text-petroleo-noite/60 hover:border-onda hover:text-onda hover:bg-onda-claro/30"
+      className="w-full h-full min-h-13 rounded-xl border border-dashed border-mar/20 text-xs font-semibold text-marinho/60 hover:border-onda hover:text-onda hover:bg-onda-claro/30"
     >
       + Livre
     </button>

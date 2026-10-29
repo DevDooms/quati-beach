@@ -87,13 +87,13 @@ function AlternarVisao({ visao, onChange }: { visao: 'dia' | 'semana'; onChange:
     <button
       onClick={() => onChange(v)}
       aria-pressed={visao === v}
-      className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 ${visao === v ? 'bg-petroleo text-white' : ''}`}
+      className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 ${visao === v ? 'bg-mar text-white' : ''}`}
     >
       {icone} {texto}
     </button>
   )
   return (
-    <div className="flex rounded-xl border border-petroleo/15 p-1 text-sm font-semibold">
+    <div className="flex rounded-xl border border-mar/15 p-1 text-sm font-semibold">
       {botao('dia', <List className="size-4" />, 'Por dia')}
       {botao('semana', <LayoutGrid className="size-4" />, 'Semana')}
     </div>
@@ -113,15 +113,15 @@ function VisaoDia({ aulas, dia, onDia, onEscolher }: { aulas: Aula[]; dia: DiaSe
               key={d}
               onClick={() => onDia(d)}
               aria-pressed={dia === d}
-              className={`rounded-xl py-2 text-center border transition ${dia === d ? 'bg-petroleo text-white border-petroleo' : 'bg-white border-petroleo/10 hover:border-onda'}`}
+              className={`rounded-xl py-2 text-center border transition ${dia === d ? 'bg-mar text-white border-mar' : 'bg-white border-mar/10 hover:border-onda'}`}
             >
               <span className="block text-sm font-bold">{DIAS_CURTOS[d]}</span>
-              <span className={`block text-[11px] ${dia === d ? 'text-sol' : 'text-petroleo-noite/70'}`}>{qtd} aula{qtd !== 1 && 's'}</span>
+              <span className={`block text-[11px] ${dia === d ? 'text-sol' : 'text-marinho/70'}`}>{qtd} aula{qtd !== 1 && 's'}</span>
             </button>
           )
         })}
       </div>
-      <h2 className="titulo text-3xl text-petroleo mt-6">{DIAS_SEMANA[dia]}</h2>
+      <h2 className="titulo text-3xl text-mar mt-6">{DIAS_SEMANA[dia]}</h2>
       <div className="mt-3 grid gap-3 md:grid-cols-2">
         {doDia.map((a) => <CartaoAula key={a.id} aula={a} professor={acharProfessor(db, a.professorId)} onParticipar={() => onEscolher(a.id)} />)}
       </div>
@@ -142,7 +142,7 @@ function VisaoSemana({ aulas, onEscolher }: { aulas: Aula[]; onEscolher: (id: st
     <Cartao className="mt-6 overflow-x-auto">
       <table className="w-full min-w-[760px] table-fixed border-collapse text-sm">
         <thead>
-          <tr className="bg-petroleo-noite text-white">
+          <tr className="bg-marinho text-white">
             <th className="w-16 py-3" />
             {ORDEM_DIAS.map((d) => (
               <th key={d} className={`py-3 titulo text-xl font-normal ${d === hoje ? 'text-sol' : ''}`}>{DIAS_CURTOS[d]}</th>
@@ -151,10 +151,10 @@ function VisaoSemana({ aulas, onEscolher }: { aulas: Aula[]; onEscolher: (id: st
         </thead>
         <tbody>
           {horas.map((h) => (
-            <tr key={h} className="border-t border-petroleo/10 align-top">
-              <td className="py-2 text-center font-bold text-petroleo-noite/70">{fmtHora(h)}</td>
+            <tr key={h} className="border-t border-mar/10 align-top">
+              <td className="py-2 text-center font-bold text-marinho/70">{fmtHora(h)}</td>
               {ORDEM_DIAS.map((d) => (
-                <td key={d} className="p-1 border-l border-petroleo/10 space-y-1">
+                <td key={d} className="p-1 border-l border-mar/10 space-y-1">
                   {aulas
                     .filter((a) => a.diaSemana === d && a.hora === h)
                     .map((a) => <CartaoAulaCompacto key={a.id} aula={a} professor={acharProfessor(db, a.professorId)} onClick={() => onEscolher(a.id)} />)}
@@ -164,7 +164,7 @@ function VisaoSemana({ aulas, onEscolher }: { aulas: Aula[]; onEscolher: (id: st
           ))}
         </tbody>
       </table>
-      {horas.length === 0 && <p className="p-8 text-center text-petroleo-noite/70">Nenhuma aula com esses filtros.</p>}
+      {horas.length === 0 && <p className="p-8 text-center text-marinho/70">Nenhuma aula com esses filtros.</p>}
     </Cartao>
   )
 }

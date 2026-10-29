@@ -24,8 +24,8 @@ export default function Configuracoes() {
       </div>
 
       <Cartao className="p-5 mt-6">
-        <h2 className="titulo text-3xl text-petroleo">Dados de demonstração</h2>
-        <p className="mt-2 text-sm text-petroleo-noite/70">Volta tudo ao estado inicial: reservas de exemplo, aulas, professores, torneio, preços e horários.</p>
+        <h2 className="titulo text-3xl text-mar">Dados de demonstração</h2>
+        <p className="mt-2 text-sm text-marinho/70">Volta tudo ao estado inicial: reservas de exemplo, aulas, professores, torneio, preços e horários.</p>
         <div className="mt-3 flex items-center gap-3">
           <Botao
             variante="secundario"

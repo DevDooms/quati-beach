@@ -28,8 +28,8 @@ export function JanelaRemarcar({ reserva, onFechar }: { reserva: Reserva; onFech
       <Janela onFechar={onFechar}>
         <div className="text-center py-2">
           <CircleCheck className="size-16 mx-auto text-emerald-500" strokeWidth={1.5} />
-          <h2 className="titulo text-4xl mt-4 text-petroleo">Remarcado!</h2>
-          <p className="mt-2 text-sm text-petroleo-noite/70 first-letter:uppercase">
+          <h2 className="titulo text-4xl mt-4 text-mar">Remarcado!</h2>
+          <p className="mt-2 text-sm text-marinho/70 first-letter:uppercase">
             {fmtDataLonga(dia)}, {hora !== null && fmtFaixa(hora, reserva.duracao)} · {quadraPorId(reserva.quadraId).nome}
           </p>
           <Botao onClick={onFechar} tamanho="lg" largo className="mt-6">Fechar</Botao>
@@ -50,7 +50,7 @@ export function JanelaRemarcar({ reserva, onFechar }: { reserva: Reserva; onFech
       />
       <p className="mt-3 text-sm font-semibold first-letter:uppercase">{fmtDataLonga(dia)}</p>
       {livres.length === 0 ? (
-        <p className="mt-2 text-sm text-petroleo-noite/70">Nenhum horário livre na {quadraPorId(reserva.quadraId).nome} neste dia.</p>
+        <p className="mt-2 text-sm text-marinho/70">Nenhum horário livre na {quadraPorId(reserva.quadraId).nome} neste dia.</p>
       ) : (
         <div className="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Horários livres">
           {livres.map((h) => (
@@ -59,14 +59,14 @@ export function JanelaRemarcar({ reserva, onFechar }: { reserva: Reserva; onFech
               role="radio"
               aria-checked={hora === h}
               onClick={() => setHora(h)}
-              className={`rounded-xl border-2 py-2 titulo text-xl transition ${hora === h ? 'bg-onda text-white border-onda' : 'border-onda/30 text-petroleo hover:border-onda'}`}
+              className={`rounded-xl border-2 py-2 titulo text-xl transition ${hora === h ? 'bg-onda text-white border-onda' : 'border-onda/30 text-mar hover:border-onda'}`}
             >
               {fmtFaixa(h, reserva.duracao).replace(' – ', '–')}
             </button>
           ))}
         </div>
       )}
-      <p className="mt-3 text-xs text-petroleo-noite/70">O valor combinado da reserva continua o mesmo.</p>
+      <p className="mt-3 text-xs text-marinho/70">O valor combinado da reserva continua o mesmo.</p>
       {erro && (
         <div role="alert" className="mt-3">
           <Aviso>{erro}</Aviso>

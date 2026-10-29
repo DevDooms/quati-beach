@@ -18,7 +18,7 @@ export default function PaginaProfessores() {
           const turmas = turmasDoProfessor(db, p.id)
           const dias = ORDEM_DIAS.filter((d) => turmas.some((a) => a.diaSemana === d))
           return (
-            <article key={p.id} className="rounded-3xl bg-white border border-petroleo/10 overflow-hidden flex flex-col">
+            <article key={p.id} className="rounded-3xl bg-white border border-mar/10 overflow-hidden flex flex-col">
               <div className={`h-28 bg-gradient-to-br ${p.cor} relative`}>
                 <div className="absolute -bottom-10 left-6 rounded-full ring-4 ring-white">
                   <Avatar professor={p} tamanho="size-20 text-2xl" />
@@ -28,10 +28,10 @@ export default function PaginaProfessores() {
                 <div className="flex flex-wrap gap-1.5">
                   {p.modalidades.map((m) => <SeloModalidade key={m} id={m} pequeno />)}
                 </div>
-                <h2 className="titulo text-4xl text-petroleo mt-2">Prof. {p.nome}</h2>
+                <h2 className="titulo text-4xl text-mar mt-2">Prof. {p.nome}</h2>
                 {p.destaque && <p className="text-xs font-semibold text-sol-escuro inline-flex items-center gap-1"><Award className="size-4" /> {p.destaque}</p>}
-                <p className="mt-3 text-sm text-petroleo-noite/70 flex-1">{p.bio}</p>
-                <p className="mt-4 text-xs text-petroleo-noite/70">
+                <p className="mt-3 text-sm text-marinho/70 flex-1">{p.bio}</p>
+                <p className="mt-4 text-xs text-marinho/70">
                   {turmas.length} turmas{dias.length > 0 && ` · ${dias.map((d) => DIAS_CURTOS[d]).join(', ')}`}
                 </p>
                 <Botao para={`/aulas?professor=${p.id}`} redondo className="mt-4">

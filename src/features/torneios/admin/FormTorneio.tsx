@@ -23,7 +23,7 @@ export function FormTorneio({ torneio, onExcluir }: { torneio: Torneio; onExclui
 
   return (
     <Cartao className="p-5 space-y-3 self-start">
-      <h2 className="titulo text-3xl text-petroleo">Dados do torneio</h2>
+      <h2 className="titulo text-3xl text-mar">Dados do torneio</h2>
       <Campo rotulo="Nome" compacto>
         <Entrada compacto value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} />
       </Campo>

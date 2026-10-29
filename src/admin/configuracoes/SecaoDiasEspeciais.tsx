@@ -16,12 +16,12 @@ export function SecaoDiasEspeciais() {
   return (
     <Secao titulo={<><CalendarX className="size-6" /> Feriados e datas especiais</>} descricao="Fechar um dia ou abrir em horário diferente, sem mexer na semana normal.">
       <ul className="mt-3 space-y-2">
-        {lista.length === 0 && <li className="text-sm text-petroleo-noite/70">Nenhuma data especial cadastrada.</li>}
+        {lista.length === 0 && <li className="text-sm text-marinho/70">Nenhuma data especial cadastrada.</li>}
         {lista.map((e) => (
           <li key={e.id} className="flex items-center gap-3 rounded-xl bg-areia-claro px-3 py-2 text-sm">
             <b className="w-24 capitalize">{fmtDiaSemana(dataDeISO(e.data))} {fmtDataCurta(dataDeISO(e.data))}</b>
             <span className="flex-1">{e.nome} · {e.fechado ? 'fechado' : `${e.horario[0]}h às ${e.horario[1]}h`}</span>
-            <button onClick={() => set((db) => removerDiaEspecial(db, e.id))} className="text-petroleo-noite/70 hover:text-red-600" aria-label={`Remover ${e.nome}`}>
+            <button onClick={() => set((db) => removerDiaEspecial(db, e.id))} className="text-marinho/70 hover:text-red-600" aria-label={`Remover ${e.nome}`}>
               <X className="size-4" />
             </button>
           </li>

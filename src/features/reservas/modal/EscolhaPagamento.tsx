@@ -35,23 +35,23 @@ export function EscolhaPagamento({ forma, onChange, saldoHoras, semBalcao }: Pro
             <label
               key={id}
               className={`cursor-pointer rounded-2xl border-2 px-2 py-3 text-center transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-onda ${
-                ativo ? 'border-onda bg-onda-claro/60' : 'border-petroleo/10 hover:border-petroleo/30'
+                ativo ? 'border-onda bg-onda-claro/60' : 'border-mar/10 hover:border-mar/30'
               }`}
             >
               <input type="radio" name="forma" value={id} checked={ativo} onChange={() => onChange(id)} className="sr-only" />
-              <Icone className={`size-6 mx-auto ${ativo ? 'text-petroleo' : 'text-petroleo-noite/70'}`} />
+              <Icone className={`size-6 mx-auto ${ativo ? 'text-mar' : 'text-marinho/70'}`} />
               <span className="block mt-1 text-sm font-bold">{rotulo}</span>
-              <span className="block text-[11px] text-petroleo-noite/70 leading-tight">{id === 'Crédito' ? `Saldo: ${saldoHoras}h` : detalhe}</span>
+              <span className="block text-[11px] text-marinho/70 leading-tight">{id === 'Crédito' ? `Saldo: ${saldoHoras}h` : detalhe}</span>
             </label>
           )
         })}
       </div>
       {forma === 'Cartão' && (
-        <p className="mt-2 flex items-center gap-1.5 text-xs text-petroleo-noite/70">
+        <p className="mt-2 flex items-center gap-1.5 text-xs text-marinho/70">
           <ShieldCheck className="size-4 text-emerald-600 shrink-0" /> Pagamento seguro · Visa, Mastercard, Elo e Hipercard
         </p>
       )}
-      {forma === 'Balcão' && <p className="mt-2 text-xs text-petroleo-noite/70">O horário fica reservado e você paga em dinheiro, Pix ou cartão ao chegar.</p>}
+      {forma === 'Balcão' && <p className="mt-2 text-xs text-marinho/70">O horário fica reservado e você paga em dinheiro, Pix ou cartão ao chegar.</p>}
     </fieldset>
   )
 }

@@ -19,11 +19,12 @@ export function Avaliacoes() {
       </div>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {AVALIACOES.map((a) => (
-          <figure key={a.nome} className="rounded-3xl bg-white border border-petroleo/10 p-6">
+          <figure key={a.nome} className="relative rounded-3xl bg-white border border-mar/10 p-6 odd:rotate-[-0.6deg] even:rotate-[0.6deg] hover:rotate-0 transition shadow-sm">
+            <span className="manuscrito absolute right-5 top-1 text-6xl text-sol/70 leading-none" aria-hidden>“</span>
             <Estrelas tamanho="size-4" />
-            <blockquote className="mt-3 text-petroleo-noite/80">“{a.texto}”</blockquote>
+            <blockquote className="mt-3 text-marinho/80">“{a.texto}”</blockquote>
             <figcaption className="mt-4 text-sm">
-              <b>{a.nome}</b> <span className="text-petroleo-noite/70">· {a.quando}</span>
+              <b>{a.nome}</b> <span className="text-marinho/70">· {a.quando}</span>
             </figcaption>
           </figure>
         ))}

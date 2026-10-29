@@ -19,7 +19,7 @@ export function SeloModalidade({ id, pequeno = false }: { id: ModalidadeId; pequ
   return (
     <span
       className={`inline-flex items-center rounded-full font-bold whitespace-nowrap uppercase tracking-wide ${pequeno ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs'} ${m.cor} ${
-        id === 'volei' ? 'text-petroleo-noite' : 'text-white'
+        id === 'volei' ? 'text-marinho' : 'text-white'
       }`}
     >
       {m.curto}
@@ -36,16 +36,16 @@ export function SeloPago({ pago, onClick }: { pago: boolean; onClick?: () => voi
   )
   if (!onClick) return selo
   return (
-    <button onClick={onClick} className="rounded-full hover:ring-2 hover:ring-petroleo/20" title="Alternar pagamento">
+    <button onClick={onClick} className="rounded-full hover:ring-2 hover:ring-mar/20" title="Alternar pagamento">
       {selo}
     </button>
   )
 }
 
 const CORES_ORIGEM: Record<Origem, string> = {
-  Site: 'bg-onda-claro text-petroleo',
+  Site: 'bg-onda-claro text-mar',
   WhatsApp: 'bg-whatsapp/15 text-whatsapp-escuro',
-  Balcão: 'bg-petroleo/10 text-petroleo-noite/70',
+  Balcão: 'bg-mar/10 text-marinho/70',
 }
 
 export const SeloOrigem = ({ origem }: { origem: Origem }) => <Selo className={CORES_ORIGEM[origem]}>{origem}</Selo>

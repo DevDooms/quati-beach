@@ -22,7 +22,7 @@ export function JanelaEspera({ detalhes, naFila, onFechar, onConfirmar }: Props)
       <Detalhes itens={detalhes} />
       {feito ? (
         <>
-          <p className="mt-4 text-sm text-petroleo-noite/70">
+          <p className="mt-4 text-sm text-marinho/70">
             Se esse horário for cancelado, a gente te chama no WhatsApp na hora. Você é o <b>{posicao}º</b> da fila.
           </p>
           <Botao onClick={onFechar} tamanho="lg" largo className="mt-5">Fechar</Botao>
@@ -39,7 +39,7 @@ export function JanelaEspera({ detalhes, naFila, onFechar, onConfirmar }: Props)
             else setPosicao(posicaoNaFila)
           }}
         >
-          <p className="text-sm text-petroleo-noite/70">
+          <p className="text-sm text-marinho/70">
             Esse horário está ocupado{naFila > 0 && ` e ${naFila} ${naFila === 1 ? 'pessoa já está' : 'pessoas já estão'} na fila`}. Deixe seu contato que
             avisamos se vagar.
           </p>

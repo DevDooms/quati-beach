@@ -29,11 +29,11 @@ export default function PaginaPacotes() {
               const porHora = precoPorHoraDoPacote(p)
               const economia = Math.round(avulso * p.horas - p.preco)
               return (
-                <div key={p.id} className="rounded-3xl bg-white border border-petroleo/10 p-6 flex flex-col">
+                <div key={p.id} className="rounded-3xl bg-white border border-mar/10 p-6 flex flex-col">
                   <Ticket className="size-8 text-laranja" />
-                  <h2 className="titulo text-4xl text-petroleo mt-3">{p.nome}</h2>
-                  <p className="text-sm text-petroleo-noite/70">{p.horas} horas · {fmtReais(porHora)} por hora</p>
-                  <p className="mt-4 titulo text-5xl text-petroleo flex-1">{fmtReais(p.preco)}</p>
+                  <h2 className="titulo text-4xl text-mar mt-3">{p.nome}</h2>
+                  <p className="text-sm text-marinho/70">{p.horas} horas · {fmtReais(porHora)} por hora</p>
+                  <p className="mt-4 titulo text-5xl text-mar flex-1">{fmtReais(p.preco)}</p>
                   {economia > 0 && <p className="text-xs font-semibold text-emerald-700">Até {fmtReais(economia)} a menos que avulso no horário de pico</p>}
                   <Botao variante="destaque" tamanho="lg" largo className="mt-5" onClick={() => setEscolhido(p)}>Comprar</Botao>
                 </div>
@@ -63,10 +63,10 @@ function JanelaComprar({ pacote, onFechar }: { pacote: Pacote; onFechar: () => v
           ) : (
             <>
               <CircleCheck className="size-16 mx-auto text-emerald-500" strokeWidth={1.5} />
-              <h2 className="titulo text-4xl mt-4 text-petroleo">Pacote comprado!</h2>
+              <h2 className="titulo text-4xl mt-4 text-mar">Pacote comprado!</h2>
             </>
           )}
-          <p className="mt-3 text-sm text-petroleo-noite/70">Seu saldo agora é de <b>{saldoDe(db, contato.telefone)} horas</b>.</p>
+          <p className="mt-3 text-sm text-marinho/70">Seu saldo agora é de <b>{saldoDe(db, contato.telefone)} horas</b>.</p>
           <Botao onClick={onFechar} tamanho="lg" largo className="mt-6">Fechar</Botao>
         </div>
       </Janela>

@@ -5,13 +5,13 @@ export type VarianteBotao = 'primario' | 'destaque' | 'secundario' | 'perigo' | 
 export type TamanhoBotao = 'sm' | 'md' | 'lg'
 
 const VARIANTES: Record<VarianteBotao, string> = {
-  primario: 'bg-petroleo text-white hover:bg-petroleo-escuro',
-  destaque: 'bg-sol text-petroleo-noite hover:brightness-105',
-  secundario: 'bg-white border border-petroleo/20 text-petroleo hover:border-petroleo/50',
+  primario: 'bg-mar text-white hover:bg-mar-fundo',
+  destaque: 'bg-sol text-marinho hover:brightness-105',
+  secundario: 'bg-white border border-mar/20 text-mar hover:border-mar/50',
   perigo: 'bg-white border border-red-200 text-red-600 hover:bg-red-50',
   whatsapp: 'bg-whatsapp text-white hover:brightness-105',
   'whatsapp-contorno': 'border-2 border-whatsapp text-whatsapp-escuro hover:bg-whatsapp/10',
-  claro: 'bg-white text-petroleo hover:bg-sol',
+  claro: 'bg-white text-mar hover:bg-sol',
   'contorno-claro': 'border-2 border-white/30 text-white hover:bg-white/10',
 }
 

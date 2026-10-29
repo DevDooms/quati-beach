@@ -33,20 +33,20 @@ export default function PaginaEventos() {
       <div className="mx-auto max-w-6xl px-4 py-10 grid gap-8 lg:grid-cols-[1fr_420px]">
         <div className="grid gap-4 sm:grid-cols-2 self-start">
           {DESTAQUES.map(({ icone: Icone, titulo, texto }) => (
-            <div key={titulo} className="rounded-3xl bg-white border border-petroleo/10 p-6">
+            <div key={titulo} className="rounded-3xl bg-white border border-mar/10 p-6">
               <Icone className="size-8 text-laranja" />
-              <h2 className="titulo text-3xl text-petroleo mt-3">{titulo}</h2>
-              <p className="text-sm text-petroleo-noite/70 mt-1">{texto}</p>
+              <h2 className="titulo text-3xl text-mar mt-3">{titulo}</h2>
+              <p className="text-sm text-marinho/70 mt-1">{texto}</p>
             </div>
           ))}
         </div>
 
-        <div className="rounded-3xl bg-white border border-petroleo/10 p-6 shadow-lg self-start">
+        <div className="rounded-3xl bg-white border border-mar/10 p-6 shadow-lg self-start">
           {enviado ? (
             <div className="text-center py-6">
               <CircleCheck className="size-16 mx-auto text-emerald-500" strokeWidth={1.5} />
-              <h2 className="titulo text-4xl text-petroleo mt-3">Pedido enviado!</h2>
-              <p className="mt-2 text-sm text-petroleo-noite/70">A equipe do {NEGOCIO.apelido} vai te chamar no WhatsApp com a proposta.</p>
+              <h2 className="titulo text-4xl text-mar mt-3">Pedido enviado!</h2>
+              <p className="mt-2 text-sm text-marinho/70">A equipe do {NEGOCIO.apelido} vai te chamar no WhatsApp com a proposta.</p>
               <Botao
                 variante="secundario"
                 redondo
@@ -69,7 +69,7 @@ export default function PaginaEventos() {
                 setEnviado(true)
               }}
             >
-              <h2 className="titulo text-4xl text-petroleo">Pedir orçamento</h2>
+              <h2 className="titulo text-4xl text-mar">Pedir orçamento</h2>
               <CamposContato contato={f} onChange={(c) => setF({ ...f, ...c })} />
               <Campo rotulo="Tipo de evento">
                 <Selecao value={f.tipo} onChange={(e) => setF({ ...f, tipo: e.target.value })}>

@@ -21,9 +21,9 @@ export default function PaginaMinhaConta() {
 
   return (
     <>
-      <section className="bg-petroleo text-white">
+      <section className="bg-mar text-white">
         <div className="mx-auto max-w-6xl px-4 py-10 flex flex-wrap items-center gap-5">
-          <span className="size-16 rounded-full bg-sol text-petroleo-noite grid place-items-center titulo text-3xl">{iniciais(usuario.nome)}</span>
+          <span className="size-16 rounded-full bg-sol text-marinho grid place-items-center titulo text-3xl">{iniciais(usuario.nome)}</span>
           <div className="flex-1 min-w-0">
             <p className="text-sol font-semibold text-sm uppercase tracking-[0.2em]">Área do cliente</p>
             <h1 className="titulo text-5xl">Olá, {primeiroNome(usuario.nome)}!</h1>
@@ -71,9 +71,9 @@ export default function PaginaMinhaConta() {
 
 function Numero({ valor, rotulo }: { valor: number; rotulo: string }) {
   return (
-    <div className="rounded-2xl bg-white border border-petroleo/10 p-4 text-center">
-      <p className="titulo text-4xl text-petroleo">{valor}</p>
-      <p className="text-xs text-petroleo-noite/70">{rotulo}</p>
+    <div className="rounded-2xl bg-white border border-mar/10 p-4 text-center">
+      <p className="titulo text-4xl text-mar">{valor}</p>
+      <p className="text-xs text-marinho/70">{rotulo}</p>
     </div>
   )
 }

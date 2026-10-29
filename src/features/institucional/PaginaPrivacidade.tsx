@@ -10,7 +10,7 @@ export default function PaginaPrivacidade() {
         Como o {NEGOCIO.nome} usa os seus dados.
       </CabecalhoPagina>
 
-      <article className="mx-auto max-w-3xl px-4 py-10 space-y-6 text-petroleo-noite/80 leading-relaxed">
+      <article className="mx-auto max-w-3xl px-4 py-10 space-y-6 text-marinho/80 leading-relaxed">
         <Bloco titulo="Quais dados coletamos">
           Só o necessário para a sua reserva: <b>nome</b> e <b>número de WhatsApp</b>. Em pedidos de evento, também a data e o número de pessoas.
           Não pedimos CPF, endereço nem dados de cartão: pagamentos com cartão são processados por um parceiro de pagamento.
@@ -30,7 +30,7 @@ export default function PaginaPrivacidade() {
           Você pode pedir a qualquer momento para ver, corrigir ou apagar seus dados, ou para não receber mais mensagens. É só chamar no WhatsApp{' '}
           <b>{NEGOCIO.telefone}</b>.
         </Bloco>
-        <p className="text-xs text-petroleo-noite/70">Modelo para a demonstração. Antes de publicar, revisar o texto com o responsável pelo negócio.</p>
+        <p className="text-xs text-marinho/70">Modelo para a demonstração. Antes de publicar, revisar o texto com o responsável pelo negócio.</p>
       </article>
     </>
   )
@@ -39,7 +39,7 @@ export default function PaginaPrivacidade() {
 function Bloco({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
     <section>
-      <h2 className="titulo text-3xl text-petroleo">{titulo}</h2>
+      <h2 className="titulo text-3xl text-mar">{titulo}</h2>
       <p className="mt-1">{children}</p>
     </section>
   )

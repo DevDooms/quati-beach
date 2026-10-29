@@ -93,7 +93,7 @@ export default function ReservasAdmin() {
 
       <TabelaReservas lista={lista.slice(0, limite)} onAbrir={setAberta} onPagar={pagar} />
       <CartoesReservas lista={lista.slice(0, limite)} onAbrir={setAberta} />
-      {lista.length === 0 && <p className="p-8 text-center text-petroleo-noite/70">Nenhuma reserva com esses filtros.</p>}
+      {lista.length === 0 && <p className="p-8 text-center text-marinho/70">Nenhuma reserva com esses filtros.</p>}
 
       {lista.length > limite && (
         <div className="mt-4 text-center">
@@ -113,14 +113,14 @@ function TabelaReservas({ lista, onAbrir, onPagar }: { lista: Reserva[]; onAbrir
   return (
     <Cartao className="hidden md:block overflow-hidden">
       <table className="w-full text-sm">
-        <thead className="bg-petroleo-noite text-white text-left">
+        <thead className="bg-marinho text-white text-left">
           <tr>
             {['Data', 'Hora', 'Quadra', 'Cliente', 'Origem', 'Valor', 'Pagamento', ''].map((h) => (
               <th key={h} className="px-4 py-3 font-semibold">{h}</th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-petroleo/10">
+        <tbody className="divide-y divide-mar/10">
           {lista.map((r) => {
             const d = dataDeISO(r.data)
             return (
@@ -130,7 +130,7 @@ function TabelaReservas({ lista, onAbrir, onPagar }: { lista: Reserva[]; onAbrir
                 <td className="px-4 py-3">{quadraPorId(r.quadraId).nome}</td>
                 <td className="px-4 py-3">
                   <b className="block">{r.nome}</b>
-                  <span className="text-xs text-petroleo-noite/70">{r.telefone}</span>
+                  <span className="text-xs text-marinho/70">{r.telefone}</span>
                 </td>
                 <td className="px-4 py-3"><SeloOrigem origem={r.origem} /></td>
                 <td className="px-4 py-3">{fmtReais(r.valor)}</td>
@@ -160,13 +160,13 @@ function CartoesReservas({ lista, onAbrir }: { lista: Reserva[]; onAbrir: (r: Re
         return (
           <Cartao key={r.id} className="p-3">
             <button onClick={() => onAbrir(r)} className="w-full text-left flex items-center gap-3">
-              <span className="rounded-xl bg-petroleo text-white text-center px-2.5 py-1.5 shrink-0">
+              <span className="rounded-xl bg-mar text-white text-center px-2.5 py-1.5 shrink-0">
                 <span className="block text-[10px] uppercase text-sol font-semibold">{fmtDiaSemana(d)} {fmtDataCurta(d)}</span>
                 <span className="titulo text-2xl leading-none">{fmtHora(r.hora)}</span>
               </span>
               <span className="flex-1 min-w-0">
                 <b className="block truncate">{r.nome}</b>
-                <span className="text-xs text-petroleo-noite/70">{quadraPorId(r.quadraId).nome} · {fmtReais(r.valor)}</span>
+                <span className="text-xs text-marinho/70">{quadraPorId(r.quadraId).nome} · {fmtReais(r.valor)}</span>
                 <span className="flex gap-1.5 mt-1"><SeloOrigem origem={r.origem} /><SeloPago pago={r.pago} /></span>
               </span>
             </button>

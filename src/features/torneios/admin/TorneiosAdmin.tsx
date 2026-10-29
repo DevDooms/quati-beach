@@ -36,7 +36,7 @@ export default function TorneiosAdmin() {
       </div>
 
       {!t ? (
-        <Cartao className="p-10 text-center text-petroleo-noite/70">Nenhum torneio cadastrado.</Cartao>
+        <Cartao className="p-10 text-center text-marinho/70">Nenhum torneio cadastrado.</Cartao>
       ) : (
         <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
           <FormTorneio key={t.id} torneio={t} onExcluir={() => setSelId(db.torneios.find((x) => x.id !== t.id)?.id ?? '')} />

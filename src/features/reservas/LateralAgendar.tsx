@@ -10,10 +10,10 @@ import { fmtReais } from '../../lib/formatos'
 import { cancelarReserva, podeCancelar, reservasDoCliente } from './regras'
 
 function Caixa({ titulo, icone, children, tom = 'branco' }: { titulo: string; icone?: ReactNode; children: ReactNode; tom?: 'branco' | 'onda' | 'sol' }) {
-  const cores = { branco: 'bg-white border-petroleo/10', onda: 'bg-onda-claro/60 border-onda/20', sol: 'bg-sol/20 border-sol/40' }
+  const cores = { branco: 'bg-white border-mar/10', onda: 'bg-onda-claro/60 border-onda/20', sol: 'bg-sol/20 border-sol/40' }
   return (
     <div className={`rounded-2xl border p-5 ${cores[tom]}`}>
-      <h3 className="titulo text-2xl text-petroleo flex items-center gap-2 [&>svg]:size-5">
+      <h3 className="titulo text-2xl text-mar flex items-center gap-2 [&>svg]:size-5">
         {icone} {titulo}
       </h3>
       {children}
@@ -38,7 +38,7 @@ export function LateralAgendar() {
           <li className="flex justify-between"><span>Seg–Sex após {db.precos.inicioPico}h</span><b>{fmtReais(db.precos.pico)}</b></li>
           <li className="flex justify-between"><span>Sábado e domingo</span><b>{fmtReais(db.precos.pico)}</b></li>
         </ul>
-        <p className="mt-3 text-xs text-petroleo-noite/70 flex gap-1.5">
+        <p className="mt-3 text-xs text-marinho/70 flex gap-1.5">
           <Lightbulb className="size-4 shrink-0 text-sol-escuro" /> Iluminação noturna inclusa. Bolas e redes à disposição.
         </p>
       </Caixa>
@@ -49,7 +49,7 @@ export function LateralAgendar() {
             {promocoes.map((p) => (
               <li key={p.id}>
                 <b>{p.nome}</b>: {fmtReais(p.preco)}/h
-                <span className="block text-xs text-petroleo-noite/70">{diasTexto(p.dias)} · {fmtHora(p.inicio)} às {fmtHora(p.fim)}</span>
+                <span className="block text-xs text-marinho/70">{diasTexto(p.dias)} · {fmtHora(p.inicio)} às {fmtHora(p.fim)}</span>
               </li>
             ))}
           </ul>
@@ -58,13 +58,13 @@ export function LateralAgendar() {
 
       {vendePacotes && (
         <Caixa titulo="Pacotes de horas" icone={<Ticket />} tom="sol">
-          <p className="mt-1 text-sm text-petroleo-noite/80">Joga sempre? Compre horas antecipadas e use quando quiser.</p>
-          <Link to="/pacotes" className="mt-2 inline-block text-sm font-bold text-petroleo underline">Ver pacotes</Link>
+          <p className="mt-1 text-sm text-marinho/80">Joga sempre? Compre horas antecipadas e use quando quiser.</p>
+          <Link to="/pacotes" className="mt-2 inline-block text-sm font-bold text-mar underline">Ver pacotes</Link>
         </Caixa>
       )}
 
       <Caixa titulo="Bom saber" icone={<Info />} tom="onda">
-        <ul className="mt-2 space-y-1.5 text-sm text-petroleo-noite/80">
+        <ul className="mt-2 space-y-1.5 text-sm text-marinho/80">
           <li>• Cancele ou remarque pelo site até <b>{db.politica.cancelamentoHoras}h antes</b>.</li>
           <li>• Horário ocupado? Toque nele e entre na <b>lista de espera</b>.</li>
         </ul>
@@ -72,7 +72,7 @@ export function LateralAgendar() {
 
       <Caixa titulo="Suas reservas">
         {proximas.length === 0 ? (
-          <p className="mt-2 text-sm text-petroleo-noite/70">Nenhuma reserva ainda. Toque num horário livre para reservar.</p>
+          <p className="mt-2 text-sm text-marinho/70">Nenhuma reserva ainda. Toque num horário livre para reservar.</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {proximas.map((r) => (
@@ -82,11 +82,11 @@ export function LateralAgendar() {
                   <p className="font-bold first-letter:uppercase">
                     {fmtDiaSemana(dataDeISO(r.data))} {fmtDataCurta(dataDeISO(r.data))} · {fmtHora(r.hora)}
                   </p>
-                  <p className="text-petroleo-noite/70 text-xs">{quadraPorId(r.quadraId).nome}</p>
+                  <p className="text-marinho/70 text-xs">{quadraPorId(r.quadraId).nome}</p>
                 </div>
                 {/* respeita o prazo de cancelamento do dono */}
                 {podeCancelar(r, db.politica) && (
-                  <button onClick={() => set((db) => cancelarReserva(db, r.id))} className="p-1.5 text-petroleo-noite/70 hover:text-red-600" aria-label="Cancelar reserva">
+                  <button onClick={() => set((db) => cancelarReserva(db, r.id))} className="p-1.5 text-marinho/70 hover:text-red-600" aria-label="Cancelar reserva">
                     <Trash2 className="size-4" />
                   </button>
                 )}

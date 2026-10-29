@@ -1,4 +1,5 @@
 // Logo e ícones de marca desenhados à mão (a lib de ícones não traz marcas).
+import { useId } from 'react'
 import logo from '../assets/logo.png'
 import { NEGOCIO } from '../config/estabelecimento'
 
@@ -25,10 +26,79 @@ export function IconeInstagram({ className = 'size-5' }: { className?: string })
 }
 
 // Onda decorativa usada entre seções
-export function Onda({ className = '', cor = '#fbf6ec' }: { className?: string; cor?: string }) {
+export function Onda({ className = '', cor = 'var(--color-areia-claro)' }: { className?: string; cor?: string }) {
   return (
     <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className={className} aria-hidden>
       <path d="M0 40c120-30 240-30 360 0s240 30 360 0 240-30 360 0 240 30 360 0v40H0z" fill={cor} />
     </svg>
+  )
+}
+
+// Mar batendo na areia: três camadas de onda andando em velocidades diferentes, a última é a areia
+const CRISTA = 'M0 40 Q180 4 360 40 T720 40 T1080 40 T1440 40 T1800 40 T2160 40 T2520 40 T2880 40 V100 H0Z'
+const CAMADAS = [
+  { cor: 'var(--color-ceu)', opacidade: 0.35, y: 0, duracao: '22s' },
+  { cor: '#ffffff', opacidade: 0.55, y: 14, duracao: '15s' },
+  { cor: 'var(--color-areia-claro)', opacidade: 1, y: 28, duracao: '30s' },
+]
+export function Ondas({ className = '', cor }: { className?: string; cor?: string }) {
+  return (
+    <div className={`pointer-events-none overflow-hidden ${className}`} aria-hidden>
+      {CAMADAS.map((c, i) => (
+        <svg
+          key={i}
+          viewBox="0 0 2880 100"
+          preserveAspectRatio="none"
+          className="anim-mare absolute left-0 w-[200%] h-full"
+          style={{ top: `${c.y}%`, ['--duracao' as string]: c.duracao, animationDirection: i === 1 ? 'reverse' : 'normal' }}
+        >
+          <path d={CRISTA} fill={i === CAMADAS.length - 1 && cor ? cor : c.cor} fillOpacity={c.opacidade} />
+        </svg>
+      ))}
+    </div>
+  )
+}
+
+// Bola de futevôlei com as faixas nas cores da logo
+export function Bola({ className = 'size-16' }: { className?: string }) {
+  const id = useId()
+  return (
+    <svg viewBox="0 0 100 100" className={className} aria-hidden>
+      <defs>
+        <clipPath id={`${id}c`}>
+          <circle cx="50" cy="50" r="47" />
+        </clipPath>
+        <radialGradient id={`${id}l`} cx="35%" cy="30%" r="75%">
+          <stop offset="0" stopColor="#fff" stopOpacity=".7" />
+          <stop offset=".55" stopColor="#fff" stopOpacity="0" />
+          <stop offset="1" stopColor="#0c1f4d" stopOpacity=".28" />
+        </radialGradient>
+      </defs>
+      <g clipPath={`url(#${id}c)`}>
+        <rect width="100" height="100" fill="#fff" />
+        <path d="M-10 26 Q50 2 112 36 L112 56 Q50 22 -10 46 Z" fill="var(--color-sol)" />
+        <path d="M14 -10 Q44 48 8 112 L30 112 Q64 48 36 -10 Z" fill="var(--color-mar)" />
+        <path d="M58 112 Q66 62 112 34 L112 56 Q84 72 80 112 Z" fill="var(--color-onda)" />
+        <g fill="none" stroke="#0c1f4d" strokeOpacity=".35" strokeWidth="1.4">
+          <path d="M-10 26 Q50 2 112 36 M-10 46 Q50 22 112 56" />
+          <path d="M14 -10 Q44 48 8 112 M36 -10 Q64 48 30 112" />
+          <path d="M58 112 Q66 62 112 34 M80 112 Q84 72 112 56" />
+        </g>
+        <rect width="100" height="100" fill={`url(#${id}l)`} />
+      </g>
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#0c1f4d" strokeWidth="2.5" />
+    </svg>
+  )
+}
+
+// Bola quicando com sombra na areia
+export function BolaQuicando({ className = 'w-24' }: { className?: string }) {
+  return (
+    <div className={`relative aspect-[1/2] ${className}`} aria-hidden>
+      <div className="absolute inset-x-0 bottom-[6%] h-[50%] flex items-end">
+        <Bola className="w-full h-auto anim-quica" />
+      </div>
+      <div className="absolute left-[12%] right-[12%] bottom-0 h-[7%] rounded-[50%] bg-marinho blur-[3px] anim-sombra" />
+    </div>
   )
 }

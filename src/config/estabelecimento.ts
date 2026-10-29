@@ -89,11 +89,11 @@ export const quadraPorId = (id: QuadraId): Quadra => QUADRAS.find((q) => q.id ==
 export const modalidadePorId = (id: ModalidadeId) => MODALIDADES.find((m) => m.id === id)!
 
 export const CORES_PROFESSOR = [
-  'from-onda to-petroleo',
-  'from-petroleo to-petroleo-escuro',
-  'from-laranja to-[#c96a10]',
+  'from-onda to-mar',
+  'from-mar to-mar-fundo',
+  'from-laranja to-[#c95f0c]',
   'from-sol to-[#d9a400]',
-  'from-[#2b8a6e] to-petroleo',
+  'from-[#1f9a5e] to-mar',
 ]
 
 // Avaliações reais do Google (pedir autorização ao dono antes de publicar)

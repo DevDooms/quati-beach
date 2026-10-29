@@ -19,8 +19,8 @@ export default function PaginaBar() {
         {CARDAPIO.map((c, i) => {
           const Icone = ICONES[i % ICONES.length]
           return (
-            <section key={c.categoria} className="rounded-3xl bg-white border border-petroleo/10 p-6">
-              <h2 className="titulo text-3xl text-petroleo flex items-center gap-2">
+            <section key={c.categoria} className="rounded-3xl bg-white border border-mar/10 p-6">
+              <h2 className="titulo text-3xl text-mar flex items-center gap-2">
                 <Icone className="size-6 text-laranja" /> {c.categoria}
               </h2>
               <ul className="mt-4 space-y-3">
@@ -28,10 +28,10 @@ export default function PaginaBar() {
                   <li key={item.nome} className="flex items-baseline gap-2">
                     <span className="min-w-0">
                       <b className="block">{item.nome}</b>
-                      {item.descricao && <span className="text-xs text-petroleo-noite/70">{item.descricao}</span>}
+                      {item.descricao && <span className="text-xs text-marinho/70">{item.descricao}</span>}
                     </span>
-                    <span className="flex-1 border-b border-dotted border-petroleo/20 translate-y-[-4px]" />
-                    <span className="font-extrabold text-petroleo whitespace-nowrap">{fmtReais(item.preco)}</span>
+                    <span className="flex-1 border-b border-dotted border-mar/20 translate-y-[-4px]" />
+                    <span className="font-extrabold text-mar whitespace-nowrap">{fmtReais(item.preco)}</span>
                   </li>
                 ))}
               </ul>
@@ -50,7 +50,7 @@ export default function PaginaBar() {
             <IconeWhatsApp className="size-5 text-whatsapp-escuro" /> Encomendar no WhatsApp
           </Botao>
         </div>
-        <p className="mt-3 text-center text-xs text-petroleo-noite/70">Cardápio e preços ilustrativos para a demonstração.</p>
+        <p className="mt-3 text-center text-xs text-marinho/70">Cardápio e preços ilustrativos para a demonstração.</p>
       </div>
     </>
   )

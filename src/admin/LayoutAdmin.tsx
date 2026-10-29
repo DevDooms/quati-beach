@@ -38,7 +38,7 @@ export default function LayoutAdmin() {
   return (
     <div className="min-h-dvh bg-fundo-painel lg:grid lg:grid-cols-[240px_1fr]">
       {/* Lateral (desktop) / barra superior (celular) */}
-      <aside className="bg-petroleo-noite text-white lg:sticky lg:top-0 lg:h-dvh flex flex-col z-30">
+      <aside className="bg-marinho text-white lg:sticky lg:top-0 lg:h-dvh flex flex-col z-30">
         <div className="flex items-center justify-between gap-3 px-4 h-16 lg:h-20 border-b border-white/10">
           <Link to="/admin" className="flex items-center gap-2.5">
             <Logo className="size-10" />
@@ -59,7 +59,7 @@ export default function LayoutAdmin() {
               end={end}
               className={({ isActive }) =>
                 `shrink-0 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                  isActive ? 'bg-sol text-petroleo-noite' : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  isActive ? 'bg-sol text-marinho' : 'text-white/70 hover:bg-white/10 hover:text-white'
                 }`
               }
             >
@@ -91,7 +91,7 @@ export default function LayoutAdmin() {
 
       <main className="min-w-0 px-4 sm:px-8 py-6 sm:py-8">
         <Outlet />
-        <p className="mt-10 text-center text-xs text-petroleo-noite/70">
+        <p className="mt-10 text-center text-xs text-marinho/70">
           Painel de demonstração · <Link to="/demo" className="underline">Trocar de visão</Link>
         </p>
       </main>

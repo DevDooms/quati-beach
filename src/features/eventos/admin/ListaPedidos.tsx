@@ -22,17 +22,17 @@ export function ListaPedidos() {
               <span className="size-11 shrink-0 rounded-2xl bg-laranja/15 text-laranja grid place-items-center"><PartyPopper className="size-6" /></span>
               <div className="min-w-0">
                 <p className="font-extrabold truncate">{e.nome}</p>
-                <p className="text-xs text-petroleo-noite/70">{e.telefone} · {formatDistanceToNow(new Date(e.criadoEm), { locale: ptBR, addSuffix: true })}</p>
+                <p className="text-xs text-marinho/70">{e.telefone} · {formatDistanceToNow(new Date(e.criadoEm), { locale: ptBR, addSuffix: true })}</p>
               </div>
             </div>
             {e.respondido ? (
               <span className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-emerald-700"><CircleCheck className="size-4" /> Respondido</span>
             ) : (
-              <Selo className="bg-sol text-petroleo-noite font-extrabold">NOVO</Selo>
+              <Selo className="bg-sol text-marinho font-extrabold">NOVO</Selo>
             )}
           </div>
-          <p className="mt-3 font-bold text-petroleo">{e.tipo}</p>
-          <p className="text-sm text-petroleo-noite/70 flex flex-wrap gap-x-4">
+          <p className="mt-3 font-bold text-mar">{e.tipo}</p>
+          <p className="text-sm text-marinho/70 flex flex-wrap gap-x-4">
             <span className="inline-flex items-center gap-1 first-letter:uppercase"><CalendarDays className="size-4" /> {fmtDataLonga(dataDeISO(e.data))}</span>
             <span className="inline-flex items-center gap-1"><Users className="size-4" /> {e.pessoas} pessoas</span>
           </p>
@@ -44,7 +44,7 @@ export function ListaPedidos() {
             <Botao variante="secundario" onClick={() => set((db) => marcarRespondido(db, e.id, !e.respondido))}>
               {e.respondido ? 'Marcar como novo' : 'Marcar respondido'}
             </Botao>
-            <button onClick={() => set((db) => removerPedido(db, e.id))} className="p-2.5 text-petroleo-noite/70 hover:text-red-600" aria-label="Apagar pedido">
+            <button onClick={() => set((db) => removerPedido(db, e.id))} className="p-2.5 text-marinho/70 hover:text-red-600" aria-label="Apagar pedido">
               <Trash2 className="size-4" />
             </button>
           </div>

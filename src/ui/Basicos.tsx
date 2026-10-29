@@ -4,7 +4,7 @@ import type { Professor } from '../tipos'
 import { Botao } from './Botao'
 
 export function Cartao({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-2xl bg-white border border-petroleo/10 shadow-sm ${className}`}>{children}</div>
+  return <div className={`rounded-2xl bg-white border border-mar/10 shadow-sm ${className}`}>{children}</div>
 }
 
 export function Chip({ ativo, onClick, children }: { ativo: boolean; onClick: () => void; children: ReactNode }) {
@@ -13,7 +13,7 @@ export function Chip({ ativo, onClick, children }: { ativo: boolean; onClick: ()
       onClick={onClick}
       aria-pressed={ativo}
       className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold border transition ${
-        ativo ? 'bg-petroleo text-white border-petroleo' : 'bg-white text-petroleo-noite/80 border-petroleo/15 hover:border-petroleo/40'
+        ativo ? 'bg-mar text-white border-mar' : 'bg-white text-marinho/80 border-mar/15 hover:border-mar/40'
       }`}
     >
       {children}
@@ -35,7 +35,7 @@ export function Detalhes({ itens, rodape }: { itens: { rotulo: string; valor: Re
     <dl className="rounded-2xl bg-areia-claro p-4 text-sm space-y-1.5">
       {itens.map((d) => (
         <div key={d.rotulo} className="flex justify-between gap-4">
-          <dt className="text-petroleo-noite/70">{d.rotulo}</dt>
+          <dt className="text-marinho/70">{d.rotulo}</dt>
           <dd className="font-semibold text-right first-letter:uppercase">{d.valor}</dd>
         </div>
       ))}
@@ -48,20 +48,20 @@ export function Detalhes({ itens, rodape }: { itens: { rotulo: string; valor: Re
 export function MiniNumero({ valor, rotulo }: { valor: ReactNode; rotulo: string }) {
   return (
     <div className="rounded-xl bg-areia-claro py-2 text-center">
-      <p className="titulo text-2xl sm:text-3xl text-petroleo">{valor}</p>
-      <p className="text-[11px] text-petroleo-noite/70">{rotulo}</p>
+      <p className="titulo text-2xl sm:text-3xl text-mar">{valor}</p>
+      <p className="text-[11px] text-marinho/70">{rotulo}</p>
     </div>
   )
 }
 
 // Estado vazio de listas
 export function Vazio({ children }: { children: ReactNode }) {
-  return <p className="rounded-2xl border-2 border-dashed border-petroleo/15 p-6 text-center text-sm text-petroleo-noite/70">{children}</p>
+  return <p className="rounded-2xl border-2 border-dashed border-mar/15 p-6 text-center text-sm text-marinho/70">{children}</p>
 }
 
 // Aviso colorido curto (alertas de conflito, dicas)
 export function Aviso({ children, tom = 'alerta' }: { children: ReactNode; tom?: 'alerta' | 'info' | 'sucesso' }) {
-  const cores = { alerta: 'bg-amber-50 text-amber-800', info: 'bg-onda-claro/60 text-petroleo', sucesso: 'bg-emerald-50 text-emerald-800' }
+  const cores = { alerta: 'bg-amber-50 text-amber-800', info: 'bg-onda-claro/60 text-mar', sucesso: 'bg-emerald-50 text-emerald-800' }
   return <p className={`rounded-xl p-3 text-sm ${cores[tom]}`}>{children}</p>
 }
 

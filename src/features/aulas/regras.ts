@@ -13,7 +13,7 @@ const PROFESSOR_A_DEFINIR: Omit<Professor, 'id'> = {
   modalidades: [],
   bio: '',
   destaque: '',
-  cor: 'from-petroleo to-petroleo-escuro',
+  cor: 'from-mar to-mar-fundo',
   telefone: '',
 }
 

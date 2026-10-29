@@ -17,7 +17,7 @@ interface Props {
 
 export function HorariosDaQuadra({ dia, slots, onReservar, onAvisar }: Props) {
   const { db } = useDB()
-  if (slots.length === 0) return <p className="mt-4 rounded-2xl bg-white p-6 text-center text-petroleo-noite/70">Não há mais horários hoje. Escolha outro dia.</p>
+  if (slots.length === 0) return <p className="mt-4 rounded-2xl bg-white p-6 text-center text-marinho/70">Não há mais horários hoje. Escolha outro dia.</p>
   return (
     <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
       {slots.map((s) => (
@@ -40,10 +40,10 @@ export function Legenda() {
     ['bg-white border border-onda', 'Livre'],
     ['bg-sol', 'Sua reserva'],
     ['bg-onda-claro', 'Aula'],
-    ['bg-petroleo/10', 'Ocupado'],
+    ['bg-mar/10', 'Ocupado'],
   ]
   return (
-    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-petroleo-noite/70">
+    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-marinho/70">
       {itens.map(([cor, nome]) => (
         <span key={nome} className="inline-flex items-center gap-1.5">
           <span className={`size-3 rounded ${cor}`} /> {nome}
@@ -54,7 +54,7 @@ export function Legenda() {
 }
 
 const BASE = 'w-full h-20 rounded-2xl text-center px-2 flex flex-col items-center justify-center gap-0.5'
-const LISTRADO = 'bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-petroleo)_8%,transparent)_0_6px,transparent_6px_12px)]'
+const LISTRADO = 'bg-[repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-mar)_8%,transparent)_0_6px,transparent_6px_12px)]'
 
 interface PropsCelula {
   slot: Slot
@@ -73,7 +73,7 @@ function Celula({ slot, preco, promocao, professor, onReservar, onAvisar }: Prop
         <button
           onClick={onReservar}
           title={promocao ? `Promoção: ${promocao}` : undefined}
-          className={`${BASE} group relative bg-white border-2 text-petroleo hover:bg-onda hover:text-white hover:border-onda transition ${promocao ? 'border-laranja' : 'border-onda/40'}`}
+          className={`${BASE} group relative bg-white border-2 text-mar hover:bg-onda hover:text-white hover:border-onda transition ${promocao ? 'border-laranja' : 'border-onda/40'}`}
         >
           {promocao && (
             <span className="absolute -top-2 right-2 inline-flex items-center gap-0.5 rounded-full bg-laranja text-white px-1.5 text-[10px] font-extrabold">
@@ -86,14 +86,14 @@ function Celula({ slot, preco, promocao, professor, onReservar, onAvisar }: Prop
       )
     case 'minha':
       return (
-        <div className={`${BASE} bg-sol text-petroleo-noite`}>
+        <div className={`${BASE} bg-sol text-marinho`}>
           {hora}
           <span className="text-xs font-bold">Sua reserva</span>
         </div>
       )
     case 'aula':
       return (
-        <div className={`${BASE} bg-onda-claro text-petroleo`}>
+        <div className={`${BASE} bg-onda-claro text-mar`}>
           {hora}
           <span className="text-[11px] font-semibold truncate max-w-full">
             Aula de {modalidadePorId(slot.aula!.modalidade).curto} · {professor}
@@ -102,14 +102,14 @@ function Celula({ slot, preco, promocao, professor, onReservar, onAvisar }: Prop
       )
     case 'bloqueado':
       return (
-        <div className={`${BASE} ${LISTRADO} text-petroleo-noite/70`} title={slot.bloqueio?.motivo}>
+        <div className={`${BASE} ${LISTRADO} text-marinho/70`} title={slot.bloqueio?.motivo}>
           {hora}
           <span className="text-xs inline-flex items-center gap-1"><Lock className="size-3" /> Indisponível</span>
         </div>
       )
     case 'reservado':
       return (
-        <button onClick={onAvisar} title="Entrar na lista de espera" className={`${BASE} ${LISTRADO} text-petroleo-noite/70 hover:text-petroleo hover:ring-2 hover:ring-petroleo/20`}>
+        <button onClick={onAvisar} title="Entrar na lista de espera" className={`${BASE} ${LISTRADO} text-marinho/70 hover:text-mar hover:ring-2 hover:ring-mar/20`}>
           {hora}
           <span className="text-xs inline-flex items-center gap-1">
             Ocupado · <Bell className="size-3" /> avise-me

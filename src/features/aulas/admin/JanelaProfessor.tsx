@@ -7,7 +7,7 @@ import type { ModalidadeId, Professor } from '../../../tipos'
 import { AreaTexto, Botao, Campo, Confirmar, Entrada, Janela } from '../../../ui'
 import { removerProfessor, salvarProfessor, turmasDoProfessor } from '../regras'
 
-const Rotulo = ({ children }: { children: string }) => <span className="text-xs font-bold uppercase tracking-wide text-petroleo-noite/70">{children}</span>
+const Rotulo = ({ children }: { children: string }) => <span className="text-xs font-bold uppercase tracking-wide text-marinho/70">{children}</span>
 
 export function JanelaProfessor({ professor, onFechar }: { professor: Professor; onFechar: () => void }) {
   const { db, set } = useDB()
@@ -36,8 +36,8 @@ export function JanelaProfessor({ professor, onFechar }: { professor: Professor;
             {MODALIDADES.map((m) => {
               const marcada = f.modalidades.includes(m.id)
               return (
-                <label key={m.id} className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold cursor-pointer ${marcada ? 'border-onda bg-onda-claro' : 'border-petroleo/15'}`}>
-                  <input type="checkbox" checked={marcada} onChange={() => alternar(m.id)} className="accent-petroleo" /> {m.nome}
+                <label key={m.id} className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold cursor-pointer ${marcada ? 'border-onda bg-onda-claro' : 'border-mar/15'}`}>
+                  <input type="checkbox" checked={marcada} onChange={() => alternar(m.id)} className="accent-mar" /> {m.nome}
                 </label>
               )
             })}
@@ -69,7 +69,7 @@ export function JanelaProfessor({ professor, onFechar }: { professor: Professor;
         {ehNovo ? (
           <span />
         ) : turmas > 0 ? (
-          <p className="text-xs text-petroleo-noite/70 self-center">Tem {turmas} turma(s): troque o professor delas antes de remover.</p>
+          <p className="text-xs text-marinho/70 self-center">Tem {turmas} turma(s): troque o professor delas antes de remover.</p>
         ) : (
           <Confirmar
             rotulo="Remover"

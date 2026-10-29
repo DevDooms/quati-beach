@@ -83,7 +83,7 @@ export default function ModalReserva(p: Props) {
           p.preco && (
             <div className="flex justify-between gap-4 border-t border-areia pt-2 mt-2">
               <dt className="font-semibold">Valor</dt>
-              <dd className="font-extrabold text-lg text-petroleo">{p.preco}</dd>
+              <dd className="font-extrabold text-lg text-mar">{p.preco}</dd>
             </div>
           )
         }
@@ -129,7 +129,7 @@ export default function ModalReserva(p: Props) {
         <Botao href={linkWhatsApp(p.mensagemWhatsApp(contato.nome.trim()))} variante="whatsapp-contorno" tamanho="lg" largo>
           <IconeWhatsApp /> Prefiro confirmar pelo WhatsApp
         </Botao>
-        <p className="text-center text-[11px] text-petroleo-noite/70">
+        <p className="text-center text-[11px] text-marinho/70">
           Ao confirmar, você concorda com a <a href="/privacidade" target="_blank" className="underline">política de privacidade</a>.
         </p>
       </form>
@@ -147,8 +147,8 @@ function TelaSucesso(p: Props & { forma?: FormaPagamento; contato: Pessoa }) {
       ) : (
         <>
           <CircleCheck className="size-16 mx-auto text-emerald-500" strokeWidth={1.5} />
-          <h2 className="titulo text-4xl mt-4 text-petroleo">{p.textoSucesso}</h2>
-          <p className="mt-2 text-sm text-petroleo-noite/70">
+          <h2 className="titulo text-4xl mt-4 text-mar">{p.textoSucesso}</h2>
+          <p className="mt-2 text-sm text-marinho/70">
             {p.forma === 'Cartão' && 'Pagamento aprovado! '}
             {p.forma === 'Crédito' && `Usamos ${p.horas}h dos seus créditos. `}
             {p.forma === 'Balcão' && `Pague ${p.preco} no balcão quando chegar. `}

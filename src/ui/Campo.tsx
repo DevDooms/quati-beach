@@ -2,14 +2,14 @@ import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTML
 
 // Um só estilo de campo para o site e o painel; `compacto` é o tamanho do painel.
 export const classeEntrada = (compacto = false) =>
-  `w-full rounded-xl border border-petroleo/20 bg-white outline-none focus:border-onda focus:ring-2 focus:ring-onda/30 ${
+  `w-full rounded-xl border border-mar/20 bg-white outline-none focus:border-onda focus:ring-2 focus:ring-onda/30 ${
     compacto ? 'px-3 py-2.5 text-sm' : 'px-4 py-3'
   }`
 
 export function Campo({ rotulo, children, compacto, className = '' }: { rotulo: string; children: ReactNode; compacto?: boolean; className?: string }) {
   return (
     <label className={`block ${className}`}>
-      <span className={compacto ? 'text-xs font-bold uppercase tracking-wide text-petroleo-noite/70' : 'text-sm font-semibold'}>{rotulo}</span>
+      <span className={compacto ? 'text-xs font-bold uppercase tracking-wide text-marinho/70' : 'text-sm font-semibold'}>{rotulo}</span>
       <span className="block mt-1">{children}</span>
     </label>
   )
@@ -21,7 +21,7 @@ export function Entrada({ compacto, icone, className = '', ...props }: ComCompac
   if (!icone) return <input {...props} className={`${classeEntrada(compacto)} ${className}`} />
   return (
     <span className="relative block">
-      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-petroleo-noite/70 [&>svg]:size-4">{icone}</span>
+      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-marinho/70 [&>svg]:size-4">{icone}</span>
       <input {...props} className={`${classeEntrada(compacto)} pl-10 ${className}`} />
     </span>
   )

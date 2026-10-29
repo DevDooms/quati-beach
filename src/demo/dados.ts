@@ -22,7 +22,7 @@ export const PROFESSORES_DEMO: Professor[] = [
     modalidades: ['futevolei'],
     bio: 'Atleta de circuito estadual, foca em quem está começando: domínio, levantada e posicionamento.',
     destaque: '8 anos de areia',
-    cor: 'from-onda to-petroleo',
+    cor: 'from-onda to-mar',
     telefone: '(11) 97111-2201',
   },
   {
@@ -32,7 +32,7 @@ export const PROFESSORES_DEMO: Professor[] = [
     modalidades: ['futevolei'],
     bio: 'Responsável pelas turmas intermediária, avançada e kids. Treino com intensidade e muita técnica.',
     destaque: 'Campeão do 3º Torneio Quati',
-    cor: 'from-petroleo to-petroleo-escuro',
+    cor: 'from-mar to-mar-fundo',
     telefone: '(11) 97222-3302',
   },
   {
@@ -42,7 +42,7 @@ export const PROFESSORES_DEMO: Professor[] = [
     modalidades: ['beach-tennis'],
     bio: 'Professora de beach tennis com certificação de federação. Aulas leves, divertidas e com evolução rápida.',
     destaque: 'Certificada FPT',
-    cor: 'from-laranja to-[#c96a10]',
+    cor: 'from-laranja to-[#c95f0c]',
     telefone: '(11) 97333-4403',
   },
   {
@@ -62,7 +62,7 @@ export const PROFESSORES_DEMO: Professor[] = [
     modalidades: ['beach-tennis'],
     bio: 'Educador físico, toca a turma da melhor idade e as turmas noturnas de iniciantes.',
     destaque: 'Turma melhor idade',
-    cor: 'from-[#2b8a6e] to-petroleo',
+    cor: 'from-[#1f9a5e] to-mar',
     telefone: '(11) 97555-6605',
   },
 ]

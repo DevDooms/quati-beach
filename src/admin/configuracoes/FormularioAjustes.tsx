@@ -58,12 +58,12 @@ export function FormularioAjustes() {
             {MODULOS.map(({ id, nome, descricao }) => {
               const ativo = modulos[id]
               return (
-                <label key={id} className={`cursor-pointer rounded-2xl border-2 p-4 transition ${ativo ? 'border-onda bg-onda-claro/50' : 'border-petroleo/10 opacity-75'}`}>
+                <label key={id} className={`cursor-pointer rounded-2xl border-2 p-4 transition ${ativo ? 'border-onda bg-onda-claro/50' : 'border-mar/10 opacity-75'}`}>
                   <span className="flex items-center justify-between gap-2">
                     <b>{nome}</b>
-                    <input type="checkbox" checked={ativo} onChange={() => setF({ ...f, modulos: { ...modulos, [id]: !ativo } })} className="accent-petroleo size-5" />
+                    <input type="checkbox" checked={ativo} onChange={() => setF({ ...f, modulos: { ...modulos, [id]: !ativo } })} className="accent-mar size-5" />
                   </span>
-                  <span className="block mt-1 text-xs text-petroleo-noite/70">{descricao}</span>
+                  <span className="block mt-1 text-xs text-marinho/70">{descricao}</span>
                 </label>
               )
             })}
@@ -83,7 +83,7 @@ export function FormularioAjustes() {
               </Selecao>
             </Campo>
           </div>
-          <p className="mt-2 text-xs text-petroleo-noite/70">Mudar a duração vale para as reservas novas; as já marcadas mantêm a duração delas.</p>
+          <p className="mt-2 text-xs text-marinho/70">Mudar a duração vale para as reservas novas; as já marcadas mantêm a duração delas.</p>
         </Secao>
 
         <Secao titulo="Preço da hora">
@@ -100,7 +100,7 @@ export function FormularioAjustes() {
               </Selecao>
             </Campo>
           </div>
-          <p className="mt-3 text-xs text-petroleo-noite/70">
+          <p className="mt-3 text-xs text-marinho/70">
             Seg–Sex: {fmtReais(precos.normal)} até {precos.inicioPico}h e {fmtReais(precos.pico)} depois. Fim de semana: {fmtReais(precos.pico)}. Mudar o preço não altera reservas já feitas.
           </p>
         </Secao>
@@ -116,7 +116,7 @@ export function FormularioAjustes() {
                   <Selecao compacto value={abre} onChange={(e) => mudar([Number(e.target.value), Math.max(fecha, Number(e.target.value) + 1)])} aria-label={`Abre ${DIAS_SEMANA[d]}`}>
                     {HORAS_CHEIAS.map((h) => <option key={h} value={h}>{h}h</option>)}
                   </Selecao>
-                  <span className="text-petroleo-noite/70">às</span>
+                  <span className="text-marinho/70">às</span>
                   <Selecao compacto value={fecha} onChange={(e) => mudar([abre, Number(e.target.value)])} aria-label={`Fecha ${DIAS_SEMANA[d]}`}>
                     {HORAS_CHEIAS.filter((h) => h > abre).map((h) => <option key={h} value={h}>{h}h</option>)}
                   </Selecao>
@@ -147,7 +147,7 @@ export function FormularioAjustes() {
         )}
 
         <Secao titulo={<><IconeWhatsApp className="size-6 text-whatsapp-escuro" /> Bot de WhatsApp</>}>
-          <p className="mt-2 text-sm text-petroleo-noite/70">
+          <p className="mt-2 text-sm text-marinho/70">
             Em breve: o cliente manda mensagem, o bot mostra os horários livres, confirma a reserva e ela aparece direto na agenda deste painel. Lembretes automáticos antes do jogo.
           </p>
           <div className="mt-3">

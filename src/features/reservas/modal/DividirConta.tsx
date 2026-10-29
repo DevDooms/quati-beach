@@ -14,7 +14,7 @@ export function DividirConta({ valor, resumo }: { valor: number; resumo: string 
 
   return (
     <div className="mt-5 rounded-2xl border-2 border-dashed border-onda/40 p-4 text-left">
-      <p className="font-bold flex items-center gap-2 text-petroleo"><Users className="size-5" /> Dividir com a galera</p>
+      <p className="font-bold flex items-center gap-2 text-mar"><Users className="size-5" /> Dividir com a galera</p>
       <div className="mt-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <BotaoRedondo onClick={() => setPessoas((n) => Math.max(MIN, n - 1))} rotulo="Menos pessoas"><Minus className="size-4" /></BotaoRedondo>
@@ -22,8 +22,8 @@ export function DividirConta({ valor, resumo }: { valor: number; resumo: string 
           <BotaoRedondo onClick={() => setPessoas((n) => Math.min(MAX, n + 1))} rotulo="Mais pessoas"><Plus className="size-4" /></BotaoRedondo>
         </div>
         <p className="text-right leading-tight">
-          <span className="titulo text-3xl text-petroleo">{fmtReaisCentavos(valor / pessoas)}</span>
-          <span className="block text-[11px] text-petroleo-noite/70">por pessoa</span>
+          <span className="titulo text-3xl text-mar">{fmtReaisCentavos(valor / pessoas)}</span>
+          <span className="block text-[11px] text-marinho/70">por pessoa</span>
         </p>
       </div>
       <Botao href={linkCompartilhar(doCliente.dividirConta(resumo, valor, pessoas))} variante="whatsapp" tamanho="lg" largo className="mt-3">
@@ -35,7 +35,7 @@ export function DividirConta({ valor, resumo }: { valor: number; resumo: string 
 
 function BotaoRedondo({ onClick, rotulo, children }: { onClick: () => void; rotulo: string; children: ReactNode }) {
   return (
-    <button type="button" onClick={onClick} className="size-9 rounded-full border border-petroleo/20 grid place-items-center" aria-label={rotulo}>
+    <button type="button" onClick={onClick} className="size-9 rounded-full border border-mar/20 grid place-items-center" aria-label={rotulo}>
       {children}
     </button>
   )
