@@ -17,8 +17,8 @@ export default function PaginaEntrar() {
   const [telefone, setTelefone] = useState(CLIENTE_DEMO.telefone)
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-10 sm:py-16">
-      <div className="grid overflow-hidden rounded-3xl bg-white shadow-xl md:grid-cols-2">
+    <section className="conteudo py-10 sm:py-16">
+      <div className="grid overflow-hidden rounded-xl bg-white md:grid-cols-2">
         <div className="relative hidden md:block bg-mar">
           <img src={quadraAerea} alt="" className="absolute inset-0 size-full object-cover opacity-50" />
           <div className="absolute inset-0 bg-gradient-to-t from-marinho via-marinho/40 to-transparent" />

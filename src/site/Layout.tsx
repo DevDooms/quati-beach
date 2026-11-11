@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { CalendarDays, CircleUser, MapPin, Menu, Phone, X } from 'lucide-react'
 import { NEGOCIO } from '../config/estabelecimento'
@@ -7,7 +7,7 @@ import { useDB } from '../lib/banco'
 import { doCliente } from '../lib/mensagens'
 import { linkWhatsApp } from '../lib/whatsapp'
 import type { Modulos } from '../tipos'
-import { Bola, Botao, IconeInstagram, IconeWhatsApp, Logo } from '../ui'
+import { Botao, IconeInstagram, IconeWhatsApp, Logo } from '../ui'
 import { statusFuncionamento } from '../features/reservas/agenda'
 
 // itens do menu; os de módulos desligados no painel somem do site
@@ -26,6 +26,7 @@ export default function Layout() {
   const { pathname, search } = useLocation()
   const tipoNavegacao = useNavigationType()
   const [menu, setMenu] = useState(false)
+  const fecharMenu = useCallback(() => setMenu(false), [])
   const { db } = useDB()
   const { usuario } = useUsuario()
   // pacotes só aparece se o dono ligou o módulo E criou algum pacote
@@ -47,7 +48,7 @@ export default function Layout() {
   return (
     <div className="min-h-dvh flex flex-col">
       <div className="bg-sol text-marinho text-xs font-semibold">
-        <div className="mx-auto max-w-6xl px-4 h-8 flex items-center justify-between gap-4">
+        <div className="conteudo h-8 flex items-center justify-between gap-4">
           <span className="flex items-center gap-2">
             <span className={`size-2 rounded-full ${status.aberto ? 'bg-verde-quadra animate-pulse' : 'bg-red-500'}`} />
             {status.texto}
@@ -58,10 +59,13 @@ export default function Layout() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-30 bg-marinho/95 backdrop-blur text-white shadow-lg shadow-marinho/25 border-b-[3px] border-sol">
-        <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="group flex items-center gap-2.5 shrink-0">
-            <Logo className="size-11 ring-2 ring-sol/60 transition group-hover:rotate-12" />
+      <header className="sticky top-0 z-30 bg-marinho text-white border-b-[3px] border-sol">
+        <div className="conteudo h-16 flex items-center justify-between gap-4">
+          <button className="lg:hidden p-2 -ml-2" onClick={() => setMenu(true)} aria-label="Abrir menu" aria-expanded={menu}>
+            <Menu />
+          </button>
+          <Link to="/" className="group flex items-center gap-2.5 shrink-0 mr-auto lg:mr-0">
+            <Logo className="size-11" />
             <span className="titulo text-2xl leading-none">
               {NEGOCIO.marca[0]} <span className="text-sol">{NEGOCIO.marca[1]}</span>
               <span className="block text-[11px] font-sans font-semibold tracking-[0.3em] text-ceu uppercase">{NEGOCIO.marca[2]}</span>
@@ -73,7 +77,7 @@ export default function Layout() {
               <NavLink
                 key={n.to}
                 to={n.to}
-                className={({ isActive }) => `px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${isActive ? 'bg-sol text-marinho' : 'text-white/75 hover:text-white hover:bg-white/10'}`}
+                className={({ isActive }) => `px-3 py-2 text-sm font-semibold whitespace-nowrap transition border-b-2 ${isActive ? 'border-sol text-sol' : 'border-transparent text-white/80 hover:text-white'}`}
               >
                 {n.label}
               </NavLink>
@@ -84,30 +88,14 @@ export default function Layout() {
             <Link to={conta.to} className="hidden lg:inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-white/85 hover:text-white">
               <CircleUser className="size-5" /> {conta.label}
             </Link>
-            <Botao para="/agendar" variante="destaque" redondo className="hidden sm:inline-flex">
+            <Botao para="/agendar" variante="destaque" redondo>
               <CalendarDays className="size-4" /> Reservar
             </Botao>
-            <button className="lg:hidden p-2 -mr-2" onClick={() => setMenu((m) => !m)} aria-label={menu ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menu}>
-              {menu ? <X /> : <Menu />}
-            </button>
           </div>
         </div>
-
-        {menu && (
-          <nav className="lg:hidden border-t border-white/10 px-4 pb-4 pt-2 anim-sobe" aria-label="Menu">
-            {[...nav, conta].map((n) => (
-              <NavLink
-                key={n.to}
-                to={n.to}
-                end
-                className={({ isActive }) => `block py-3 text-lg font-semibold border-b border-white/10 ${isActive ? 'text-sol' : 'text-white'}`}
-              >
-                {n.label}
-              </NavLink>
-            ))}
-          </nav>
-        )}
       </header>
+
+      {menu && <MenuLateral nav={nav} conta={conta} aberto={status.aberto} textoStatus={status.texto} onFechar={fecharMenu} />}
 
       <main className="flex-1">
         <Outlet />
@@ -128,12 +116,83 @@ export default function Layout() {
   )
 }
 
-function Rodape({ nav }: { nav: { to: string; label: string }[] }) {
+type ItemNav = { to: string; label: string }
+
+// Gaveta do menu no celular: entra pela esquerda, fecha no fundo escuro ou no Esc
+function MenuLateral({ nav, conta, aberto, textoStatus, onFechar }: { nav: ItemNav[]; conta: ItemNav; aberto: boolean; textoStatus: string; onFechar: () => void }) {
+  useEffect(() => {
+    const fechaNoEsc = (e: KeyboardEvent) => e.key === 'Escape' && onFechar()
+    const overflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', fechaNoEsc)
+    return () => {
+      document.body.style.overflow = overflow
+      window.removeEventListener('keydown', fechaNoEsc)
+    }
+  }, [onFechar])
+
+  return (
+    <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu">
+      <div className="absolute inset-0 bg-marinho/60 anim-aparece" onClick={onFechar} />
+      <aside className="absolute inset-y-0 left-0 w-[86%] max-w-sm bg-marinho text-white flex flex-col anim-gaveta">
+        <div className="h-1.5 faixa-quadra shrink-0" aria-hidden />
+        <div className="flex items-center justify-between px-5 h-16 shrink-0">
+          <span className="flex items-center gap-2.5">
+            <Logo className="size-10" />
+            <span className="titulo text-2xl leading-none">
+              {NEGOCIO.marca[0]} <span className="text-sol">{NEGOCIO.marca[1]}</span>
+            </span>
+          </span>
+          <button className="p-2 -mr-2 text-white/80 hover:text-white" onClick={onFechar} aria-label="Fechar menu">
+            <X />
+          </button>
+        </div>
+        <p className="mx-5 flex items-center gap-2 text-xs font-semibold text-white/70">
+          <span className={`size-2 rounded-full ${aberto ? 'bg-verde-quadra' : 'bg-red-500'}`} /> {textoStatus}
+        </p>
+
+        <nav className="mt-4 flex-1 overflow-y-auto" aria-label="Menu">
+          {nav.map((n) => (
+            <NavLink
+              key={n.to}
+              to={n.to}
+              end
+              onClick={onFechar}
+              className={({ isActive }) =>
+                `block border-l-4 px-5 py-2.5 titulo text-3xl transition ${isActive ? 'border-sol text-sol bg-white/5' : 'border-transparent text-white hover:bg-white/5'}`
+              }
+            >
+              {n.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="shrink-0 border-t border-white/10 px-5 py-5 space-y-4">
+          <Link to={conta.to} onClick={onFechar} className="flex items-center gap-2 font-semibold text-white/85 hover:text-white">
+            <CircleUser className="size-5" /> {conta.label}
+          </Link>
+          <div className="flex gap-2">
+            <Botao href={linkWhatsApp(doCliente.informacoes())} variante="whatsapp" redondo className="flex-1">
+              <IconeWhatsApp /> WhatsApp
+            </Botao>
+            <Botao href={NEGOCIO.instagram} variante="contorno-claro" redondo aria-label="Instagram">
+              <IconeInstagram />
+            </Botao>
+          </div>
+          <p className="flex items-start gap-2 text-xs text-white/60">
+            <MapPin className="size-4 shrink-0" /> {NEGOCIO.endereco}, {NEGOCIO.cidadeCurta}
+          </p>
+        </div>
+      </aside>
+    </div>
+  )
+}
+
+function Rodape({ nav }: { nav: ItemNav[] }) {
   return (
     <footer className="relative bg-marinho text-white/70 overflow-hidden">
       <div className="h-2 faixa-quadra" aria-hidden />
-      <Bola className="absolute -right-10 bottom-10 size-48 opacity-[0.07] rotate-12" />
-      <div className="relative mx-auto max-w-6xl px-4 py-12 grid gap-8 sm:grid-cols-3">
+      <div className="relative conteudo py-12 grid gap-8 sm:grid-cols-3">
         <div>
           <div className="flex items-center gap-2.5 text-white">
             <Logo className="size-9" />

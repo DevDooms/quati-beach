@@ -4,7 +4,7 @@ import { NEGOCIO } from '../../../config/estabelecimento'
 import { useDB } from '../../../lib/banco'
 import { doCliente } from '../../../lib/mensagens'
 import { linkWhatsApp } from '../../../lib/whatsapp'
-import { Botao, IconeInstagram, IconeWhatsApp, Onda, TituloSecao } from '../../../ui'
+import { Botao, IconeInstagram, IconeWhatsApp, TituloSecao } from '../../../ui'
 
 const Item = ({ icone, children }: { icone: ReactNode; children: ReactNode }) => (
   <li className="flex gap-3 [&>svg]:size-5 [&>svg]:text-sol [&>svg]:shrink-0 [&>svg]:mt-0.5">
@@ -18,8 +18,7 @@ export function ComoChegar() {
   const f = db.funcionamento
   return (
     <section className="bg-mar-fundo text-white">
-      <Onda cor="var(--color-areia-claro)" className="block w-full h-10 sm:h-14 rotate-180 -mt-px" />
-      <div className="mx-auto max-w-6xl px-4 pt-10 pb-16 grid gap-8 lg:grid-cols-2">
+      <div className="conteudo py-16 grid gap-10 lg:grid-cols-2">
         <div>
           <TituloSecao sobre="Como chegar" titulo="Venha jogar com a gente" claro />
           <ul className="mt-6 space-y-4">
@@ -52,7 +51,7 @@ export function ComoChegar() {
             </Botao>
           </div>
         </div>
-        <div className="rounded-3xl overflow-hidden min-h-72 bg-mar">
+        <div className="rounded-xl overflow-hidden min-h-72 bg-mar">
           <iframe title={`Mapa ${NEGOCIO.nome}`} src={NEGOCIO.mapaEmbed} className="w-full h-full min-h-72 border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
         </div>
       </div>

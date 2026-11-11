@@ -17,7 +17,7 @@ export class ErroInesperado extends Component<{ children: ReactNode }, { erro: E
     if (!this.state.erro) return this.props.children
     return (
       <div className="min-h-dvh grid place-items-center bg-areia-claro px-4">
-        <div className="max-w-md rounded-3xl bg-white p-8 text-center shadow-xl">
+        <div className="max-w-md rounded-xl bg-white p-8 text-center">
           <p className="titulo text-5xl text-mar">Ops!</p>
           <p className="mt-2 text-marinho/80">Algo deu errado nesta tela. Seus dados estão salvos.</p>
           <div className="mt-6 flex flex-col gap-2">

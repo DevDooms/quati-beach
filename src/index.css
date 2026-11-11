@@ -33,6 +33,26 @@ body {
   @apply bg-areia-claro text-marinho font-sans antialiased;
 }
 
+/* Largura do conteúdo do site: ocupa a tela até 1480px, com respiro nas bordas */
+@layer components {
+  .conteudo {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 92.5rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .conteudo {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .conteudo {
+      padding-inline: 3.5rem;
+    }
+  }
+}
+
 .titulo {
   @apply font-display tracking-wide leading-[0.95];
 }
@@ -89,6 +109,24 @@ body {
 }
 .anim-sobe {
   animation: sobe 0.25s ease-out;
+}
+
+/* Gaveta do menu no celular, entrando pela esquerda */
+@keyframes gaveta {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes aparece {
+  from {
+    opacity: 0;
+  }
+}
+.anim-gaveta {
+  animation: gaveta 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.anim-aparece {
+  animation: aparece 0.2s ease-out;
 }
 
 /* Entrada da página inicial, em cascata */
@@ -235,6 +273,8 @@ html.intro-ativa .anim-entra {
   .anim-sombra,
   .anim-mare,
   .anim-brilho,
+  .anim-gaveta,
+  .anim-aparece,
   .anim-entra {
     animation: none;
   }

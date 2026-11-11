@@ -20,7 +20,7 @@ export default function PaginaPacotes() {
       <CabecalhoPagina sobre="Pacotes" titulo={<>Horas <span className="text-sol">antecipadas</span></>}>
         Compre um pacote e use as horas quando quiser: na hora de reservar, escolha “Meus créditos”.
       </CabecalhoPagina>
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="conteudo py-10">
         {db.pacotes.length === 0 ? (
           <Vazio>Nenhum pacote disponível no momento.</Vazio>
         ) : (
@@ -29,7 +29,7 @@ export default function PaginaPacotes() {
               const porHora = precoPorHoraDoPacote(p)
               const economia = Math.round(avulso * p.horas - p.preco)
               return (
-                <div key={p.id} className="rounded-3xl bg-white border border-mar/10 p-6 flex flex-col">
+                <div key={p.id} className="rounded-xl bg-white border border-mar/10 p-6 flex flex-col">
                   <Ticket className="size-8 text-laranja" />
                   <h2 className="titulo text-4xl text-mar mt-3">{p.nome}</h2>
                   <p className="text-sm text-marinho/70">{p.horas} horas · {fmtReais(porHora)} por hora</p>

@@ -9,6 +9,7 @@ import { fmtReais } from '../../lib/formatos'
 import { doCliente } from '../../lib/mensagens'
 import type { Hora } from '../../tipos'
 import { CabecalhoPagina, EtiquetaJanela, SeloModalidade, Vazio } from '../../ui'
+import { ModalAula } from '../aulas/ModalAula'
 import { diaEspecial, estaLivre, horasReservaveis, livresNoDia, precoDoHorario, slotDe } from './agenda'
 import { HorariosDaQuadra, Legenda } from './HorariosDaQuadra'
 import { JanelaEspera } from './JanelaEspera'
@@ -40,6 +41,8 @@ export default function PaginaAgendar() {
     return h && quadraId && estaLivre(db, dia, h, quadraId, { usuario }) ? h : null
   })
   const [esperaHora, setEsperaHora] = useState<Hora | null>(null)
+  const [aulaId, setAulaId] = useState<string | null>(null)
+  const aulaAberta = db.aulas.find((a) => a.id === aulaId)
 
   const livresHoje = Object.fromEntries(QUADRAS.map((q) => [q.id, livresNoDia(db, dias[0], q.id)]))
   const slots = quadraId ? horasReservaveis(db, dia).map((h) => slotDe(db, dia, h, quadraId, { usuario })) : []
@@ -77,10 +80,10 @@ export default function PaginaAgendar() {
         Escolha a quadra no mapa, depois o dia e o horário. Cada reserva é de {fmtDuracao(duracao)}.
       </CabecalhoPagina>
 
-      <div className="mx-auto max-w-6xl px-4 py-8 grid gap-8 lg:grid-cols-[1fr_300px]">
+      <div className="conteudo py-8 grid gap-8 lg:grid-cols-[1fr_300px]">
         <div className="min-w-0">
           <Passo n={1} titulo="Escolha a quadra" />
-          <div className="mt-3 rounded-3xl bg-white border border-mar/10 p-2 sm:p-4 shadow-sm">
+          <div className="mt-3 rounded-xl bg-white border border-mar/10 p-2 sm:p-4 shadow-sm">
             <MapaQuadras selecionada={quadraId} onEscolher={escolherQuadra} livres={livresHoje} />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
@@ -103,7 +106,7 @@ export default function PaginaAgendar() {
           <div ref={calendario} className="scroll-mt-24 mt-10">
             <Passo n={2} titulo={quadraId ? `Horários da ${quadraPorId(quadraId).nome}` : 'Escolha o dia e o horário'} />
             {!quadraId ? (
-              <div className="mt-3 rounded-3xl border-2 border-dashed border-mar/20 p-10 text-center text-marinho/70">
+              <div className="mt-3 rounded-xl border-2 border-dashed border-mar/20 p-10 text-center text-marinho/70">
                 <MousePointerClick className="size-10 mx-auto text-onda" />
                 <p className="mt-3 font-semibold">Toque em uma quadra no mapa para ver o calendário dela.</p>
               </div>
@@ -128,7 +131,7 @@ export default function PaginaAgendar() {
                 {especial?.fechado ? (
                   <div className="mt-4"><Vazio>Fechado neste dia. Escolha outra data.</Vazio></div>
                 ) : (
-                  <HorariosDaQuadra dia={dia} slots={slots} onReservar={setHora} onAvisar={setEsperaHora} />
+                  <HorariosDaQuadra dia={dia} slots={slots} onReservar={setHora} onAvisar={setEsperaHora} onAula={db.modulos.aulas ? (a) => setAulaId(a.id) : undefined} />
                 )}
               </>
             )}
@@ -176,6 +179,8 @@ export default function PaginaAgendar() {
           onConfirmar={(p) => aplicar((db) => entrarNaEspera(db, { ...p, data: dataISO(dia), hora: esperaHora, quadraId }))}
         />
       )}
+
+      {aulaAberta && <ModalAula aula={aulaAberta} dia={dia} onFechar={() => setAulaId(null)} />}
     </>
   )
 }
