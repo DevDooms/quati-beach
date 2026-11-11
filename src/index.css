@@ -129,6 +129,107 @@ body {
   animation: brilho 6s ease-in-out infinite;
 }
 
+/* ---------- Intro (src/app/Intro.tsx) ---------- */
+
+/* Enquanto a intro está na tela: sem rolagem, e a entrada em cascata das páginas espera a cortina abrir */
+html.intro-ativa {
+  overflow: hidden;
+}
+html.intro-ativa .anim-entra {
+  animation-play-state: paused;
+}
+
+/* Logo caindo do céu e quicando duas vezes na areia */
+@keyframes intro-logo {
+  0% { transform: translateY(-120vh) rotate(-260deg); animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.45); }
+  38% { transform: translateY(0) rotate(0deg) scale(1.08, 0.9); animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
+  58% { transform: translateY(-22%) rotate(12deg); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  74% { transform: translateY(0) rotate(0deg) scale(1.04, 0.95); animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
+  86% { transform: translateY(-6%) rotate(-3deg); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  100% { transform: none; }
+}
+.intro-logo {
+  animation: intro-logo 1.3s both;
+}
+
+/* Sombra acompanha a queda: aparece e cresce conforme a bola chega perto */
+@keyframes intro-sombra {
+  0% { transform: scaleX(0.2); opacity: 0; }
+  38% { transform: scaleX(1.1); opacity: 0.8; }
+  58% { transform: scaleX(0.75); opacity: 0.45; }
+  74%, 100% { transform: scaleX(1); opacity: 0.7; }
+}
+.intro-sombra {
+  animation: intro-sombra 1.3s ease-out both;
+}
+
+/* Anel amarelo se espalhando no impacto, como areia levantando */
+@keyframes intro-anel {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.intro-anel {
+  opacity: 0;
+  animation: intro-anel 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) var(--atraso, 0.5s) both;
+}
+
+@keyframes intro-texto {
+  from { transform: translateY(110%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.intro-texto {
+  animation: intro-texto 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--atraso, 0s) both;
+}
+
+/* Maré subindo do pé da tela */
+@keyframes intro-ondas {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+.intro-ondas {
+  animation: intro-ondas 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s both;
+}
+
+@keyframes intro-brilho {
+  from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+.intro-brilho {
+  animation: intro-brilho 1.6s ease-out 0.4s both;
+}
+
+/* Cortina subindo e revelando o site */
+@keyframes intro-sai {
+  to { transform: translateY(-100%); }
+}
+.intro-sai {
+  animation: intro-sai 0.75s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-logo,
+  .intro-sombra,
+  .intro-anel,
+  .intro-texto,
+  .intro-ondas,
+  .intro-brilho {
+    animation: none;
+  }
+  .intro-anel {
+    display: none;
+  }
+  .intro-brilho {
+    transform: translate(-50%, -50%);
+  }
+  .intro-sai {
+    animation: intro-sumir 0.75s ease forwards;
+  }
+}
+@keyframes intro-sumir {
+  to { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .anim-quica,
   .anim-sombra,

@@ -6,11 +6,13 @@ import '@fontsource/bebas-neue/latin-400.css'
 import '@fontsource/kaushan-script/latin-400.css'
 import './index.css'
 import Rotas from './app/Rotas'
+import { Intro } from './app/Intro'
 import { AuthProvider } from './lib/auth'
 import { BancoProvider } from './lib/banco'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Intro />
     <BancoProvider>
       <AuthProvider>
         <Rotas />
